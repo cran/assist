@@ -86,7 +86,8 @@ function(s, t = s)
 		as.double(t), 
 		as.integer(n), 
 		as.integer(m), 
-		val = double(n * m))$val, ncol = m, byrow = TRUE) 
+		val = double(n * m),
+		PACKAGE="assist")$val, ncol = m, byrow = TRUE) 
 } 
 cubic2<- 
 function(s, t = s) 
@@ -101,7 +102,8 @@ function(s, t = s)
 		as.double(t), 
 		as.integer(n), 
 		as.integer(m), 
-		val = double(n * m))$val, ncol = m, byrow = TRUE) 
+		val = double(n * m),
+		PACKAGE="assist")$val, ncol = m, byrow = TRUE) 
 } 
 dcrdr<-function(rkpk.obj, r)
 {
@@ -147,7 +149,8 @@ dcrdr<-function(rkpk.obj, r)
 		dr = double(nnull * ngrid),
 		lddr = as.integer(nnull),
 		wk = double(2 * nobs),
-		info = integer(1))
+		info = integer(1),
+		PACKAGE="assist")
 	dcrdr
 }
 
@@ -239,7 +242,8 @@ function(y, q, s, weight = NULL, vmu = "v", theta = NULL, varht = NULL, tol = 0,
 		c = double(nobs), 
 		d = double(nnull), 
 		wk = double(nobs * nobs * (nq + 2)), 
-		info = integer(1)) 
+		info = integer(1),
+		PACKAGE="assist") 
 	if(result$info == -1) 
 		stop("dimension error") 
 	else if(result$info == -2) 
@@ -334,7 +338,8 @@ function(y, q, s=NULL, weight = NULL, vmu = "v", varht = NULL, limnla = c(-10, 3
 		qraux = double(nnull), 
 		jpvt = integer(nnull), 
 		wk = double(3 * nobs), 
-		info = integer(1)) 
+		info = integer(1),
+		PACKAGE="assist") 
 	if(result$info == -1) 
 		stop("dimension error") 
 	else if(result$info == -2) 
@@ -396,7 +401,8 @@ dsms<-function(rkpk.obj)
 		sms = double(nnull * nnull),
 		ldsms = nnull,
 		wk = double(2 * nobs),
-		info = integer(1))
+		info = integer(1),
+		PACKAGE="assist")
 	dsms
 }
 
@@ -411,7 +417,8 @@ function(s, t = s, r = 1)
 		as.double(r), 
 		as.integer(n), 
 		as.integer(m), 
-		val = double(n * m))$val, ncol = m, byrow = TRUE) 
+		val = double(n * m),
+		PACKAGE="assist")$val, ncol = m, byrow = TRUE) 
 } 
 gdmudr<- 
 function(y, q, s, family, vmu = "v", varht = NULL, init = 0,  
@@ -497,7 +504,8 @@ function(y, q, s, family, vmu = "v", varht = NULL, init = 0,
 		ywk = double(nobs), 
 		u = double(nobs), 
 		w = double(nobs), 
-		info = integer(1)) 
+		info = integer(1),
+		PACKAGE="assist") 
 	if(result$info > 0) 
 		stop("the matrix S is rank deficient: rank(S)+1")
 	else { 
@@ -611,7 +619,8 @@ function(y, q, s, family, vmu = "v", varht = NULL, limnla = c(
 		ywk = double(nobs), 
 		u = double(nobs), 
 		w = double(nobs), 
-		info = integer(1)) 
+		info = integer(1),
+		PACKAGE="assist") 
 	if(result$info > 0) 
 		stop("matrix S is rank deficient: rank(S)+1") 
 	else { 
@@ -865,7 +874,8 @@ function(s, t = s)
 		as.double(t), 
 		as.integer(n), 
 		as.integer(m), 
-		val = double(n * m))$val, ncol = m, byrow = TRUE) 
+		val = double(n * m),
+		PACKAGE="assist")$val, ncol = m, byrow = TRUE) 
 } 
 linear<-
 function(s, t = s)
@@ -880,7 +890,8 @@ function(s, t = s)
                 as.double(t),
                 as.integer(n),
                 as.integer(m),
-                val = double(n * m))$val, ncol = m, byrow = TRUE)
+                val = double(n * m),
+		PACKAGE="assist")$val, ncol = m, byrow = TRUE)
 }
 linear2<-
 function(s, t = s)
@@ -894,7 +905,8 @@ function(s, t = s)
                 as.double(t),
                 as.integer(n),
                 as.integer(m),
-                val = double(n * m))$val, ncol = m, byrow = TRUE)
+                val = double(n * m),
+		PACKAGE="assist")$val, ncol = m, byrow = TRUE)
 }
 list.prod<- 
 function(x, y, fun="*") 
@@ -916,7 +928,8 @@ function(s, t = s)
                 as.double(t),
                 as.integer(n),
                 as.integer(m),
-                val = double(n * m))$val, ncol = m, byrow = TRUE)
+                val = double(n * m),
+		PACKAGE="assist")$val, ncol = m, byrow = TRUE)
 }
 lspline<-
 function(x, y = x, type = "exp", ...)
@@ -996,7 +1009,8 @@ function(s, t = s, order = 2)
                         as.double(t), 
                         as.integer(n), 
                         as.integer(m), 
-                        val = double(n * m))$val, ncol = m, byrow = TRUE) 
+                        val = double(n * m),
+			PACKAGE="assist")$val, ncol = m, byrow = TRUE) 
         } 
         else { 
                 matrix(.C("mperiod_ker", 
@@ -1005,7 +1019,8 @@ function(s, t = s, order = 2)
                         as.integer(n), 
                         as.integer(m), 
                         as.integer(order), 
-                        val = double(n * m))$val, ncol = m, byrow = TRUE) 
+                        val = double(n * m),
+			PACKAGE="assist")$val, ncol = m, byrow = TRUE) 
         } 
 } 
 
@@ -1021,7 +1036,8 @@ function(s, t = s)
 		as.double(t),
 		as.integer(n),
 		as.integer(m),
-		val = double(n * m))$val, ncol = m, byrow = TRUE)
+		val = double(n * m),
+		PACKAGE="assist")$val, ncol = m, byrow = TRUE)
 }
 quintic2<-
 function(s, t = s)
@@ -1035,7 +1051,8 @@ function(s, t = s)
                 as.double(t),
                 as.integer(n),
                 as.integer(m),
-                val = double(n * m))$val, ncol = m, byrow = TRUE)
+                val = double(n * m),
+		PACKAGE="assist")$val, ncol = m, byrow = TRUE)
 }
 rk.prod<-
 function(x, ...)
@@ -1125,7 +1142,8 @@ function(s, t = s)
                 as.double(t),
                 as.integer(n),
                 as.integer(m),
-                val = double(n * m))$val, ncol = m, byrow = TRUE)
+                val = double(n * m),
+		PACKAGE="assist")$val, ncol = m, byrow = TRUE)
 }
 septic2<-
 function(s, t = s)
@@ -1139,7 +1157,8 @@ function(s, t = s)
                 as.double(t),
                 as.integer(n),
                 as.integer(m),
-                val = double(n * m))$val, ncol = m, byrow = TRUE)
+                val = double(n * m),
+		PACKAGE="assist")$val, ncol = m, byrow = TRUE)
 }
 shrink0<-
 function(x, y = x)
@@ -1153,7 +1172,8 @@ function(x, y = x)
 		as.integer(y),
 		as.integer(n),
 		as.integer(m),
-		val = integer(n * m))$val
+		val = integer(n * m),
+		PACKAGE="assist")$val
 	matrix(val, ncol = m, byrow = TRUE)
 }
 shrink1<-
@@ -1168,7 +1188,8 @@ function(x, y = x)
 		as.integer(y),
 		as.integer(n),
 		as.integer(m),
-		val = integer(n * m))$val
+		val = integer(n * m),
+		PACKAGE="assist")$val
 	matrix(val, ncol = m, byrow = TRUE) - 1/length(unique(x))
 }
 sine0<-
@@ -1181,7 +1202,8 @@ function(s, t = s)
 		as.double(t),
 		as.integer(n),
 		as.integer(m),
-		val = double(n * m))$val, ncol = m, byrow = TRUE)
+		val = double(n * m),
+		PACKAGE="assist")$val, ncol = m, byrow = TRUE)
 }
 sine1<-
 function(s, t = s)
@@ -1193,7 +1215,8 @@ function(s, t = s)
 		as.double(t),
 		as.integer(n),
 		as.integer(m),
-		val = double(n * m))$val, ncol = m, byrow = TRUE)
+		val = double(n * m),
+		PACKAGE="assist")$val, ncol = m, byrow = TRUE)
 }
 
 sphere<- 
@@ -1225,7 +1248,8 @@ function(x, y = x, order = 2)
 		as.integer(N), 
 		as.integer(M), 
 		as.integer(order), 
-		val = double(N * M))$val, ncol = M, byrow = TRUE) 
+		val = double(N * M),
+		PACKAGE="assist")$val, ncol = M, byrow = TRUE) 
 } 
 
 ssr.control<- 
@@ -1612,7 +1636,8 @@ function(s, u = s, order = 2)
 		as.integer(order),
 		as.integer(N),
 		as.integer(M),
-		val = double(N * M))$val, ncol = M, byrow = TRUE)
+		val = double(N * M),
+		PACKAGE="assist")$val, ncol = M, byrow = TRUE)
 	if((d %% 2) == 0)
 		resul * ((-1)^(d/2 + order + 1))
 	else resul * sign(sin(pi * (d/2 - order)))
@@ -1634,7 +1659,8 @@ function(x, order = 2)
 	result <- .C("tp_term",
 		as.integer(d),
 		as.integer(order),
-		p = integer(order^d * d))$p
+		p = integer(order^d * d),
+		PACKAGE="assist")$p
 	result <- matrix(result, nrow = d, byrow = FALSE)
 	term <- choose(order + d - 1, d)
 	mat <- NULL

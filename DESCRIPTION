@@ -1,5 +1,5 @@
 Package: assist
-Version: 0.0.2
+Version: 0.1.0
 Title: A Suite of S-Plus Functions Implementing Smoothing Splines 
 Author: Yuedong Wang <yuedong@pstat.ucsb.edu>, and
  Chunlei Ke <chunlei_ke@yahoo.com>.
