@@ -420,6 +420,7 @@ function(s, t = s, r = 1)
 		val = double(n * m),
 		PACKAGE="assist")$val, ncol = m, byrow = TRUE) 
 } 
+
 gdmudr<- 
 function(y, q, s, family, vmu = "v", varht = NULL, init = 0,  
 	theta = NULL, tol1 = 0, tol2 = 0, prec1 = 1e-006, maxit1 = 30, prec2 =  
@@ -1219,6 +1220,19 @@ function(s, t = s)
 		PACKAGE="assist")$val, ncol = m, byrow = TRUE)
 }
 
+sine4p<-
+function(s, t = s)
+{
+	n <- length(s)
+	m <- length(t)
+	matrix(.C("sinLspline_ker4p",
+		as.double(s),
+		as.double(t),
+		as.integer(n),
+		as.integer(m),
+		val = double(n * m),
+		PACKAGE="assist")$val, ncol = m, byrow = TRUE)
+}
 sphere<- 
 function(x, y = x, order = 2) 
 { 
@@ -3981,11 +3995,13 @@ snm<- function(formula,
          }
      }
     else{
-      grid.S<- S
-      S<- NULL
+#      grid.S<- S
+      grid.S<-S<- NULL
       for(i in 1:lengthF){
-         if(length(Call$formF)>0 && !is.null(Call$formF[[i]])) 
+         if(length(Call$formF)>0 && !is.null(Call$formF[[i]])){ 
             S<- cbind(S, delta1[, i]*model.matrix2(Call$formF[[i]], dataInit[[i]]))        
+            grid.S<- cbind(grid.S, model.matrix2(Call$formF[[i]], x.star[[i]]))
+	    }
          tmp.q<- eval(Call$rk[[i]], dataInit[[i]])
          if(!is.list(tmp.q)) tmp.q<- list(tmp.q)        
          Q<- c(Q, lapply(tmp.q, function(x, x0)
@@ -3993,7 +4009,7 @@ snm<- function(formula,
          tmp.q<- rkEval(Call$rk[[i]], dataInit[[i]], x.star[[i]])
          if(!is.list(tmp.q)) tmp.q<- list(tmp.q)
          grid.Q<- c(grid.Q, 
-            lapply(tmp.q, function(x, x0) (diag(x0)%*%x)%*%diag(x0), x0=delta1[,i]))
+            lapply(tmp.q, function(x, x0) (diag(x0)%*%x), x0=delta1[,i]))
         }
      }
 #    if(is.null(S))
@@ -4013,7 +4029,8 @@ snm<- function(formula,
                    init=control$rkpk.control$init)  
        }
     if(is.null(rk.obj$theta)) theta.rk<- 1    
-    else    theta.rk<- 10^(rk.obj$theta)   
+    else theta.rk<- 10^(rk.obj$theta)   
+
     if(verbose){
        if(length(theta.rk)==1)   
            cat("smoothing parameters: ", format(10^(rk.obj$nlaht)), "\n")
@@ -4193,7 +4210,7 @@ snm<- function(formula,
              job=control$rkpk.control$job, tol=control$rkpk.control$tol)  
      }
   else{
-       rk.obj2 <- dmudr(y=y.star, q=Q, s=S, weight=V,
+       rk.obj2 <- dmudr(y=y.star, q=Q, s=S, weight=V, 
                    tol=control$rkpk.control$tol, maxit=control$rkpk.control$maxit, 
                    vmu=spar, prec=control$rkpk.control$prec, init=control$rkpk.control$init)
       } 
@@ -4231,6 +4248,167 @@ snm<- function(formula,
   attr(result, "class")<- c("snm")
   result
 }
+
+
+intervals.snm<-function (object, level = 0.95, newdata = NULL, terms, pstd = TRUE, 
+    ...) 
+{
+    Call <- match.call()
+    if (!inherits(object, "snm")) 
+        stop("Input doesn't match")
+    ssr.obj <- object$forCI
+    if (length(ssr.obj$q) > 1) 
+        is.dmudr <- TRUE
+    else is.dmudr <- FALSE
+    if (is.null(theta <- object$theta)) 
+        theta <- 1
+    else theta <- 10^theta
+    nobs <- ssr.obj$rkpk.obj$nobs
+    nnull <- ssr.obj$rkpk.obj$nnull
+    if (is.null(newdata)) 
+        eval.len <- nobs
+    else eval.len <- nrow(newdata)
+    if (missing(terms) || is.null(terms)) 
+        terms <- rep(1, nnull + length(theta))
+    terms <- as.matrix(terms)
+    if ((ncol(terms) != nnull + length(theta)) && (nrow(terms) != 
+        nnull + length(theta))) 
+        stop("the input of terms must match")
+    if (ncol(terms) != nnull + length(theta)) 
+        terms <- t(terms)
+    if (nnull > 0) {
+        terms1 <- matrix(terms[, 1:(ncol(terms) - length(theta))], 
+            nrow = nrow(terms))
+        terms2 <- matrix(terms[, (ncol(terms1) + 1):(ncol(terms))], 
+            nrow = nrow(terms))
+    }
+    else {
+        terms1 <- NULL
+        terms2 <- terms
+    }
+    f.info <- getFunInfo(eval(object$call$func))
+    funcName <- f.info$fName
+    funcArg <- f.info$f.arg
+    lengthF <- length(funcName)
+    swk <- ssr.obj$s
+    qwk <- ssr.obj$q
+
+     if(missing(newdata))  dataInit<- ssr.obj$data
+    else {
+        dataInit <- list(length(ssr.obj$data))
+        for (num in 1:length(dataInit)) dataInit[[num]] <- newdata
+        }
+     phi <- rwk <- Rwk <- NULL
+     oldCoefD <- ssr.obj$rkpk.obj$d
+     thetaUsed <- theta
+     for (i in 1:lengthF) {
+            if (length(ssr.obj$expand.call$formF) > 0 && !is.null(ssr.obj$expand.call$formF[[i]])) {
+                tmp.s <- model.matrix2(ssr.obj$expand.call$formF[[i]], 
+                  data = dataInit[[i]])
+                phi <- cbind(phi, tmp.s)
+                oldCoefD <- oldCoefD[-c(1:ncol(tmp.s))]
+            }
+     	    tmp.q <- eval(ssr.obj$expand.call$rk[[i]], dataInit[[i]])
+            if (!is.list(tmp.q)) tmp.q <- list(tmp.q)
+            Rwk <- c(Rwk, tmp.q)
+            tmp.q <- rkEval(ssr.obj$expand.call$rk[[i]], ssr.obj$data[[i]], 
+                dataInit[[i]])
+            if (!is.list(tmp.q)) 
+                tmp.q <- list(tmp.q)
+            thetaUsed <- thetaUsed[-c(1:length(tmp.q))]
+            rwk <- c(rwk, lapply(tmp.q, function(x, z1) z1 * 
+                x, z1 = ssr.obj$delta1[, i]))
+        }
+    
+    phi.new <- NULL
+    if (!is.null(terms1)) {
+        for (i in 1:ncol(swk)) {
+            phi.new <- cbind(phi.new, as.vector(phi[, i] %*% 
+                t(as.matrix(terms1[, i]))))
+        }
+    }
+    if (is.matrix(rwk)) 
+        rwk <- list(rwk)
+    if (is.matrix(Rwk)) 
+        Rwk <- list(Rwk)
+    qSum <- Rsum <- 0
+    xi <- xi2 <- 0
+    for (i in 1:length(theta)) {
+        rwk[[i]] <- rwk[[i]] * theta[i]
+        xi2 <- xi2 + as.vector(rwk[[i]]) %*% t(as.matrix(terms2[, 
+            i]))
+        Rsum <- Rsum + (as.vector(Rwk[[i]]) * theta[i]) %*% t(as.matrix(terms2[, 
+            i]))
+        qSum <- qSum + qwk[[i]] * theta[i]
+        if (!is.null(ssr.obj$weight)) 
+            rwk[[i]] <- ssr.obj$weight %*% rwk[[i]]
+        xi <- xi + as.vector(rwk[[i]]) %*% t(as.matrix(terms2[, 
+            i]))
+    }
+    y <- ssr.obj$y
+#    if (is.dmudr && (ssr.obj$control$algorithm == "a2")) {
+    if(is.dmudr){
+        dsidr.fit <- dsidr(s = swk, q = qSum, y = y, weight = ssr.obj$weight, 
+            vmu = ssr.obj$rkpk.obj$vmu, tol = ssr.obj$control$rkpk.control$tol, 
+            job = ssr.obj$control$rkpk.control$job, limnla = ssr.obj$rkpk.control$limnla)
+    }
+    else dsidr.fit <- ssr.obj$rkpk.obj
+    if (pstd) {
+        b <- dsidr.fit$varht/(10^dsidr.fit$nlaht)
+        if (nnull > 0) 
+            dsmsV <- matrix(dsms(dsidr.fit)$sms, ncol = nnull)
+        else dsmsV <- 0
+        cr <- 0
+        dr <- 0
+        for (i in 1:length(rwk)) {
+            dcrdrV <- dcrdr(dsidr.fit, rwk[[i]])
+            cr <- cr + dcrdrV$cr %*% t(as.matrix(terms2[, i]))
+            if (nnull > 0) 
+                dr <- dr + dcrdrV$dr %*% t(as.matrix(terms2[, 
+                  i]))
+        }
+        if (nnull > 0) {
+            ciMain <- apply(phi, 1, function(x, terms1, w) diag(terms1 %*% 
+                (x * w) %*% (x * t(terms1))), terms1 = terms1, 
+                w = dsmsV)
+            ciMain <- matrix(as.vector(ciMain), nrow = nrow(terms), 
+                byrow = FALSE)
+        }
+        ciRK <- matrix(as.vector(cr) * as.vector(xi), ncol = nobs, 
+            byrow = TRUE)
+        ciRK <- matrix(apply(ciRK, 1, sum), nrow = eval.len, 
+            byrow = FALSE)
+        Rsum <- apply(Rsum, 2, function(x, r) x[seq(1, length(x), 
+            length = r)], eval.len)
+        ciRK <- Rsum - ciRK
+        if (nnull > 0) {
+            ciCross <- matrix(as.vector(t(phi.new)) * as.vector(dr), 
+                ncol = nnull, byrow = TRUE)
+            ciCross <- matrix(apply(ciCross, 1, sum), nrow = eval.len, 
+                byrow = FALSE)
+            ci <- t(ciMain) + ciRK - 2 * ciCross
+        }
+        else ci <- ciRK
+        ci <- ci * (ci > 0)
+    }
+    ccc <- object$funcCoef$c
+    ddd<- object$funcCoef$d
+    fit <- apply(xi2, 2, function(x, w, r) matVec.prod(matrix(x, 
+        ncol = r, byrow = TRUE), as.vector(w), left = FALSE), 
+        w = ccc, r = nobs)
+    if (nnull > 0) 
+        fit <- fit + phi %*% matDiag.prod(t(terms1), ddd)
+    if (pstd) {
+        if (ncol(ci) == 1) 
+            ci <- as.vector(ci)
+        resul <- list(fit = fit, pstd = sqrt(ci * b))
+    }
+    else resul <- list(fit = fit, pstd = NULL)
+    class(resul) <- c("bCI", "list")
+    resul
+}
+
+
 snm.control<- function(rkpk.control=list(job = -1, tol = 0, init = 0, limnla=c(-10, 3),  
               varht=NULL, theta= NULL, prec = 1e-006, maxit = 30),   
               nlme.control= list(returnObject=TRUE, maxIter=5), 
@@ -4527,175 +4705,6 @@ predict.snm<- function(object, newdata=NULL, ...)
 # calculate fits
   else fit.y<- as.vector(object$fitted)
   fit.y
-}    
-
-
-intervals.snm<- function(object, level=0.95, newdata=NULL, terms, pstd=TRUE, ...)
-{
-## To calculate confidence interval for snm object
-## variabls of newdata should correspond to those in "func"
-  Call<- match.call()
-  if(!inherits(object, "snm")) 
-       stop("Input doesn't match")
-     
-  ssr.obj<- object$forCI  
-  if(length(ssr.obj$q)>1) is.dmudr<-TRUE
-  else is.dmudr<-FALSE  
-  if(is.null(theta<- object$theta)) theta<- 1
-  else theta<- 10^theta    
-
-  nobs<- ssr.obj$rkpk.obj$nobs
-  nnull<- ssr.obj$rkpk.obj$nnull
-  if(is.null(newdata)) eval.len<- nobs
-  else   eval.len<- nrow(newdata)
-
-  if(missing(terms) || is.null(terms)) terms<- rep(1, nnull+ length(theta))
-  terms<-as.matrix(terms)
-
-  if((ncol(terms) != nnull+length(theta)) && (nrow(terms) != nnull+length(theta)))
-      stop("the input of terms must match") 
-   
-  if(ncol(terms)!= nnull+length(theta)) terms<-t(terms)
-  if(nnull>0){
-     terms1<- matrix(terms[, 1:(ncol(terms)-length(theta))], nrow=nrow(terms))
-     terms2<- matrix(terms[, (ncol(terms1)+1):(ncol(terms))], nrow=nrow(terms))
-  }
-  else{
-        terms1<- NULL
-        terms2<- terms
-  }
-
-  f.info<-getFunInfo(eval(object$call$func))
-  funcName<- f.info$fName
-  funcArg<- f.info$f.arg
-
-  lengthF<- length(funcName)
-
-  swk<- ssr.obj$s
-  qwk<- ssr.obj$q
-
-  if(missing(newdata)){
-           phi<- ssr.obj$s
-           rwk<- Rwk<- ssr.obj$q
-          }
-  else{
- 
-     dataInit<- list(length(ssr.obj$data))
-
-     for(num in 1:length(dataInit)) dataInit[[num]]<-newdata
-
-     phi<-rwk<- Rwk<- NULL
-     oldCoefD<- ssr.obj$rkpk.obj$d
-     thetaUsed<- theta
-     for(i in 1:lengthF){
-	   if(length(ssr.obj$expand.call$formF)>0 && !is.null(ssr.obj$expand.call$formF[[i]])){
-               tmp.s<- model.matrix2(ssr.obj$expand.call$formF[[i]], data=dataInit[[i]]) 
-               phi<- cbind(phi, tmp.s)          
-               oldCoefD<- oldCoefD[-c(1:ncol(tmp.s))]
-           }
-     tmp.q<- eval(ssr.obj$expand.call$rk[[i]], dataInit[[i]])
-     if(!is.list(tmp.q)) tmp.q<- list(tmp.q)        
-     Rwk<- c(Rwk, tmp.q)
-     tmp.q<- rkEval(ssr.obj$expand.call$rk[[i]], ssr.obj$data[[i]], dataInit[[i]])
-     if(!is.list(tmp.q)) tmp.q<- list(tmp.q)
-
-     thetaUsed<- thetaUsed[-c(1:length(tmp.q))]
-     rwk<- c(rwk, lapply(tmp.q, function(x,z1) 
-            z1*x, z1=ssr.obj$delta1[,i]))
-     }
-  }
-## if Null Space is null 
-#    if(is.null(phi)) phi<-matrix(rep(1, eval.len), ncol=1)
-
-    phi.new<- NULL
-    if(!is.null(terms1)){
-         for(i in 1:ncol(swk)){
-             phi.new<- cbind(phi.new, as.vector(phi[,i] %*% t(as.matrix(terms1[, i]))))
-         }
-   }
-
-   if(is.matrix(rwk)) rwk<- list(rwk) 
-   if(is.matrix(Rwk)) Rwk<- list(Rwk)                  
-
-   qSum<- Rsum<- 0
-   xi<- xi2<- 0
-    for(i in 1:length(theta)){
-      rwk[[i]]<-  rwk[[i]]*theta[i]
-      xi2<- xi2+ as.vector(rwk[[i]]) %*% t(as.matrix(terms2[, i]))
-      Rsum<- Rsum+ (as.vector(Rwk[[i]])*theta[i]) %*% t(as.matrix(terms2[, i]))
-      qSum<- qSum+ qwk[[i]]*theta[i]
-
-      if(!is.null(ssr.obj$weight)) rwk[[i]]<-ssr.obj$weight%*%rwk[[i]]
-      xi<- xi+ as.vector(rwk[[i]]) %*% t(as.matrix(terms2[, i]))
-     }
-
-# call dsidr
-   y<-ssr.obj$y
-   if(is.dmudr && (ssr.obj$control$algorithm=="a2")){     
-           dsidr.fit<- dsidr(s=swk, q=qSum, y=y, 
-                    weight=ssr.obj$weight,
-                    vmu=ssr.obj$rkpk.obj$vmu, 
-                    tol=ssr.obj$control$rkpk.control$tol,
-                    job=ssr.obj$control$rkpk.control$job, 
-                    limnla=ssr.obj$rkpk.control$limnla)
-              }
-   else dsidr.fit<- ssr.obj$rkpk.obj
-
-## pstd=TRUE   
-   if(pstd){
-      b<- dsidr.fit$varht/(10^dsidr.fit$nlaht)
-
-# call dsms and dcrdr    
-     if(nnull>0) dsmsV<- matrix(dsms(dsidr.fit)$sms, ncol=nnull)
-     else dsmsV<-0
-     cr<-0
-     dr<-0
-
-     for(i in 1:length(rwk)){
-       dcrdrV<- dcrdr(dsidr.fit, rwk[[i]])
-       cr<- cr + dcrdrV$cr %*% t(as.matrix(terms2[, i]))
-       if(nnull>0) dr<- dr + dcrdrV$dr %*% t(as.matrix(terms2[, i]))
-       }
-
-# collect STDs
-#  variance for the  main effect part
-     if(nnull>0) {
-          ciMain<- apply(phi, 1, 
-            function(x, terms1, w) diag(terms1 %*% 
-            (x*w)%*% (x*t(terms1))), terms1=terms1, w=dsmsV)
-          ciMain<- matrix(as.vector(ciMain), nrow=nrow(terms), byrow=FALSE)
-     }
-
-#  variance for the rk part
- 
-      ciRK<-  matrix( as.vector(cr) *as.vector(xi) , ncol=nobs, byrow=TRUE)
-      ciRK<- matrix(apply(ciRK, 1, sum), nrow=eval.len, byrow=FALSE)
-      Rsum<- apply(Rsum, 2, function(x, r) x[seq(1, length(x), length=r)], 
-             eval.len)
-      ciRK<- Rsum-ciRK
-
-# covariance between both parts
-     if(nnull>0){
-         ciCross<-  matrix(as.vector(t(phi.new)) * as.vector(dr), ncol=nnull, byrow=TRUE)
-         ciCross<-  matrix(apply(ciCross, 1, sum), nrow=eval.len, byrow=FALSE)
-# overall covariance
-     	ci<-t(ciMain) + ciRK -2* ciCross
-       }
-        else ci<- ciRK
-     ci<-ci * (ci>0)
-    }
-# caculate fits for $f$
-   ccc<- dsidr.fit$c
-   fit<- apply(xi2, 2, function(x, w, r) 
-          matVec.prod(matrix(x, ncol=r, byrow=TRUE), as.vector(w), left=FALSE),w=ccc, r=nobs)
-   if(nnull>0) fit<- fit+phi%*% matDiag.prod(t(terms1), dsidr.fit$d) 
-   if(pstd){
-        if(ncol(ci)==1) ci<- as.vector(ci)
-        resul<- list( fit=fit, pstd=sqrt(ci*b))
-       }
-   else resul<- list(fit=fit, pstd=NULL)
-   class(resul)<-c("bCI", "list")
-   resul
 }    
 
 plot.bCI<-

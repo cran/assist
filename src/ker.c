@@ -164,6 +164,32 @@ sinLspline_ker1(double *x, double *y, long *N, long *M, double *val){
   }
 }
 
+
+static double
+rk_sinL4p(double x) {
+  double val=0;
+  long i;
+
+  for(i=3; i<=50; i++)
+      /* val += 2.0 * cos(6.283 * i * x)/(i*i*2-1)/(i*i*2-1)/(i*i-4.0)/(i*i-4.0);*/
+     val += 2.0 * cos(6.283 * i * x)/256.0/9488.531/(i*i*2-1)/(i*i*2-1)/(i*i-4.0)/(i*i-4.0);
+
+  return(val);
+}
+
+void
+sinLspline_ker4p(double *x, double *y, long *N, long *M, double *val){
+  /* this function is to calculate the rk for cubic spline  */
+  /* with domain [0, T].                                    */
+  long i,j;
+   for(i = 0; i < *N; i++) {
+    for(j = 0; j < *M; j++) {
+      val[(i*(*M))+j] = rk_sinL4p(x[i]-y[j]);
+    }
+  }
+}
+
+
 /***~~~~  factor ~~~~***/
 void
 factor_ker(long *x, long *y, long *N, long *M, long *val){

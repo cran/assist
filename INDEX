@@ -71,6 +71,8 @@ print.summary.ssr       Print Values
 rk.prod                 Calculate product of reproducing kernels
 shrink0                 Calculate reproducing kernels for Stein
                         shrinkage estimate
+sine4p                  Calculate Reproducing Kernels for Periodic
+                        L-Splines with Period 1/2
 slm                     Fit a Semi-parametric Linear Mixed Effects
                         Model
 snm                     Fit a Semi-parametric Nonlinear Mixed-effects
@@ -83,6 +85,7 @@ sphere                  Calculate Pseudo Reproducing Kernels for
                         Spherical Splines
 ssr                     Fit a General Smoothing Spline Regression
                         Model
+ssr.control             Set Control Parameters for 'ssr'
 ssr.object              A fitted ssr Object
 summary.nnr             Object Summaries
 summary.slm             Object Summaries

@@ -4,8 +4,8 @@ export(alogit, bdiag, chol.new, cubic, cubic2,
 	dcrdr, dmudr, dsidr, dsms, gdsidr, gdmudr, hat.ssr, ident,
         kron, linear, linear2, lspline,  nnr,
         nnr.control, periodic, quintic, quintic2, rk.prod,
-        septic, septic2, shrink0, shrink1, slm, snm, snm.control, 
-        snr, snr.control, ssr,  sphere, tp, tp.pseudo, xyplot2)
+        septic, septic2, shrink0, shrink1, sine4p, slm, snm, snm.control, 
+        snr, snr.control, ssr,  ssr.control, sphere, tp, tp.pseudo, xyplot2)
 
 importFrom(nlme, intervals)
 
