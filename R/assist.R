@@ -1282,7 +1282,7 @@ function (formula, rk, data = sys.parent(), subset, weights = NULL,
     else n <- length(y)
     varName <- unique(all.vars(Call$rk))
     dataOrg <- data
-    if (m$formula[[3]]=="-1") S<- NULL 
+    if (eval(m$formula)[[3]]=="-1") S<- NULL 
     else if (scale) {
         if (missing(data)) {
             data <- as.list(varName)
@@ -4682,9 +4682,8 @@ intervals.snm<- function(object, level=0.95, newdata=NULL, terms, pstd=TRUE, ...
      	ci<-t(ciMain) + ciRK -2* ciCross
        }
         else ci<- ciRK
-     }
      ci<-ci * (ci>0)
-    
+    }
 # caculate fits for $f$
    ccc<- dsidr.fit$c
    fit<- apply(xi2, 2, function(x, w, r) 

@@ -544,7 +544,7 @@ double cos_angle(double a1, double b1, double a2, double b2)
   return val;
 }
 
-double rk_q(double z, int ord){
+double rk_q(double z, long ord){
   double w, a, c, val;
   if(z>0.9999999){
     switch(ord){
@@ -610,7 +610,7 @@ double rk_q(double z, int ord){
 void sphere_ker(double *x1, double *y1, double *x2, double *y2, long *len1, 
                long *len2, long *ord, double *rk)
 {
- int i, j;
+ long i, j;
  
  for(i=0; i< *len1; i++)
     for(j=0; j< *len2; j++){

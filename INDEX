@@ -13,7 +13,7 @@ dcrdr                   Interface to Fortran Subroutine dcrdr
 deviance.ssr            Model Deviance
 dmudr                   Interface of dmudr subroutine in RKPACK
 dog                     Coronary Ainus Potassium Concentrations
- dsidr                  Interface of dsidr subroutines in RKPACK
+dsidr                   Interface of dsidr subroutines in RKPACK
 dsms                    Interface to Fortran Subroutine dsms
 gdmudr                  Interface of dbmdr, dbimdr, dgmdr, dpmdr in
                         GRKPACK.
@@ -36,19 +36,19 @@ intervals.snr           Calculate Predictions and Approximate
                         Estimates From a snr Object
 kron                    Calculate reproducing kernels for
                         one-dimensional space
+linear                  Calculate Reproducing Kernels for Polynomial
+                        Splines on [0, 1]
+linear2                 Calculate Reproducing Kernels for Polynomial
+                        Splines on [0, T]
 lspline                 Calculate Reproducing Kernels for Some
                         L-splines
-nnr.control             Set Control Parameters for nnr
 nnr                     Nonlinear Non-parametric Regression
+nnr.control             Set Control Parameters for nnr
 periodic                Calculate Reproducing Kernels for Periodic
                         Polynomial Splines with Period 1
 plot.bCI                Bayesian Confidence Interval Plot of a
                         Smoothing Spline Fit
 plot.ssr                Generate Diagnostic Plots for a ssr Object
-Polynomial              Calculate Reproducing Kernels for Polynomial
-                        Splines on [0, 1]
-Polynomial2             Calculate Reproducing Kernels for Polynomial
-                        Splines on [0, T]
 predict.slm             Predict Method for Semiparametric Linear Mixed
                         Effects Model Fits
 predict.snm             Predictions from a Semiparametric Nonlinear
@@ -57,39 +57,39 @@ predict.snr             Predict Method from a Semiparametric Nonlinear
                         Regression Model Fit
 predict.ssr             Calculate Predictions and Posterior Standard
                         Deviations for a ssr Object
- print.anova.ssr        Print an anova.ssr Object
+print.anova.ssr         Print an anova.ssr Object
 print.nnr               Print Values
 print.slm               Print Values
 print.snm               Print Values
 print.snr               Print Values
- print.ssr              Print Values
+print.ssr               Print Values
 print.summary.nnr       Print Vales
 print.summary.slm       Print Values
 print.summary.snm       Print Values
 print.summary.snr       Print Values
 print.summary.ssr       Print Values
 rk.prod                 Calculate product of reproducing kernels
-Shrinkage               Calculate reproducing kernels for Stein
+shrink0                 Calculate reproducing kernels for Stein
                         shrinkage estimate
 slm                     Fit a Semi-parametric Linear Mixed Effects
                         Model
-snm.control             Set Control Parameters for snm
 snm                     Fit a Semi-parametric Nonlinear Mixed-effects
                         Model
-snr.control             Set Control Parameters for snr
+snm.control             Set Control Parameters for snm
 snr                     Fit A Semi-parametric Nonlinear Regression
                         Model
+snr.control             Set Control Parameters for snr
 sphere                  Calculate Pseudo Reproducing Kernels for
                         Spherical Splines
-ssr.object              A fitted ssr Object
 ssr                     Fit a General Smoothing Spline Regression
                         Model
+ssr.object              A fitted ssr Object
 summary.nnr             Object Summaries
 summary.slm             Object Summaries
 summary.snm             Object Summaries
 summary.snr             Object Summaries
 summary.ssr             Summarize a ssr object
-Thin                    Calculate Reproducing Kernels for Thin Plate
+tp.pseudo               Calculate Reproducing Kernels for Thin Plate
                         Splines
 TXtemp                  Texas Historical Climate Data
 wesdr                   Wisconsin Epidemiological Study of Diabetic
