@@ -60,23 +60,26 @@ Models. PhD thesis, University of California, Santa Barbara.
 \code{\link{snr}}, \code{\link{plot.bCI}}, \code{\link{predict.ssr}}
 }
 \examples{
-data(Arosa)
-Arosa$csmonth <- (Arosa$month-0.5)/12
-Arosa$csyear <- (Arosa$year-1)/45
-# fit a simple sin-cos model
-ozone.fit1 <- lm(thick~sin(2*pi*csmonth)+cos(2*pi*csmonth), data=Arosa)
 
-# get start values
-tmp <- atan(-ozone.fit1$coef[3]/ozone.fit1$coef[2])/(2*pi)
-tmp <- log(tmp/(1-tmp))
+data(CO2)
+options(contrasts=rep("contr.treatment", 2))  
 
-# fit a SNR model
-ozone.fit2 <- snr(thick~f1(csyear)+f2(csyear)*cos(2*pi*(csmonth+alogit(a))),
-                   func=list(f1(x)+f2(x)~list(~x, cubic(x))), params=list(a~1),
-                   data=Arosa, start=list(params=c(tmp)), spar="m")
-p.ozone.fit2 <- intervals(ozone.fit2,data.frame(x=seq(0,1,len=100)),
-            terms=list(f1=matrix(c(1,1,1,1,1,0,0,0,1),ncol=3,byrow=TRUE),
-                       f2=matrix(c(1,1,1,1,1,0,0,0,1),ncol=3,byrow=TRUE)))
+## get start values  
+co2.fit1 <- nlme(uptake~exp(a1)*(1-exp(-exp(a2)*(conc-a3))), 
+                 fixed=list(a1+a2~Type*Treatment,a3~1), 
+                 random=a1~1, groups=~Plant, 
+                 start=c(log(30),0,0,0,log(0.01),0,0,0,50),
+                 data=CO2)
+
+M <- model.matrix(~Type*Treatment, data=CO2)[,-1]
+
+## fit a SNR model
+co2.fit2 <- snr(uptake~exp(a1)*f(exp(a2)*(conc-a3)),
+                func=f(u)~list(~I(1-exp(-u))-1,lspline(u, type="exp")),
+                params=list(a1~M-1, a3~1, a2~Type*Treatment),
+                start=list(params=co2.fit1$coe$fixed[c(2:4,9,5:8)]), data=CO2)
+
+p.co2.fit2<- intervals(co2.fit2, newdata=data.frame(u=seq(0,10,len=50)))
 
 }
 \keyword{file}

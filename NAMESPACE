@@ -13,8 +13,8 @@ importFrom(nlme, intervals)
 # export(addCorrGroup, diagComp,exponen, getFunInfo,
 #  getParaModelMatrix, getParaValue, ident, linSinCos, list.prod, logitKer,
 #  matDiag.prod, matVec.prod, model.matrix2, paste2,
-#  prod.diag, pruneLevels, pruneLevels.factor, rkEval, select.col, 
-#  select.col.default, sine0, sine1,sum.list, table2, tp.term)
+#  prodDiag, pruneLevels, pruneLevels.factor, rkEval, select.col, 
+#  select.col.default, sine0, sine1,sumList, table2, tp.term)
 
 
 S3method(anova, ssr)

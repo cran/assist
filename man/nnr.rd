@@ -66,7 +66,7 @@ Arosa$csyear <- (Arosa$year-1)/45
 ozone.vc.fit <- nnr(thick~f1(csyear)+exp(f2(csyear))*f3(csmonth),
         func=list(f1(x)~list(~I(x-.5),cubic(x)), f2(x)~list(~I(x-.5)-1,cubic(x)),
         f3(x)~list(~sin(2*pi*x)+cos(2*pi*x)-1,lspline(x,type="sine0"))),
-        data=Arosa, spar="m", start=list(f1=mean(thick),f2=0,f3=sin(csmonth)),
+        data=Arosa[Arosa$year\%\%2==1,], spar="m", start=list(f1=mean(thick),f2=0,f3=sin(csmonth)),
         control=list(backfit=1))
 }
 \keyword{file}
