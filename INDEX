@@ -1,0 +1,125 @@
+Arosa                   Monthly Mean Ozone Thickness in Arosa of
+                        Switzerland
+Polynomial              Calculate Reproducing Kernels for Polynomial
+                        Splines on [0, 1]
+Polynomial2             Calculate Reproducing Kernels for Polynomial
+                        Splines on [0, T]
+Shrinkage               Calculate reproducing kernels for Stein
+                        shrinkage estimate
+TXtemp                  Texas Historical Climate Data
+Thin                    Calculate Reproducing Kernels for Thin Plate
+                        Splines
+acid                    Lake Acidity Study
+addCorrGroup            Add Grouping Factor(s) to a Correlation
+                        Structure
+alogit                  Calculate the Inverse Logit Transformation
+anova.ssr               Testing a Non-parametric Function Fitted via
+                        Smoothing Splines
+bdiag                   Construct a Block Diagonal Matrix
+canadaTemp              Monthly Mean Temperatures
+chickenpox              Chickenpox in New York City
+chol.new                A Modified Cholesky Decomposition
+climate                 Winter Average Temperatures
+dcrdr                   Interface to Fortran Subroutine dcrdr
+deviance.ssr            Model Deviance
+diagComp                Form a Block Diagonal Matrix
+dmudr                   Interface of dmudr subroutine in RKPACK
+dog                     Coronary Ainus Potassium Concentrations
+ dsidr                  Interface of dsidr subroutines in RKPACK
+dsms                    Interface to Fortran Subroutine dsms
+exponen                 Calculate Reproducing Kernels for L-spline
+                        based on Exponetial Functions
+gdmudr                  Interface of dbmdr, dbimdr, dgmdr, dpmdr in
+                        GRKPACK.
+gdsidr                  Interface of dbsdr, dbisdr, dgsdr, dpsdr in
+                        GRKPACK.
+getFunInfo              Extract the Unknown Spline Function Sructures
+getParaModelMatrix      Get the Model Matrix for a Parameter Model
+getParaValue            Evaluate Parameters
+hat.ssr                 Extract the Hat Matrix from a ssr Object
+horm.cort               Hormone Measurements of Cortisol
+ident                   Scaling a Vector
+intervals.nnr           Calculate Predictions and Approximate
+                        Posterior Standard Deviations for Spline
+                        Estimates From a nnr Object
+intervals.slm           Calculate Predictions and Posterior Standard
+                        Deviations of Spline Estimates From a slm
+                        Object
+intervals.snm           Calculate Predictions and Approximate
+                        Posterior Standard Deviations for Spline
+                        Estimate From a snm Object
+intervals.snr           Calculate Predictions and Approximate
+                        Posterior Standard Deviations for Spline
+                        Estimates From a snr Object
+kron                    Calculate reproducing kernels for
+                        one-dimensional space
+linSinCos               Calculate Reproducing Kernels for linear
+                        periodic L-spline
+list.prod               Operation of Two Lists
+logitKer                Calculate Reproducing Kernels for a L-spline
+                        Based on the Logit Function
+lspline                 Calculate Reproducing Kernels for Some
+                        L-splines
+matDiag.prod            Product of a Matrix and a Diagonal Matric
+                        formed from a Vector
+matVec.prod             Product of a Matrix and a Vector
+model.matrix2           Extension of the Model Matrix Function
+nnr.control             Set Control Parameters for nnr
+nnr                     Nonlinear Non-parametric Regression
+paste2                  A Special Paste Operation
+periodic                Calculate Reproducing Kernels for Periodic
+                        Polynomial Splines with Period 1
+plot.bCI                Bayesian Confidence Interval Plot of a
+                        Smoothing Spline Fit
+plot.ssr                Generate Diagnostic Plots for a ssr Object
+predict.slm             Predict Method for Semiparametric Linear Mixed
+                        Effects Model Fits
+predict.snm             Predictions from a Semiparametric Nonlinear
+                        Mixed Effects Model Fit
+predict.snr             Predict Method from a Semiparametric Nonlinear
+                        Regression Model Fit
+predict.ssr             Calculate Predictions and Posterior Standard
+                        Deviations for a ssr Object
+ print.anova.ssr        Print an anova.ssr Object
+print.nnr               Print Values
+print.slm               Print Values
+print.snm               Print Values
+print.snr               Print Values
+ print.ssr              Print Values
+print.summary.nnr       Print Vales
+print.summary.slm       Print Values
+print.summary.snm       Print Values
+print.summary.snr       Print Values
+print.summary.ssr       Print Values
+prodDiag                A Simple Matrix Operation
+rk.prod                 Calculate product of reproducing kernels
+rkEval                  Evaluate Reproducing Kernels
+sine0                   Calculate Reproducing Kernels for a Periodic
+                        L-spline without the Constant Term
+sine1                   Calculate Reproducing Kernels for a Periodic
+                        L-spline without the Constant Term
+slm                     Fit a Semi-parametric Linear Mixed Effects
+                        Model
+snm.control             Set Control Parameters for snm
+snm                     Fit a Semi-parametric Nonlinear Mixed-effects
+                        Model
+snr.control             Set Control Parameters for snr
+snr                     Fit A Semi-parametric Nonlinear Regression
+                        Model
+sphere                  Calculate Pseudo Reproducing Kernels for
+                        Spherical Splines
+ssr.object              A fitted ssr Object
+ssr                     Fit a General Smoothing Spline Regression
+                        Model
+sumList                 Sum of Components of a List
+summary.nnr             Object Summaries
+summary.slm             Object Summaries
+summary.snm             Object Summaries
+summary.snr             Object Summaries
+summary.ssr             Summarize a ssr object
+table2                  Extension of the Table Function
+tp.term                 Intermediate Steps to Computer Thin Plate
+                        Spline Kernel
+wesdr                   Wisconsin Epidemiological Study of Diabetic
+                        Retinopathy
+xyplot2                 Extension of XYPLOT

@@ -1,0 +1,55 @@
+useDynLib(assist)
+
+export(alogit, bdiag, chol.new, cubic, cubic2, 
+	dcrdr, dmudr, dsidr, dsms, gdsidr, gdmudr, hat.ssr, ident,
+        kron, linear, linear2, lspline,  nnr,
+        nnr.control, periodic, quintic, quintic2, rk.prod,
+        septic, septic2, shrink0, shrink1, slm, snm, snm.control, 
+        snr, snr.control, ssr,  sphere, tp, tp.pseudo, xyplot2)
+
+importFrom(nlme, intervals)
+
+# used internally - not intended to be visible to users
+# export(addCorrGroup, diagComp,exponen, getFunInfo,
+#  getParaModelMatrix, getParaValue, ident, linSinCos, list.prod, logitKer,
+#  matDiag.prod, matVec.prod, model.matrix2, paste2,
+#  prod.diag, pruneLevels, pruneLevels.factor, rkEval, select.col, 
+#  select.col.default, sine0, sine1,sum.list, table2, tp.term)
+
+
+S3method(anova, ssr)
+S3method(deviance, ssr)
+
+S3method(intervals, nnr)
+S3method(intervals, slm)
+S3method(intervals, snm)
+S3method(intervals, snr)
+
+S3method(plot, ssr)
+S3method(plot, bCI)
+
+S3method(print, anova.ssr)
+S3method(print, ssr)
+S3method(print, summary.ssr)
+S3method(print, snr)
+S3method(print, summary.snr)
+S3method(print, nnr)
+S3method(print, summary.nnr)
+S3method(print, slm)
+S3method(print, summary.slm)
+S3method(print, snm)
+S3method(print, summary.snm)
+
+S3method(predict, slm)
+S3method(predict, snm)
+S3method(predict, snr)
+S3method(predict, ssr)
+
+S3method(summary, nnr)
+S3method(summary, slm)
+S3method(summary, snm)
+S3method(summary, snr)
+S3method(summary, ssr)
+
+
+
