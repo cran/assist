@@ -61,7 +61,7 @@ bdiag<-function(x)
      out[iuse] <- unlist(x)
      out
 }
- chol.new<-
+chol.new<-
 function(Q)
 {
 ## to calculate decomposition Q=AA^T 
@@ -787,6 +787,7 @@ function(ssr.obj)
 	diag(cr) <- diag(cr - 1)
  - cr
 }
+
 ident<-
 function(x, y = x)
 {
@@ -846,8 +847,6 @@ function(x, y = x)
         else stop("unknown input type")						
 	resul
 }
-
-
 
 kron<- 
 function(x, y = x) 
@@ -1359,7 +1358,8 @@ function (formula, rk, data = sys.parent(), subset, weights = NULL,
                   vmu = spar, varht = varht, init = ctrl.vals$init, 
                   prec = ctrl.vals$prec, tol = ctrl.vals$tol, 
                   theta = ctrl.vals$theta, maxit = ctrl.vals$maxit)
-                lambda <- 10^rk.obj$theta
+##                lambda <- 10^rk.obj$theta
+		lambda<- 10^(rk.obj$nlaht-rk.obj$theta)
             }
             else {
                 rk.obj <- dsidr(y = y, q = Q[[1]], s = S, weight = weights, 
@@ -1489,10 +1489,12 @@ function (formula, rk, data = sys.parent(), subset, weights = NULL,
             is.lme <- 1
             tmp.Q <- 0
             if (length(lambda) > 1) {
-                for (i in 1:length(Q)) tmp.Q <- tmp.Q + Q[[i]] * 
-                  lambda[i]
+## check the following line
+##                for (i in 1:length(Q)) tmp.Q <- tmp.Q + Q[[i]] * lambda[i]
+               for (i in 1:length(Q)) tmp.Q <- tmp.Q + Q[[i]] * lambda[i]/n
                 rk.obj <- dsidr(y = y, q = tmp.Q, s = S, weight = weights, 
                   vmu = "m", limnla = 0, tol = ctrl.vals$tol)
+               lamnda<- 1/lambda
             }
             else {
                 rk.obj <- dsidr(y = y, q = Q[[1]], s = S, weight = weights, 
@@ -1509,7 +1511,8 @@ function (formula, rk, data = sys.parent(), subset, weights = NULL,
                 init = ctrl.vals$init, prec1 = ctrl.vals$prec, 
                 prec2 = ctrl.vals$prec.g, maxit1 = ctrl.vals$maxit, 
                 maxit2 = ctrl.vals$maxit.g, theta = ctrl.vals$theta)
-            lambda <- 10^rk.obj$theta
+##            lambda <- 10^rk.obj$theta
+	    lambda<- 10^(rk.obj$nlaht-rk.obj$theta)
         }
         else {
             rk.obj <- gdsidr(y = y, q = Q[[1]], s = S, family = family, 
@@ -1749,11 +1752,13 @@ function(x, ...)
 		m = cat("\nGML"), 
 		u = cat("\nUBR"), 
 		"~u" = cat("\n~UBR")) 
-	if(length(x$lambda) == 1) 
-		cat(" estimate(s) of smoothing parameter(s) :", format(x$lambda 
-			), "\n") 
-	else cat(" estimate(s) of smoothing parameter(s) :", format(1/x$lambda), 
-			"\n") 
+#	if(length(x$lambda) == 1) 
+#		cat(" estimate(s) of smoothing parameter(s) :", format(x$lambda 
+#			), "\n") 
+#	else cat(" estimate(s) of smoothing parameter(s) :", format(1/x$lambda), 
+#			"\n") 
+	cat(" estimate(s) of smoothing parameter(s) :", format(x$lambda 
+			), "\n")
 	cat("Equivalent Degrees of Freedom (DF): ", format(x$rkpk.obj$df), "\n" 
 		) 
 	cat("Estimate of sigma: ", format(sqrt(x$rkpk.obj$varht)), "\n") 
@@ -1781,7 +1786,8 @@ predict.ssr<- function(object, newdata=NULL,terms, pstd=TRUE, ...)
     nobs<- object$rkpk.obj$nobs
     nnull<- object$rkpk.obj$nnull
     if(length(object$lambda)==1) theta<-1
-    else theta<- object$lambda*nobs
+#    else theta<- object$lambda*nobs
+    else theta<- 1/(object$lambda*nobs)
 
     if(is.null(newdata)) eval.len<- nobs
     else   eval.len<- length(newdata[[1]])
@@ -2004,9 +2010,10 @@ print.summary.ssr<- function(x, ...){
 		"m"= cat("\nGML"),
 		"u"= cat("\nUBR"),
 		"~u"= cat("\n~UBR"))
-	if(length(x$lambda)==1)
-               cat(" estimate(s) of smoothing parameter(s) :", format(x$lambda), "\n")
-        else   cat(" estimate(s) of smoothing parameter(s) :", format(1.0/x$lambda), "\n")
+#	if(length(x$lambda)==1)
+#               cat(" estimate(s) of smoothing parameter(s) :", format(x$lambda), "\n")
+#        else   cat(" estimate(s) of smoothing parameter(s) :", format(1.0/x$lambda), "\n")
+	cat(" estimate(s) of smoothing parameter(s) :", format(x$lambda), "\n")
 	cat("Equivalent Degrees of Freedom (DF): ", format(x$df), "\n")
 	cat("Estimate of sigma: ", format(x$sigma), "\n")
        if(!is.null(x$cor.est)) print(x$cor.est)
@@ -2272,7 +2279,8 @@ nnr<- function(formula, func, spar="v",
    forCI<- list(expand.call=thisCall, rkpk.obj=rkFit, y=yList,  
          s=Smat, q=Qmat, data=delta3, control=defCtrl, weight=wList) 
    df<- unlist(lapply(rkFit, function(x) x$df)) 
-   lambda<- unlist(lapply(rkFit, function(x) ifelse(is.null(x$theta),x$nlaht,-1*x$theta))) 
+#   lambda<- unlist(lapply(rkFit, function(x) ifelse(is.null(x$theta),x$nlaht,-1*x$theta)))
+   lambda<- unlist(lapply(rkFit, function(x) ifelse(is.null(x$theta),x$nlaht,x$nlaht-x$theta))) 
    names(fhat)<- funcName 
    result<-list(call=match.call(),  
         data=data, 
@@ -2355,7 +2363,7 @@ summary.nnr<- function(object, ...){
   resul$vmu<- object$forCI$rkpk.obj[[1]]$vmu
   spar<- NULL
   for(i in 1:length(object$forCI$rkpk.obj)){
-     if(object$forCI$rkpk.obj[[i]]$nq>1) spar<- c(spar, 10^(-object$forCI$rkpk.obj[[i]]$theta))
+     if(object$forCI$rkpk.obj[[i]]$nq>1) spar<- c(spar, 10^(object$forCI$rkpk.obj[[i]]$nlaht-object$forCI$rkpk.obj[[i]]$theta))
      else spar<- c(spar, 10^object$forCI$rkpk.obj[[i]]$nlaht)
      }
   resul$lamb<- spar/object$df$total
@@ -2878,7 +2886,7 @@ function(x, ...)
   lambda<- NULL
   for(i in 1:length(x$forCI$rkpk.obj)){
      if(is.null(x$forCI$rkpk.obj[[i]]$theta)) lambda<- c(lambda,10^x$forCI$rkpk.obj[[i]]$nlaht)
-     else lambda<- c(lambda, 10^(-x$forCI$rkpk.obj[[i]]$theta))
+     else lambda<- c(lambda, 10^(x$forCI$rkpk.obj[[i]]$nlaht-x$forCI$rkpk.obj[[i]]$theta))
   }
   cat("Smoothing spline:\n")  
   switch(x$forCI$rkpk.obj[[1]]$vmu,
@@ -2974,7 +2982,7 @@ summary.snr<- function(object, ...){
    spar <- NULL
     for (i in 1:length(object$forCI$rkpk.obj)) {
         if (object$forCI$rkpk.obj[[i]]$nq > 1) 
-            spar <- c(spar, 10^(-object$forCI$rkpk.obj[[i]]$theta))
+            spar <- c(spar, 10^(object$forCI$rkpk.obj[[i]]$nlaht-object$forCI$rkpk.obj[[i]]$theta))
         else spar <- c(spar, 10^object$forCI$rkpk.obj[[i]]$nlaht)
     }
   resul$lamb<- spar/length(object$forCI$y)
@@ -3459,7 +3467,8 @@ slm<- function(formula,
             tmp.Q <- tmp.Q + Q[[i]] * lambda.ord[i]
           }
 	rk.obj <- dsidr(y = y, q = tmp.Q, s = S, weight= weight, vmu = "m", limnla=0)
-        lambda<- n*lambda.ord
+#        lambda<- n*lambda.ord
+ 	lambda<- 1.0/lambda.ord/n
 	}
    else {
 	rk.obj <- dsidr(y = y, q = Q[[1]], s = S, 
@@ -3519,9 +3528,11 @@ print.slm<-function(x, ...)
 		"m" =cat("\nGML"), 
 		"u" =cat("\nUBR"), 
 		"~u"=cat("\n~UBR")) 
-	if(length(x$lambda)==1)  
-              cat(" estimate(s) of smoothing parameter(s) :", format(x$lambda), "\n") 
-        else cat(" estimate(s) of smoothing parameter(s) :", format(1.0/x$lambda), "\n") 
+#	if(length(x$lambda)==1)  
+#              cat(" estimate(s) of smoothing parameter(s) :", format(x$lambda), "\n") 
+#        else cat(" estimate(s) of smoothing parameter(s) :", format(1.0/x$lambda), "\n") 
+ 	cat(" estimate(s) of smoothing parameter(s) :", format(x$lambda), "\n")
+
 	cat("Equivalent Degrees of Freedom (DF): ", format(x$df), "\n") 
 	cat("Estimate of sigma: ", format(sqrt(x$rkpk.obj$varht)), "\n")	 
                 
@@ -3535,8 +3546,10 @@ summary.slm<-function(object, ...){
   resul<- list(call=object$call, 
                 lme.fit=object$lme.obj)                
   resul$vmu<- "m"
-  if(length(object$lambda)>1) resul$lambda<- 1.0/object$lambda 
-  else resul$lambda<- object$lambda
+  
+#  if(length(object$lambda)>1) resul$lambda<- 1.0/object$lambda 
+#  else resul$lambda<- object$lambda
+  resul$lambda<- object$lambda
   resul$df<- object$rkpk.obj$df
   class(resul)<- "summary.slm" 
   resul
@@ -3652,7 +3665,8 @@ function(object,level=0.95,  newdata = NULL, terms, pstd = TRUE, ...)
 	nobs <- length(object$y)
 	if(length(theta <- object$lambda) == 1)
 		theta <- 1
-	else theta <- theta/nobs
+#	else theta <- theta/nobs
+        else theta<- 1/(theta*nobs)
 
 	nnull <- object$rkpk.obj$nnull
 	if(is.null(newdata))
@@ -3778,6 +3792,7 @@ function(object,level=0.95,  newdata = NULL, terms, pstd = TRUE, ...)
 }
 
 ### SNM-part
+### SNM-part
 snm<- function(formula,
              func,
              data=sys.parent(),
@@ -3830,6 +3845,14 @@ snm<- function(formula,
 ##extract the start values for fixed effects
   if(!missing(start)) start.fixed<-eval(Call$start)
   else start.fixed<-mean(y)
+#  if(missing(start)) stop("Start values are required")
+#  else{
+#      if(is.list(start)){
+#                start.fixed<-start$fixed
+#                start.random<- start$random
+#      }
+#      else if(is.vector(start)) start.fixed<-eval(Call$start)
+#  }
   
   if(verbose==TRUE) cat("Starting values provided: ", start.fixed, "\n")
 
@@ -3883,6 +3906,11 @@ snm<- function(formula,
   para.v <- data.frame(para.v)
   names(para.v) <- paraName
 
+## the following allows to input random effects
+#  para.v<- getParaValue(length.fix, length.random, matrix.fix, 
+#        matrix.random,start.fixed, start.random, paraName, nameRandom, 
+#         nobs, nameFixed, nobs.in)
+#print(para.v)
   start.cov <- diag(rep(1, ncol(matrix.random)))
 
 ## get info for "f"
@@ -4096,6 +4124,14 @@ snm<- function(formula,
       }
    start.fixed <- as.vector(coef.nlme$fixed)
    start.random<- nlme.obj$coef$random
+## start of testing
+## force random sum to zero for the first two step
+## to be refined
+##   if(k<=5) 
+#start.random<- lapply(start.random, function(x) apply(x,2, function(y) y-c(rep(mean(y[1:11]),11), rep(mean(y[-c(1:11)]),9))  ))
+#start.random<- lapply(start.random, function(x) apply(x,2, function(y) y-mean(y)  ))
+## end of testing
+
 ## prepare for the evaluations of 3 delta's  
    para.v<- getParaValue(length.fix, length.random, matrix.fix, 
         matrix.random,start.fixed, start.random, paraName, nameRandom, 
@@ -4293,11 +4329,12 @@ intervals.snm<-function (object, level = 0.95, newdata = NULL, terms, pstd = TRU
     swk <- ssr.obj$s
     qwk <- ssr.obj$q
 
-     if(missing(newdata))  dataInit<- ssr.obj$data
+    if(missing(newdata))  dataInit<- ssr.obj$data
     else {
         dataInit <- list(length(ssr.obj$data))
         for (num in 1:length(dataInit)) dataInit[[num]] <- newdata
         }
+    
      phi <- rwk <- Rwk <- NULL
      oldCoefD <- ssr.obj$rkpk.obj$d
      thetaUsed <- theta
@@ -4408,6 +4445,7 @@ intervals.snm<-function (object, level = 0.95, newdata = NULL, terms, pstd = TRU
     resul
 }
 
+## end of update
 
 snm.control<- function(rkpk.control=list(job = -1, tol = 0, init = 0, limnla=c(-10, 3),  
               varht=NULL, theta= NULL, prec = 1e-006, maxit = 30),   

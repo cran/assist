@@ -91,7 +91,7 @@ and S-PLUS. Springer.
 }
 \author{Chunlei Ke \email{chunlei\_ke@yahoo.com} and Yuedong Wang \email{yuedong@pstat.ucsb.edu}.}
 \seealso{
-\code{\link{nlme}}, \code{\link{predict.snm}}, \code{\link{intervals.snm}}, \code{\link{snm.control}},
+\code{\link{predict.snm}}, \code{\link{intervals.snm}}, \code{\link{snm.control}},
 \code{\link{print.snm}},\code{\link{summary.snm}}
 }
 \examples{

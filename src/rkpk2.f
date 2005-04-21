@@ -1,13 +1,13 @@
       subroutine dcoef (s, lds, nobs, nnull, qraux, jpvt, z, q, ldq, 
-&     nlaht, c, d, info, twk)
+     *nlaht, c, d, info, twk)
       integer lds, nobs, nnull, jpvt(*), ldq, info
       double precision s(lds,*), qraux(*), z(*), q(ldq,*), nlaht, c(*), 
-&     d(*), twk(2,*)
+     *d(*), twk(2,*)
       double precision dum, ddot
       integer n, n0
       info = 0
       if(.not.( nnull .lt. 0 .or. nnull .ge. nobs .or. nobs .gt. lds 
-&     .or. nobs .gt. ldq ))goto 23000
+     *.or. nobs .gt. ldq ))goto 23000
       info = -1
       return
 23000 continue
@@ -24,7 +24,7 @@
       call dpbsl (twk, 2, n, 1, z(n0+1))
       call dcopy (n-2, q(n0+2,n0+1), ldq+1, twk, 1)
       call dqrsl (q(n0+2,n0+1), ldq, n-1, n-2, twk, z(n0+2), z(n0+2), 
-&     dum, dum, dum, dum, 10000, info)
+     *dum, dum, dum, dum, 10000, info)
       if(.not.( nnull .eq. 0 ))goto 23004
       call dcopy (n, z(n0+1), 1, c(n0+1), 1)
       return
@@ -32,7 +32,7 @@
       call dset (n0, 0.d0, c, 1)
       call dcopy (n, z(n0+1), 1, c(n0+1), 1)
       call dqrsl (s, lds, nobs, nnull, qraux, c, c, dum, dum, dum, dum, 
-&     10000, info)
+     *10000, info)
       j=1
 23006 if(.not.(j.le.n0))goto 23008
       d(j) = z(j) - ddot (n, z(n0+1), 1, q(n0+1,j), 1)
@@ -44,66 +44,66 @@
       return
       end
       subroutine dsidr (vmu, s, lds, nobs, nnull, y, q, ldq, tol, job, 
-&     limnla, nlaht, score, varht, c, d, qraux, jpvt, wk, info)
+     *limnla, nlaht, score, varht, c, d, qraux, jpvt, wk, info)
 c      character*1 vmu
       integer vmu
       integer lds, nobs, nnull, ldq, job, jpvt(*), info
       double precision s(lds,*), y(*), q(ldq,*), tol, limnla(2), nlaht, 
-&     score(*), varht(2), c(*), d(*), qraux(*), wk(*), tmp
+     *score(*), varht(2), c(*), d(*), qraux(*), wk(*)
       info = 0
       if(.not.( nnull .lt. 0 .or. nnull .ge. nobs .or. nobs .gt. lds 
-&     .or. nobs .gt. ldq ))goto 23000
+     *.or. nobs .gt. ldq ))goto 23000
       info = -1
       return
 23000 continue
 c      if(.not.( vmu .ne. 'v' .and. vmu .ne. 'm' .and. vmu .ne. 'u' ))
       if(.not.( vmu .ne. 0 .and. vmu .ne. 1 .and. vmu .ne. 2 ))
-&     goto 23002
+     *goto 23002
       info = -3
       return
 23002 continue
       if(.not.( nnull .eq. 0 ))goto 23004
       call dcore (vmu, q, ldq, nobs, nnull, tol, y, job, limnla, nlaht, 
-&     score, varht, info, wk, wk(2*nobs+1))
+     *score, varht, info, wk, wk(2*nobs+1))
       if(.not.( info .ne. 0 ))goto 23006
       return
 23006 continue
       call dcoef (s, lds, nobs, nnull, qraux, jpvt, y, q, ldq, nlaht, c,
-&      d, info, wk)
+     * d, info, wk)
       return
 23004 continue
       call dstup (s, lds, nobs, nnull, qraux, jpvt, y, q, ldq, nobs, 1, 
-&     info, wk)
+     *info, wk)
       if(.not.( info .ne. 0 ))goto 23008
       return
 23008 continue
       call dcore (vmu, q, ldq, nobs, nnull, tol, y, job, limnla, nlaht, 
-&     score, varht, info, wk, wk(2*nobs+1))
+     *score, varht, info, wk, wk(2*nobs+1))
       if(.not.( info .ne. 0 ))goto 23010
       return
 23010 continue
       call dcoef (s, lds, nobs, nnull, qraux, jpvt, y, q, ldq, nlaht, c,
-&      d, info, wk)
+     * d, info, wk)
       return
       end
       subroutine dcore (vmu, q, ldq, nobs, nnull, tol, z, job, limnla, 
-&     nlaht, score, varht, info, twk, work)
+     *nlaht, score, varht, info, twk, work)
 c      character*1 vmu
       integer vmu
       integer ldq, nobs, nnull, job, info
       double precision q(ldq,*), tol, z(*), limnla(2), nlaht, score(*), 
-&     varht(2), twk(2,*), work(*)
+     *varht(2), twk(2,*), work(*)
       double precision dum, low, upp, dasum, mchpr
       integer n0, n, j
       info = 0
 c      if(.not.( vmu .ne. 'v' .and. vmu .ne. 'm' .and. vmu .ne. 'u' ))
       if(.not.( vmu .ne. 0 .and. vmu .ne. 1 .and. vmu .ne. 2 ))
-&     goto 23000
+     *goto 23000
       info = -3
       return
 23000 continue
       if(.not.( nnull .lt. 0 .or. nobs .le. nnull .or. nobs .gt. ldq ))
-&     goto 23002
+     *goto 23002
       info = -1
       return
 23002 continue
@@ -115,7 +115,7 @@ c      if(.not.( vmu .ne. 'v' .and. vmu .ne. 'm' .and. vmu .ne. 'u' ))
 23004 continue
       call dcopy (n-2, q(n0+2,n0+1), ldq+1, work, 1)
       call dqrsl (q(n0+2,n0+1), ldq, n-1, n-2, work, z(n0+2), dum, z(n0+
-&     2), dum, dum, dum, 01000, info)
+     *2), dum, dum, dum, 01000, info)
       if(.not.( job .eq. 0 ))goto 23006
       mchpr = 1.d0
 23008 if(.not.( 1.d0 + mchpr .gt. 1.d0 ))goto 23009
@@ -132,7 +132,7 @@ c      if(.not.( vmu .ne. 'v' .and. vmu .ne. 'm' .and. vmu .ne. 'u' ))
       upp = limnla(2)
       if(.not.( job .le. 0 ))goto 23010
       call dgold (vmu, q(n0+1,n0+1), ldq, n, z(n0+1), low, upp, nlaht, 
-&     score(1), varht, info, twk, work)
+     *score(1), varht, info, twk, work)
 c      if(.not.( vmu .eq. 'v' ))
       if(.not.( vmu .eq. 0 ))goto 23012
       score(1) = score(1) * dfloat (nobs) / dfloat (n)
@@ -148,7 +148,7 @@ c      if(.not.( vmu .eq. 'u' ))
       goto 23011
 23010 continue
       call deval (vmu, q(n0+1,n0+1), ldq, n, z(n0+1), job, low, upp, 
-&     nlaht, score, varht, info, twk, work)
+     *nlaht, score, varht, info, twk, work)
       dum = dfloat (nobs) / dfloat (n)
       j=1
 23018 if(.not.(j.le.job+1))goto 23020
@@ -171,20 +171,20 @@ c      if(.not.( vmu .eq. 'u' ))
       return
       end
       subroutine dmudr1 (vmu, s, lds, nobs, nnull, q, ldqr, ldqc, nq, y,
-&      tol, init, prec, maxite, theta, nlaht, score, varht, c, d, qraux,
-&      jpvt, twk, traux, qwk, ywk, thewk, hes, gra, hwk1, hwk2, gwk1, 
-&     gwk2, pvtwk, kwk, work1, work2, info)
+     * tol, init, prec, maxite, theta, nlaht, score, varht, c, d, qraux,
+     * jpvt, twk, traux, qwk, ywk, thewk, hes, gra, hwk1, hwk2, gwk1, 
+     *gwk2, pvtwk, kwk, work1, work2, info)
       integer lds, nobs, nnull, ldqr, ldqc, nq, init, maxite, jpvt(*), 
-&     pvtwk(*), info
+     *pvtwk(*), info
       double precision s(lds,*), q(ldqr,ldqc,*), y(*), tol, prec, theta(
-&     *), nlaht, score, varht(2), c(*), d(*), qraux(*), traux(*), twk(2,
-&     *), qwk(nobs,*), ywk(*), thewk(*), hes(nq,*), gra(*), hwk1(nq,*), 
-&     hwk2(nq,*), gwk1(*), gwk2(*), kwk(nobs-nnull,nobs-nnull,*), work1(
-&     *), work2(*)
+     **), nlaht, score, varht(2), c(*), d(*), qraux(*), traux(*), twk(2,
+     **), qwk(nobs,*), ywk(*), thewk(*), hes(nq,*), gra(*), hwk1(nq,*), 
+     *hwk2(nq,*), gwk1(*), gwk2(*), kwk(nobs-nnull,nobs-nnull,*), work1(
+     **), work2(*)
 c      character*1 vmu
       integer vmu
       double precision alph, scrold, scrwk, nlawk, limnla(2), tmp, 
-&     dasum, ddot
+     *dasum, ddot
       integer n, n0, i, j, iwk, maxitwk, idamax, job
       info = 0
       n0 = nnull
@@ -192,19 +192,19 @@ c      character*1 vmu
       maxitwk = maxite
 c      if(.not.( (vmu .ne. 'v' .and. vmu .ne. 'm' .and. vmu .ne. 'u') 
       if(.not.( (vmu .ne.  0  .and. vmu .ne.  1  .and. vmu .ne.  2 ) 
-&     .or. (init .ne. 0 .and. init .ne. 1) .or. (maxitwk .le.0) .or. (
-&     prec .le. 0.d0) ))goto 23000
+     *.or. (init .ne. 0 .and. init .ne. 1) .or. (maxitwk .le.0) .or. (
+     *prec .le. 0.d0) ))goto 23000
       info = -3
       return
 23000 continue
       if(.not.( lds .lt. nobs .or. nobs .le. n0 .or. n0 .lt. 0 .or. 
-&     ldqr .lt. nobs .or. ldqc .lt. nobs .or. nq .le. 0 ))goto 23002
+     *ldqr .lt. nobs .or. ldqc .lt. nobs .or. nq .le. 0 ))goto 23002
       info = -1
       return
 23002 continue
       if(.not.( n0 .gt. 0 ))goto 23004
       call dstup (s, lds, nobs, n0, qraux, jpvt, y, q, ldqr, ldqc, nq, 
-&     info, work1)
+     *info, work1)
 23004 continue
       if(.not.( info .ne. 0 ))goto 23006
       return
@@ -241,20 +241,20 @@ c      if(.not.( (vmu .ne. 'v' .and. vmu .ne. 'm' .and. vmu .ne. 'u')
 23020 continue
       call dcopy (nobs, y, 1, ywk, 1)
       call dcore (vmu, qwk, nobs, nobs, n0, tol, ywk, 0, limnla, nlawk, 
-&     scrwk, varht, info, twk, work1)
+     *scrwk, varht, info, twk, work1)
       if(.not.(info .ne. 0 ))goto 23024
       return
 23024 continue
       call dcoef (s, lds, nobs, n0, qraux, jpvt, ywk, qwk, nobs, nlawk, 
-&     c, d, info, twk)
+     *c, d, info, twk)
       if(.not.( n0 .gt. 0 ))goto 23026
       call dqrsl (s, lds, nobs, n0, qraux, c, tmp, c, tmp, tmp, tmp, 
-&     01000, info)
+     *01000, info)
 23026 continue
       i=1
 23028 if(.not.(i.le.nq))goto 23030
       call dsymv('l', n, thewk(i), q(n0+1,n0+1,i), ldqr, c(n0+1), 1, 0.
-&     d0, work1, 1)
+     *d0, work1, 1)
       thewk(i) = ddot (n, c(n0+1), 1, work1, 1) * thewk(i)
       if(.not.( thewk(i) .gt. 0.d0 ))goto 23031
       thewk(i) = dlog10 (thewk(i))
@@ -295,7 +295,7 @@ c      if(.not.( (vmu .ne. 'v' .and. vmu .ne. 'm' .and. vmu .ne. 'u')
 23043 continue
       call dcopy (nobs, y, 1, ywk, 1)
       call dcore (vmu, qwk, nobs, nobs, n0, tol, ywk, job, limnla, 
-&     nlawk, scrwk, varht, info, twk, work1)
+     *nlawk, scrwk, varht, info, twk, work1)
       if(.not.(info .ne. 0 ))goto 23049
       return
 23049 continue
@@ -319,9 +319,9 @@ c      if(.not.( (vmu .ne. 'v' .and. vmu .ne. 'm' .and. vmu .ne. 'u')
       call dcopy (n, qwk(n0+1,n0+1), nobs+1, twk(2,1), 2)
       call dcopy (n-1, qwk(n0+1,n0+2), nobs+1, twk(1,2), 2)
       call ddeev (vmu, nobs, q(n0+1,n0+1,1), ldqr, ldqc, n, nq, qwk(n0+
-&     2,n0+1), nobs, traux, twk, ywk(n0+1), thewk, nlawk, scrwk, varht, 
-&     hes, nq, gra, hwk1, hwk2, gwk1, gwk2, kwk, n, work1, work2, c, 
-&     info)
+     *2,n0+1), nobs, traux, twk, ywk(n0+1), thewk, nlawk, scrwk, varht, 
+     *hes, nq, gra, hwk1, hwk2, gwk1, gwk2, kwk, n, work1, work2, c, 
+     *info)
       iwk = 0
       i=1
 23058 if(.not.(i.le.nq))goto 23060
@@ -387,8 +387,8 @@ c      if(.not.( (vmu .ne. 'v' .and. vmu .ne. 'm' .and. vmu .ne. 'u')
       call dcopy (nq, thewk, 1, theta, 1)
       tmp = gra(idamax (nq, gra, 1)) ** 2
       if(.not.( tmp .lt. prec ** 2 .or. scrold - scrwk .lt. prec * (
-&     scrwk + 1.d0) .and. tmp .lt. prec * (scrwk + 1.d0) ** 2 ))goto 230
-&     83
+     *scrwk + 1.d0) .and. tmp .lt. prec * (scrwk + 1.d0) ** 2 ))goto 230
+     *83
       goto 23035
 23083 continue
       if(.not.( maxitwk .lt. 1 ))goto 23085
@@ -429,25 +429,25 @@ c      if(.not.( (vmu .ne. 'v' .and. vmu .ne. 'm' .and. vmu .ne. 'u')
 23095 continue
       call dcopy (nobs, y, 1, ywk, 1)
       call dcore (vmu, qwk, nobs, nobs, n0, tol, ywk, job, limnla, 
-&     nlaht, score, varht, info, twk, work1)
+     *nlaht, score, varht, info, twk, work1)
       if(.not.(info .ne. 0 ))goto 23101
       return
 23101 continue
       call dcoef (s, lds, nobs, n0, qraux, jpvt, ywk, qwk, nobs, nlaht, 
-&     c, d, info, twk)
+     *c, d, info, twk)
       return
       end
       subroutine dcrdr (s, lds, nobs, nnull, qraux, jpvt, q, ldq, nlaht,
-&      r, ldr, nr, cr, ldcr, dr, lddr, wk, info)
+     * r, ldr, nr, cr, ldcr, dr, lddr, wk, info)
       integer lds, nobs, nnull, jpvt(*), ldq, ldr, nr, ldcr, lddr, info
       double precision s(lds,*), qraux(*), q(ldq,*), nlaht, r(ldr,*), 
-&     cr(ldcr,*), dr(lddr,*), wk(2,*)
+     *cr(ldcr,*), dr(lddr,*), wk(2,*)
       double precision dum, ddot
       integer i, j, n, n0
       info = 0
       if(.not.( nnull .lt. 0 .or. nnull .ge. nobs .or. nobs .gt. lds 
-&     .or. nobs .gt. ldq .or. ldr .lt. nobs .or. nr .lt. 1 .or. ldcr 
-&     .lt. nobs .or. lddr .lt. nnull ))goto 23000
+     *.or. nobs .gt. ldq .or. ldr .lt. nobs .or. nr .lt. 1 .or. ldcr 
+     *.lt. nobs .or. lddr .lt. nnull ))goto 23000
       info = -1
       return
 23000 continue
@@ -458,10 +458,10 @@ c      if(.not.( (vmu .ne. 'v' .and. vmu .ne. 'm' .and. vmu .ne. 'u')
 23002 if(.not.(j.le.nr))goto 23004
       if(.not.( n0 .gt. 0 ))goto 23005
       call dqrsl (s, lds, nobs, nnull, qraux, r(1,j), dum, r(1,j), dum, 
-&     dum, dum, 01000, info)
+     *dum, dum, 01000, info)
 23005 continue
       call dqrsl (q(n0+2,n0+1), ldq, n-1, n-2, wk, r(n0+2,j), dum, r(n0+
-&     2,j), dum, dum, dum, 01000, info)
+     *2,j), dum, dum, dum, 01000, info)
       j=j+1
       goto 23002
 23004 continue
@@ -483,7 +483,7 @@ c      if(.not.( (vmu .ne. 'v' .and. vmu .ne. 'm' .and. vmu .ne. 'u')
       j=1
 23012 if(.not.(j.le.nr))goto 23014
       call dqrsl (q(n0+2,n0+1), ldq, n-1, n-2, wk, r(n0+2,j), r(n0+2,j),
-&      dum, dum, dum, dum, 10000, info)
+     * dum, dum, dum, dum, 10000, info)
       j=j+1
       goto 23012
 23014 continue
@@ -493,7 +493,7 @@ c      if(.not.( (vmu .ne. 'v' .and. vmu .ne. 'm' .and. vmu .ne. 'u')
       call dcopy (n, r(n0+1,j), 1, cr(n0+1,j), 1)
       if(.not.( n0 .gt. 0 ))goto 23018
       call dqrsl (s, lds, nobs, nnull, qraux, cr(1,j), cr(1,j), dum, 
-&     dum, dum, dum, 10000, info)
+     *dum, dum, dum, 10000, info)
 23018 continue
       j=j+1
       goto 23015

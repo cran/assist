@@ -4,7 +4,7 @@
 \title{Monthly Mean Ozone Thickness in Arosa of Switzerland}
 \description{ The \code{Arosa} data frame has 518 rows and 3 columns of data for monthly mean ozone thickness.}
 \usage{
-data{Arosa}
+data(Arosa)
 }
 \format{
 The data frame contains the following columns:

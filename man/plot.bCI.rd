@@ -33,7 +33,7 @@ are suitable for SS ANOVA decomposition of a spline estimate.
 }
 \author{Chunlei Ke \email{chunlei\_ke@pstat.ucsb.edu} and Yuedong Wang \email{yuedong@pstat.ucsb.edu}}
 \seealso{
-\code{\link{xyplot}}, \code{\link{predict.ssr}}, \code{\link{intervals.slm}}, 
+\code{\link{predict.ssr}}, \code{\link{intervals.slm}}, 
 \code{\link{intervals.snr}}, \code{\link{intervals.snm}}
 }
 \examples{

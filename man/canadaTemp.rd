@@ -4,7 +4,7 @@
 \title{Monthly Mean Temperatures}
 \description{ The \code{canadaTemp} data frame has 420 rows and 3 columns of data for monthly mean temperatures in Canada}
 \usage{
-data{canadaTemp}
+data(canadaTemp)
 }
 \format{
 The data frame contains the following columns:

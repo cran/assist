@@ -9,7 +9,7 @@ semi-parametric linear mixed effects model fit.
 }
 \usage{
 slm(formula, rk, data=sys.parent(), random, weights=NULL, 
-correlation=NULL, control=<see below>)
+correlation=NULL, control=list(apVar=FALSE))
 }
 \arguments{
 \item{formula}{
@@ -40,6 +40,8 @@ an optional list of any applicable control parameters from \code{lme}.
 \value{
 An object of class \code{slm} is returned. Generic functions such as print, summary, predict and intervals have
 methods to show the results of the fit.
+
+Note: output from earlier versions of \code{slm} shows incorrect smoothing spline parameters for SSANOVA, which is corrected in this version.
 }
 \details{
 This generic function fits a semi-parametric linear mixed effects model (or non-parametric mixed effects models) 
@@ -53,8 +55,7 @@ Pinherio, J. C. and Bates, D. M. (2000) Mixed-effects Models in S and S-Plus. Sp
 }
 \author{Chunlei Ke \email{chunlei\_ke@yahoo.com} and Yuedong Wang \email{yuedong@pstat.ucsb.edu}.}
 \seealso{
-\code{\link{ssr}}, \code{\link{lme}}, \code{\link{varFunc}}, 
-\code{\link{corClasses}}, \code{\link{predict.slm}}, \code{\link{intervals.slm}},
+\code{\link{ssr}}, \code{\link{predict.slm}}, \code{\link{intervals.slm}},
 \code{\link{print.slm}},\code{\link{summary.slm}}
 }
 \examples{

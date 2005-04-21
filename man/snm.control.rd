@@ -39,7 +39,7 @@ Returned is a list includes all re-seted control parameters.
 }
 \author{Chunlei Ke \email{chunlei\_ke@pstat.ucsb.edu} and Yuedong Wang \email{yuedong@pstat.ucsb.edu}}
 \seealso{
-\code{\link{snm}},\code{\link{nlme}}, \code{\link{dsidr}}, \code{\link{dmudr}}, \code{\link{nlmeControl}}
+\code{\link{snm}}, \code{\link{dsidr}}, \code{\link{dmudr}}
 }
 \examples{
 ## set maximum iteration to be 50

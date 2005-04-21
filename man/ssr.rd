@@ -63,10 +63,12 @@ ssr could be slow and memory intensive, especially for large sample size and/or 
 For fitting a cubic spline with CV or GCV estimate of the smoothing parameter, 
 the S-Plus function \code{smooth.spline} is more efficient.
 
-Components can be extracted using extractor functions predict, deviance, residuals, and summary. The output can be modified using update.  
+Components can be extracted using extractor functions predict, deviance, residuals, and summary. The output can be modified using update. 
 }
 \value{
 an object of class \code{ssr} is  returned. See ssr.object for details. 
+
+Note: output from earlier versions of \code{ssr} shows incorrect smoothing spline parameters for SSANOVA, which is corrected in this version.
 }
 \references{ 
 Gu, C. (1989). RKPACK and its applications: Fitting smoothing spline models. Proceedings of the Statistical Computing Section, ASA, 42-51.

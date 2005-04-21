@@ -9,10 +9,10 @@ nonparametric functions from a \code{nnr} object, based on which approximate Bay
 confidence intervals may be constructed.
 }
 \usage{
-intervals.nnr(object,level=0.95, newdata=NULL, terms=<see below>, pstd=TRUE,level=0.95, ...)
+intervals.nnr(object,level=0.95, newdata=NULL, terms, pstd=TRUE, ...)
 }
 \arguments{
-\item{nnr.obj}{
+\item{object}{
 an object inheriting from class \code{nnr}, representing a 
 nonlinear nonparametric regression model fit.
 }
@@ -24,7 +24,6 @@ to the function(s)' arguments appearing in the opion func=  of nnr.
 Default is NULL, where predictions are made at the same values 
 used to fit the object.
 }
-\item{level}{set as 0.95, unused currently}
 \item{terms }{
 an optional named list of vectors or matrices containing 0's and 1's  collecting one or several combinations 
 of the components of spline estimates in the fitted snr object. The length and names of the list shall match those of 

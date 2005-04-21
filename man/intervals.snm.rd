@@ -10,14 +10,13 @@ estimate of nonparametric functions from a snm object, based on which
 approximate Bayesian confidence intervals may be constructed.
 }
 \usage{
-intervals.snm(object,level=0.95, newdata=NULL, terms=<see below>, pstd=TRUE, level=0.95, ...)
+intervals.snm(object,level=0.95,newdata=NULL, terms, pstd=TRUE, ...)
 }
 \arguments{
-\item{snm.obj}{
+\item{object}{
 an object inheriting from class snm, representing a semi-parametric 
 nonlinear mixed effects model fit.
 }
-\item{level}{set as 0.95, unused currently}
 \item{newdata}{
 a data frame on which the fitted spline estimates are to be evaluated. 
 Only those predictors, referred in 'func' of 'snm' fitting, have to

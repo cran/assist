@@ -10,7 +10,7 @@ estimate of nonparametric functions from a \code{slm} object, based on which
 approximate Bayesian confidence intervals may be constructed.
 }
 \usage{
-intervals.slm(object, level=0.95, newdata=NULL, terms=<see below>, pstd=TRUE, level=0.95, ...)
+intervals.slm(object, level=0.95, newdata=NULL, terms, pstd=TRUE, ...)
 }
 \arguments{
 \item{object}{
@@ -34,7 +34,6 @@ If TRUE (the default), the posterior standard deviations are calculated.
 Orelse, only the predictions are calculated.
 Computation required for posterior standard deviations could be intensive. 
 }
-\item{level}{a numeric value set as 0.95.}
 \item{\dots}{other arguments, currently unused.}
 }
 \value{

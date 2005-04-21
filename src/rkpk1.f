@@ -88,13 +88,13 @@ C
       RETURN
       END
       subroutine dbimdr (vmu, s, lds, nobs, nnull, q, ldqr, ldqc, nq, y,
-&      tol1, tol2, init, prec1, maxiter1, prec2, maxiter2, theta, nlaht,
-&      score, varht, c, d, eta, wk, swk, qwk, ywk, u, w, info)
+     * tol1, tol2, init, prec1, maxiter1, prec2, maxiter2, theta, nlaht,
+     * score, varht, c, d, eta, wk, swk, qwk, ywk, u, w, info)
       integer lds, nobs, nnull, ldqr, ldqc, nq, init, maxiter1, 
-&     maxiter2, info
+     *maxiter2, info
       double precision s(lds,*), q(ldqr,ldqc,*), y(2,*), tol1, tol2, 
-&     prec1, prec2, theta(*), nlaht, score, varht, c(*), d(*), wk(*), 
-&     eta(*), swk(lds,*), qwk(ldqr,ldqc,*), ywk(*), u(*), w(*)
+     *prec1, prec2, theta(*), nlaht, score, varht, c(*), d(*), wk(*), 
+     *eta(*), swk(lds,*), qwk(ldqr,ldqc,*), ywk(*), u(*), w(*)
 c      character*2 vmu
       integer vmu
       double precision mse, tmp, dasum, mtol
@@ -164,8 +164,8 @@ c      if(.not.(vmu .eq. 'u~'))
 23025 continue
       call dcopy (nobs, ywk, 1, u, 1)
       call dmudr (vmu, swk, lds, nobs, nnull, qwk, ldqr, ldqc, nq, ywk, 
-&     tol2, init, prec1, maxiter1, theta, nlaht, score, varht, c, d, wk,
-&      info)
+     *tol2, init, prec1, maxiter1, theta, nlaht, score, varht, c, d, wk,
+     * info)
       init = 1
       mse = 0.d0
       j=1
@@ -193,14 +193,14 @@ c      if(.not.(vmu .eq. 'u~'))
       return
       end
       subroutine dbisdr (vmu, s, lds, nobs, nnull, y, q, ldq, tol1, 
-&     tol2, job, limnla, prec, maxiter, nlaht, score, varht, c, d, eta, 
-&     qraux, jpvt, wk, swk, qwk, ywk, u, w, info)
+     *tol2, job, limnla, prec, maxiter, nlaht, score, varht, c, d, eta, 
+     *qraux, jpvt, wk, swk, qwk, ywk, u, w, info)
 c      character*2 vmu
       integer vmu
       integer lds, nobs, nnull, ldq, job, jpvt(*), info, maxiter
       double precision s(lds,*), y(2,*), q(ldq,*), tol1, tol2, limnla(2)
-&     , nlaht, score(*), varht, c(*), d(*), qraux(*), wk(*), prec, eta(*
-&     ), swk(lds,*), qwk(ldq,*), ywk(*), u(*), w(*)
+     *, nlaht, score(*), varht, c(*), d(*), qraux(*), wk(*), prec, eta(*
+     *), swk(lds,*), qwk(ldq,*), ywk(*), u(*), w(*)
       double precision mse, tmp, dasum, mtol
       integer i, j
       info = 0
@@ -263,7 +263,7 @@ c      if(.not.(vmu .eq. 'u~'))
 23022 continue
       call dcopy (nobs, ywk, 1, u, 1)
       call dsidr (vmu, swk, lds, nobs, nnull, ywk, qwk, ldq, tol2, job, 
-&     limnla, nlaht, score, varht, c, d, qraux, jpvt, wk, info)
+     *limnla, nlaht, score, varht, c, d, qraux, jpvt, wk, info)
       mse = 0.d0
       j=1
 23027 if(.not.(j.le.nobs))goto 23029
@@ -290,13 +290,13 @@ c      if(.not.(vmu .eq. 'u~'))
       return
       end
       subroutine dbmdr (vmu, s, lds, nobs, nnull, q, ldqr, ldqc, nq, y, 
-&     tol1, tol2, init, prec1, maxiter1, prec2, maxiter2, theta, nlaht, 
-&     score, varht, c, d, eta, wk, swk, qwk, ywk, u, w, info)
+     *tol1, tol2, init, prec1, maxiter1, prec2, maxiter2, theta, nlaht, 
+     *score, varht, c, d, eta, wk, swk, qwk, ywk, u, w, info)
       integer lds, nobs, nnull, ldqr, ldqc, nq, init, maxiter1, 
-&     maxiter2, info
+     *maxiter2, info
       double precision s(lds,*), q(ldqr,ldqc,*), y(*), tol1, tol2, 
-&     prec1, prec2, theta(*), nlaht, score, varht, c(*), d(*), wk(*), 
-&     eta(*), swk(lds,*), qwk(ldqr,ldqc,*), ywk(*), u(*), w(*)
+     *prec1, prec2, theta(*), nlaht, score, varht, c(*), d(*), wk(*), 
+     *eta(*), swk(lds,*), qwk(ldqr,ldqc,*), ywk(*), u(*), w(*)
 c      character*2 vmu
       integer vmu
       double precision mse, tmp, dasum, mtol
@@ -366,8 +366,8 @@ c      if(.not.(vmu .eq. 'u~'))
 23025 continue
       call dcopy (nobs, ywk, 1, u, 1)
       call dmudr (vmu, swk, lds, nobs, nnull, qwk, ldqr, ldqc, nq, ywk, 
-&     tol2, init, prec1, maxiter1, theta, nlaht, score, varht, c, d, wk,
-&      info)
+     *tol2, init, prec1, maxiter1, theta, nlaht, score, varht, c, d, wk,
+     * info)
       init = 1
       mse = 0.d0
       j=1
@@ -395,14 +395,14 @@ c      if(.not.(vmu .eq. 'u~'))
       return
       end
       subroutine dbsdr (vmu, s, lds, nobs, nnull, y, q, ldq, tol1, tol2,
-&      job, limnla, prec, maxiter, nlaht, score, varht, c, d, eta, 
-&     qraux, jpvt, wk, swk, qwk, ywk, u, w, info)
+     * job, limnla, prec, maxiter, nlaht, score, varht, c, d, eta, 
+     *qraux, jpvt, wk, swk, qwk, ywk, u, w, info)
 c      character*2 vmu
       integer vmu
       integer lds, nobs, nnull, ldq, job, jpvt(*), info, maxiter
       double precision s(lds,*), y(*), q(ldq,*), tol1, tol2, limnla(2), 
-&     nlaht, score(*), varht(2), c(*), d(*), qraux(*), wk(*), prec, eta(
-&     *), swk(lds,*), qwk(ldq,*), ywk(*), u(*), w(*)
+     *nlaht, score(*), varht(2), c(*), d(*), qraux(*), wk(*), prec, eta(
+     **), swk(lds,*), qwk(ldq,*), ywk(*), u(*), w(*)
       double precision mse, tmp, dasum, mtol
       integer i, j
       info = 0
@@ -467,7 +467,7 @@ c      if(.not.(vmu .eq. 'u~'))
 23024 continue
       call dcopy (nobs, ywk, 1, u, 1)
       call dsidr (vmu, swk, lds, nobs, nnull, ywk, qwk, ldq, tol2, job, 
-&     limnla, nlaht, score, varht, c, d, qraux, jpvt, wk, info)
+     *limnla, nlaht, score, varht, c, d, qraux, jpvt, wk, info)
       mse = 0.d0
       j=1
 23029 if(.not.(j.le.nobs))goto 23031
@@ -543,15 +543,15 @@ C
       RETURN
       END
       subroutine ddeev (vmu, nobs, q, ldqr, ldqc, n, nq, u, ldu, uaux, 
-&     t, x, theta, nlaht, score, varht, hes, ldh, gra, hwk1, hwk2, gwk1,
-&      gwk2, kwk, ldk, work1, work2, work3, info)
+     *t, x, theta, nlaht, score, varht, hes, ldh, gra, hwk1, hwk2, gwk1,
+     * gwk2, kwk, ldk, work1, work2, work3, info)
 c      character*1 vmu
       integer vmu
       integer nobs, ldqr, ldqc, n, nq, ldu, ldh, ldk, info
       double precision q(ldqr,ldqc,*), u(ldu,*), uaux(*), t(2,*), x(*), 
-&     theta(*), nlaht, score, varht(2), hes(ldh,*), gra(*), hwk1(nq,*), 
-&     hwk2(nq,*), gwk1(*), gwk2(*), kwk(ldk,ldk,*), work1(*), work2(*), 
-&     work3(*)
+     *theta(*), nlaht, score, varht(2), hes(ldh,*), gra(*), hwk1(nq,*), 
+     *hwk2(nq,*), gwk1(*), gwk2(*), kwk(ldk,ldk,*), work1(*), work2(*), 
+     *work3(*)
       double precision trc, det, dum, ddot
       integer i, j, m
       info = 0
@@ -559,13 +559,13 @@ c      character*1 vmu
       call dset (nq*nq, 0.d0, hes, 1)
 c      if(.not.( vmu .ne. 'v' .and. vmu .ne. 'm' .and. vmu .ne. 'u' ))
       if(.not.( vmu .ne. 0 .and. vmu .ne. 1 .and. vmu .ne. 2 ))
-&     goto 23000
+     *goto 23000
       info = -3
       return
 23000 continue
       if(.not.( nobs .lt. n .or. ldqr .lt. n .or. ldqc .lt. n .or. nq 
-&     .le. 0 .or. ldu .lt. n-1 .or. ldh .lt. nq .or. ldk .lt. n ))goto 2
-&     3002
+     *.le. 0 .or. ldu .lt. n-1 .or. ldh .lt. nq .or. ldk .lt. n ))goto 2
+     *3002
       info = -1
       return
 23002 continue
@@ -582,9 +582,9 @@ c      if(.not.( vmu .ne. 'v' .and. vmu .ne. 'm' .and. vmu .ne. 'u' ))
       goto 23009
 23011 continue
       call dqrslm (u, ldu, n-1, n-2, uaux, kwk(2,2,i), n, 0, info, 
-&     work1)
+     *work1)
       call dqrsl (u, ldu, n-1, n-2, uaux, kwk(2,1,i), dum, kwk(2,1,i), 
-&     dum, dum, dum, 01000, info)
+     *dum, dum, dum, 01000, info)
 23005 i=i+1
       goto 23004
 23006 continue
@@ -661,7 +661,7 @@ c      if(.not.( vmu .ne. 'm' ))
       goto 23044
 23046 continue
       call dgemv ('t', n, n, 1.d0, kwk(1,1,i), n, work2, 1, 0.d0, work3,
-&      1)
+     * 1)
       gwk1(i) = - ddot (n, work1, 1, work3, 1)
 23044 i=i+1
       goto 23043
@@ -699,30 +699,30 @@ c      if(.not.( vmu .ne. 'm' ))
       goto 23061
 23063 continue
       call dgemv ('n', n, n, 1.d0, kwk(1,1,i), n, work1, 1, 0.d0, work2,
-&      1)
+     * 1)
       j=1
 23065 if(.not.(j.le.i))goto 23067
       if(.not.( theta(j) .le. -25.d0 ))goto 23068
       goto 23066
 23068 continue
       call dgemv ('n', n, n, 1.d0, kwk(1,1,j), n, work1, 1, 0.d0, work3,
-&      1)
+     * 1)
       hwk1(i,j) = 2.d0 * ddot (n, work2, 1, work3, 1)
       call dgemv ('t', n, n, 1.d0, kwk(1,1,j), n, work1, 1, 0.d0, work3,
-&      1)
+     * 1)
       hwk1(i,j) = hwk1(i,j) + 2.d0 * ddot (n, work2, 1, work3, 1)
 23066 j=j+1
       goto 23065
 23067 continue
       call dgemv ('t', n, n, 1.d0, kwk(1,1,i), n, work1, 1, 0.d0, work2,
-&      1)
+     * 1)
       j=1
 23070 if(.not.(j.le.i))goto 23072
       if(.not.( theta(j) .le. -25.d0 ))goto 23073
       goto 23071
 23073 continue
       call dgemv ('n', n, n, 1.d0, kwk(1,1,j), n, work1, 1, 0.d0, work3,
-&      1)
+     * 1)
       hwk1(i,j) = hwk1(i,j) + 2.d0 * ddot (n, work2, 1, work3, 1)
 23071 j=j+1
       goto 23070
@@ -740,7 +740,7 @@ c      if(.not.( vmu .ne. 'm' ))
       goto 23076
 23078 continue
       call dgemv ('n', n, n, 1.d0, kwk(1,1,i), n, work1, 1, 0.d0, work2,
-&      1)
+     * 1)
       j=1
 23080 if(.not.(j.le.i))goto 23082
       if(.not.( theta(j) .le. -25.d0 ))goto 23083
@@ -813,7 +813,7 @@ c      if(.not.( vmu .eq. 'v' ))
       goto 23113
 23115 continue
       gra(i) = gwk1(i) / trc / trc - 2.d0 * score * gwk2(i) / trc / 
-&     dfloat(nobs)
+     *dfloat(nobs)
 23113 i=i+1
       goto 23112
 23114 continue
@@ -842,7 +842,7 @@ c      if(.not.( vmu .eq. 'm' ))
       goto 23127
 23129 continue
       gra(i) = gwk1(i) / det - dfloat (nobs) / dfloat (n) * score * 
-&     gwk2(i)
+     *gwk2(i)
 23127 i=i+1
       goto 23126
 23128 continue
@@ -861,9 +861,9 @@ c      if(.not.( vmu .eq. 'v' ))
       goto 23139
 23141 continue
       hes(i,j) = hwk1(i,j) / trc / trc - 2.d0 * gwk1(i) * gwk2(j) / trc 
-&     ** 3 - 2.d0 * gwk1(j) * gwk2(i) / trc ** 3 - 2.d0 * score * hwk2(
-&     i,j) / trc / dfloat (nobs) + 6.d0 * score * gwk2(i) * gwk2(j) / 
-&     trc / trc / dfloat (nobs)
+     *** 3 - 2.d0 * gwk1(j) * gwk2(i) / trc ** 3 - 2.d0 * score * hwk2(
+     *i,j) / trc / dfloat (nobs) + 6.d0 * score * gwk2(i) * gwk2(j) / 
+     *trc / trc / dfloat (nobs)
 23139 j=j+1
       goto 23138
 23140 continue
@@ -885,7 +885,7 @@ c      if(.not.( vmu .eq. 'u' ))
       goto 23151
 23153 continue
       hes(i,j) = dum * dum * hwk1(i,j) - 2.d0 * varht(1) * dum * hwk2(i,
-&     j)
+     *j)
 23151 j=j+1
       goto 23150
 23152 continue
@@ -907,9 +907,9 @@ c      if(.not.( vmu .eq. 'm' ))
       goto 23163
 23165 continue
       hes(i,j) = hwk1(i,j) / det - gwk1(i) * gwk2(j) / det / dfloat (n) 
-&     - gwk1(j) * gwk2(i) / det / dfloat (n) - dfloat (nobs) / dfloat (
-&     n) * score * hwk2(i,j) + dfloat (nobs) / dfloat (n) ** 2 * score *
-&      gwk2(i) * gwk2(j)
+     *- gwk1(j) * gwk2(i) / det / dfloat (n) - dfloat (nobs) / dfloat (
+     *n) * score * hwk2(i,j) + dfloat (nobs) / dfloat (n) ** 2 * score *
+     * gwk2(i) * gwk2(j)
 23163 j=j+1
       goto 23162
 23164 continue
@@ -969,12 +969,12 @@ C
       RETURN
       END
       subroutine deval (vmu, q, ldq, n, z, nint, low, upp, nlaht, score,
-&      varht, info, twk, work)
+     * varht, info, twk, work)
 c      character*1 vmu
       integer vmu
       integer ldq, n, nint, info
       double precision q(ldq,*), z(*), low, upp, nlaht, score(*), varht(
-&     2), twk(2,*), work(*)
+     *2), twk(2,*), work(*)
       double precision tmp, minscr, mlo, varhtwk(2)
       integer j
       info = 0
@@ -985,7 +985,7 @@ c      character*1 vmu
 23000 continue
 c      if(.not.( (vmu .ne. 'v' .and. vmu .ne. 'm' .and. vmu .ne. 'u')
       if(.not.( (vmu .ne. 0 .and. vmu .ne. 1 .and. vmu .ne. 2)  
-&     .or. nint .lt. 1 ))goto 23002
+     *.or. nint .lt. 1 ))goto 23002
       info = -3
       return
 23002 continue
@@ -1332,13 +1332,13 @@ C     .. Executable Statements ..
       END
 *
       subroutine dgmdr (vmu, s, lds, nobs, nnull, q, ldqr, ldqc, nq, y, 
-&     tol1, tol2, init, prec1, maxiter1, prec2, maxiter2, theta, nlaht, 
-&     score, varht, c, d, eta, wk, swk, qwk, ywk, u, w, info)
+     *tol1, tol2, init, prec1, maxiter1, prec2, maxiter2, theta, nlaht, 
+     *score, varht, c, d, eta, wk, swk, qwk, ywk, u, w, info)
       integer lds, nobs, nnull, ldqr, ldqc, nq, init, maxiter1, 
-&     maxiter2, info
+     *maxiter2, info
       double precision s(lds,*), q(ldqr,ldqc,*), y(*), tol1, tol2, 
-&     prec1, prec2, theta(*), nlaht, score, varht, c(*), d(*), wk(*), 
-&     eta(*), swk(lds,*), qwk(ldqr,ldqc,*), ywk(*), u(*), w(*)
+     *prec1, prec2, theta(*), nlaht, score, varht, c(*), d(*), wk(*), 
+     *eta(*), swk(lds,*), qwk(ldqr,ldqc,*), ywk(*), u(*), w(*)
 c      character*2 vmu
       integer vmu
       double precision mse, tmp, dasum, mtol
@@ -1408,8 +1408,8 @@ c      if(.not.(vmu .eq. 'u~'))
 23025 continue
       call dcopy (nobs, ywk, 1, u, 1)
       call dmudr (vmu, swk, lds, nobs, nnull, qwk, ldqr, ldqc, nq, ywk, 
-&     tol2, init, prec1, maxiter1, theta, nlaht, score, varht, c, d, wk,
-&      info)
+     *tol2, init, prec1, maxiter1, theta, nlaht, score, varht, c, d, wk,
+     * info)
       init = 1
       mse = 0.d0
       j=1
@@ -1437,12 +1437,12 @@ c      if(.not.(vmu .eq. 'u~'))
       return
       end
       subroutine dgold (vmu, q, ldq, n, z, low, upp, nlaht, score, 
-&     varht, info, twk, work)
+     *varht, info, twk, work)
 c      character*1 vmu
       integer vmu
       integer ldq, n, info
       double precision q(ldq,*), z(*), low, upp, nlaht, score, varht(2),
-&      twk(2,*), work(*)
+     * twk(2,*), work(*)
       double precision ratio, mlo, mup, tmpl, tmpu
       ratio = ( dsqrt (5.d0) - 1.d0 ) / 2.d0
       info = 0
@@ -1453,7 +1453,7 @@ c      character*1 vmu
 23000 continue
 c      if(.not.( vmu .ne. 'v' .and. vmu .ne. 'm' .and. vmu .ne. 'u' ))
       if(.not.( vmu .ne. 0 .and. vmu .ne. 1 .and. vmu .ne. 2 ))
-&     goto 23002
+     *goto 23002
       info = -3
       return
 23002 continue
@@ -1530,14 +1530,14 @@ c      if(.not.( vmu .ne. 'v' .and. vmu .ne. 'm' .and. vmu .ne. 'u' ))
       return
       end
       subroutine dgsdr (vmu, s, lds, nobs, nnull, y, q, ldq, tol1, tol2,
-&      job, limnla, prec, maxiter, nlaht, score, varht, c, d, eta, 
-&     qraux, jpvt, wk, swk, qwk, ywk, u, w, info)
+     * job, limnla, prec, maxiter, nlaht, score, varht, c, d, eta, 
+     *qraux, jpvt, wk, swk, qwk, ywk, u, w, info)
 c      character*2 vmu
       integer vmu
       integer lds, nobs, nnull, ldq, job, jpvt(*), info, maxiter
       double precision s(lds,*), y(*), q(ldq,*), tol1, tol2, limnla(2), 
-&     nlaht, score(*), varht, c(*), d(*), qraux(*), wk(*), prec, eta(*),
-&      swk(lds,*), qwk(ldq,*), ywk(*), u(*), w(*)
+     *nlaht, score(*), varht, c(*), d(*), qraux(*), wk(*), prec, eta(*),
+     * swk(lds,*), qwk(ldq,*), ywk(*), u(*), w(*)
       double precision mse, tmp, dasum, mtol
       integer i, j
       info = 0
@@ -1600,7 +1600,7 @@ c      if(.not.(vmu .eq. 'u~'))
 23022 continue
       call dcopy (nobs, ywk, 1, u, 1)
       call dsidr (vmu, swk, lds, nobs, nnull, ywk, qwk, ldq, tol2, job, 
-&     limnla, nlaht, score, varht, c, d, qraux, jpvt, wk, info)
+     *limnla, nlaht, score, varht, c, d, qraux, jpvt, wk, info)
       mse = 0.d0
       j=1
 23027 if(.not.(j.le.nobs))goto 23029
@@ -1856,16 +1856,16 @@ C
       return
       end
       subroutine dmudr (vmu, s, lds, nobs, nnull, q, ldqr, ldqc, nq, y, 
-&     tol, init, prec, maxite, theta, nlaht, score, varht, c, d, wk, 
-&     info)
+     *tol, init, prec, maxite, theta, nlaht, score, varht, c, d, wk, 
+     *info)
       integer lds, nobs, nnull, ldqr, ldqc, nq, init, maxite, info
       double precision s(lds,*), q(ldqr,ldqc,*), y(*), tol, prec, theta(
-&     *), nlaht, score, varht(2), c(*), d(*), wk(*)
+     **), nlaht, score, varht(2), c(*), d(*), wk(*)
 c      character*1 vmu
       integer vmu
       integer n, n0
       integer iqraux, itraux, itwk, iqwk, iywk, ithewk, ihes, igra, 
-&     ihwk1, ihwk2, igwk1, igwk2, ikwk, iwork1, iwork2, ijpvt, ipvtwk
+     *ihwk1, ihwk2, igwk1, igwk2, ikwk, iwork1, iwork2, ijpvt, ipvtwk
       n = nobs
       n0 = nnull
       iqraux = 1
@@ -1886,18 +1886,18 @@ c      character*1 vmu
       ijpvt = iwork2 + n
       ipvtwk = ijpvt + n0
       call dmudr1 (vmu, s, lds, nobs, nnull, q, ldqr, ldqc, nq, y, tol, 
-&     init, prec, maxite, theta, nlaht, score, varht, c, d, wk(iqraux), 
-&     wk(ijpvt), wk(itwk), wk(itraux), wk(iqwk), wk(iywk), wk(ithewk), 
-&     wk(ihes), wk(igra), wk(ihwk1), wk(ihwk2), wk(igwk1), wk(igwk2), 
-&     wk(ipvtwk), wk(ikwk), wk(iwork1), wk(iwork2), info)
+     *init, prec, maxite, theta, nlaht, score, varht, c, d, wk(iqraux), 
+     *wk(ijpvt), wk(itwk), wk(itraux), wk(iqwk), wk(iywk), wk(ithewk), 
+     *wk(ihes), wk(igra), wk(ihwk1), wk(ihwk2), wk(igwk1), wk(igwk2), 
+     *wk(ipvtwk), wk(ikwk), wk(iwork1), wk(iwork2), info)
       return
       end
       subroutine dmudrnew (vmu, s, lds, nobs, nnull, q,q1, q2, ldqr, 
-&     ldqc,nq, y, tol, init, prec, maxite, theta, nlaht, score, varht, 
-&     c, d, wk, ok, info)
+     *ldqc,nq, y, tol, init, prec, maxite, theta, nlaht, score, varht, 
+     *c, d, wk, ok, info)
       integer lds, nobs, nnull, ldqr, ldqc, init, maxite, info, nq, ok
       double precision s(lds,*),q(ldqr,ldqc,*), y(*), tol, prec, theta(*
-&     ), nlaht, score, varht, c(*), d(*), wk(*), q1(ldqr,*), q2(ldqr,*)
+     *), nlaht, score, varht, c(*), d(*), wk(*), q1(ldqr,*), q2(ldqr,*)
 c      character * 1 vmu
       integer vmu
       integer i, j
@@ -1914,7 +1914,7 @@ c      character * 1 vmu
       goto 23000
 23002 continue
       call dmudr (vmu, s, lds, nobs, nnull, q, ldqr, ldqc, nq, y, tol, 
-&     init, prec, maxite, theta, nlaht, score, varht, c, d, wk, info)
+     *init, prec, maxite, theta, nlaht, score, varht, c, d, wk, info)
       if(.not.(d(1).lt. 0.001))goto 23006
       ok=1
 23006 continue
@@ -2218,13 +2218,13 @@ C
       RETURN
       END
       subroutine dpmdr (vmu, s, lds, nobs, nnull, q, ldqr, ldqc, nq, y, 
-&     tol1, tol2, init, prec1, maxiter1, prec2, maxiter2, theta, nlaht, 
-&     score, varht, c, d, eta, wk, swk, qwk, ywk, u, w, info)
+     *tol1, tol2, init, prec1, maxiter1, prec2, maxiter2, theta, nlaht, 
+     *score, varht, c, d, eta, wk, swk, qwk, ywk, u, w, info)
       integer lds, nobs, nnull, ldqr, ldqc, nq, init, maxiter1, 
-&     maxiter2, info
+     *maxiter2, info
       double precision s(lds,*), q(ldqr,ldqc,*), y(*), tol1, tol2, 
-&     prec1, prec2, theta(*), nlaht, score, varht, c(*), d(*), wk(*), 
-&     eta(*), swk(lds,*), qwk(ldqr,ldqc,*), ywk(*), u(*), w(*)
+     *prec1, prec2, theta(*), nlaht, score, varht, c(*), d(*), wk(*), 
+     *eta(*), swk(lds,*), qwk(ldqr,ldqc,*), ywk(*), u(*), w(*)
 c      character*2 vmu
       integer vmu
       double precision mse, tmp, dasum, mtol
@@ -2293,8 +2293,8 @@ c      if(.not.(vmu .eq. 'u~'))
 23025 continue
       call dcopy (nobs, ywk, 1, u, 1)
       call dmudr (vmu, swk, lds, nobs, nnull, qwk, ldqr, ldqc, nq, ywk, 
-&     tol2, init, prec1, maxiter1, theta, nlaht, score, varht, c, d, wk,
-&      info)
+     *tol2, init, prec1, maxiter1, theta, nlaht, score, varht, c, d, wk,
+     * info)
       init = 1
       mse = 0.d0
       j=1
@@ -2541,14 +2541,14 @@ c           endwhile
       return
       end
       subroutine dpsdr (vmu, s, lds, nobs, nnull, y, q, ldq, tol1, tol2,
-&      job, limnla, prec, maxiter, nlaht, score, varht, c, d, eta, 
-&     qraux, jpvt, wk, swk, qwk, ywk, u, w, info)
+     * job, limnla, prec, maxiter, nlaht, score, varht, c, d, eta, 
+     *qraux, jpvt, wk, swk, qwk, ywk, u, w, info)
 c      character*2 vmu
       integer vmu
       integer lds, nobs, nnull, ldq, job, jpvt(*), info, maxiter
       double precision s(lds,*), y(*), q(ldq,*), tol1, tol2, limnla(2), 
-&     nlaht, score(*), varht(2), c(*), d(*), qraux(*), wk(*), prec, eta(
-&     *), swk(lds,*), qwk(ldq,*), ywk(*), u(*), w(*)
+     *nlaht, score(*), varht(2), c(*), d(*), qraux(*), wk(*), prec, eta(
+     **), swk(lds,*), qwk(ldq,*), ywk(*), u(*), w(*)
       double precision mse, tmp, dasum, mtol
       integer i, j
       info = 0
@@ -2615,7 +2615,7 @@ c      if(.not.(vmu .eq. 'u~'))
 23026 continue
       call dcopy (nobs, ywk, 1, u, 1)
       call dsidr (vmu, swk, lds, nobs, nnull, ywk, qwk, ldq, tol2, job, 
-&     limnla, nlaht, score, varht, c, d, qraux, jpvt, wk, info)
+     *limnla, nlaht, score, varht, c, d, qraux, jpvt, wk, info)
       mse = 0.d0
       j=1
 23031 if(.not.(j.le.nobs))goto 23033
@@ -4057,7 +4057,7 @@ c      character*1 vmu
       info = 0
 c      if(.not.( vmu .ne. 'v' .and. vmu .ne. 'm' .and. vmu .ne. 'u' ))
       if(.not.( vmu .ne. 0 .and. vmu .ne. 1 .and. vmu .ne. 2 ))
-&     goto 23000
+     *goto 23000
       info = -3
       return
 23000 continue
@@ -4135,7 +4135,7 @@ c      if(.not.( vmu .eq. 'u' ))
 23024 continue
       deno = deno / dfloat (n)
       score = alph * alph * la * la * nume - 2.d0 * varht(1) * alph * 
-&     la * deno
+     *la * deno
 23020 continue
       return
       end

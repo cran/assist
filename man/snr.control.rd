@@ -45,7 +45,7 @@ returned is a list includes all re-seted control parameters.
 }
 \author{Chunlei Ke \email{chunlei\_ke@yahoo.com} and Yuedong Wang \email{yuedong@pstat.ucsb.edu}.}
 \seealso{
-\code{\link{snr}}, \code{\link{dsidr}}, \code{\link{dmudr}}, \code{\link{gnls}}, \code{\link{gnlsControl}}
+\code{\link{snr}}, \code{\link{dsidr}}, \code{\link{dmudr}}
 }
 \examples{
 ## use Newton-Raphson iteration and only a single backfitting

@@ -30,8 +30,8 @@ rc(double x, double y) {
    }      
 
 void
-cubic_ker1(double *x, double *y, long *N, long *M, double *val){            
-  long i,j;
+cubic_ker1(double *x, double *y, int *N, int *M, double *val){            
+  int i,j;
    for(i = 0; i < *N; i++) {
     for(j = 0; j < *M; j++) {
       val[(i*(*M))+j] = rc(x[i], y[j]);
@@ -49,10 +49,10 @@ rkc(double x, double y) {
 }
 
 void
-cubic_ker2(double *x, double *y, long *N, long *M, double *val){
+cubic_ker2(double *x, double *y, int *N, int *M, double *val){
   /* this function is to calculate the rk for cubic spline  */
   /* with domain [0, T].                                    */
-  long i,j;
+  int i,j;
    for(i = 0; i < *N; i++) {
     for(j = 0; j < *M; j++) {
       val[(i*(*M))+j] = rkc(x[i], y[j]);
@@ -63,9 +63,9 @@ cubic_ker2(double *x, double *y, long *N, long *M, double *val){
 
 /***~~~~  periodic (m=1) ~~~~***/
 void
-period_ker(double *x, double *y, long *N, long *M, double *val){
+period_ker(double *x, double *y, int *N, int *M, double *val){
 
-  long i,j;
+  int i,j;
    for(i = 0; i < *N; i++) {
     for(j = 0; j < *M; j++) {
       val[(i*(*M))+j] = -dk4(x[i]-y[j]);
@@ -75,9 +75,9 @@ period_ker(double *x, double *y, long *N, long *M, double *val){
 
 /***~~~~ period (m-order) ***/
 static double
-per_rkm(double x, long m) {
+per_rkm(double x, int m) {
   double val=0;
-  long i;
+  int i;
 
   for(i=2; i<=50; i++)
      val += (2.0/(pow(cos(6.283 * i), 2*m)))*cos(6.282*x);
@@ -86,10 +86,10 @@ per_rkm(double x, long m) {
 }
 
 void
-mperiod_ker(double *x, double *y, long *N, long *M, long *ord, double *val){
+mperiod_ker(double *x, double *y, int *N, int *M, int *ord, double *val){
   /* this function is to calculate the rk for cubic spline  */
   /* with domain [0, T].                                    */
-  long i,j;
+  int i,j;
    for(i = 0; i < *N; i++) {
     for(j = 0; j < *M; j++) {
       val[(i*(*M))+j] = per_rkm(x[i]-y[j], *ord);
@@ -111,8 +111,8 @@ rk_exp(double x, double y, double r) {
  }
 
 void
-expLspline_ker(double *x, double *y, double *r, long *N, long *M, double *val) {
-  long  i, j;
+expLspline_ker(double *x, double *y, double *r, int *N, int *M, double *val) {
+  int  i, j;
 
   for(i=0; i< *N; i++) 
       for(j=0; j< *M; j++) val[i*(*M)+j]=rk_exp(x[i], y[j], *r);
@@ -122,7 +122,7 @@ expLspline_ker(double *x, double *y, double *r, long *N, long *M, double *val) {
 static double
 rk_sinL0(double x) {
   double val=0;
-  long i;
+  int i;
 
   for(i=2; i<=50; i++)
      val += 2 * cos(6.283 * i * x)/1558.545/(i*i*2-1)/(i*i*2-1);
@@ -131,10 +131,10 @@ rk_sinL0(double x) {
 }
 
 void
-sinLspline_ker0(double *x, double *y, long *N, long *M, double *val){
+sinLspline_ker0(double *x, double *y, int *N, int *M, double *val){
   /* this function is to calculate the rk for cubic spline  */
   /* with domain [0, T].                                    */
-  long i,j;
+  int i,j;
    for(i = 0; i < *N; i++) {
     for(j = 0; j < *M; j++) {
       val[(i*(*M))+j] = rk_sinL0(x[i]-y[j]);
@@ -144,7 +144,7 @@ sinLspline_ker0(double *x, double *y, long *N, long *M, double *val){
 static double
 rk_sinL1(double x) {
   double val=0;
-  long i;
+  int i;
 
   for(i=2; i<=50; i++)
      val += 2 * cos(6.283 * i * x)/61528.9/(i*i*2-1)/(i*i*2-1)/i/i;
@@ -153,10 +153,10 @@ rk_sinL1(double x) {
 }
 
 void
-sinLspline_ker1(double *x, double *y, long *N, long *M, double *val){
+sinLspline_ker1(double *x, double *y, int *N, int *M, double *val){
   /* this function is to calculate the rk for cubic spline  */
   /* with domain [0, T].                                    */
-  long i,j;
+  int i,j;
    for(i = 0; i < *N; i++) {
     for(j = 0; j < *M; j++) {
       val[(i*(*M))+j] = rk_sinL1(x[i]-y[j]);
@@ -168,7 +168,7 @@ sinLspline_ker1(double *x, double *y, long *N, long *M, double *val){
 static double
 rk_sinL4p(double x) {
   double val=0;
-  long i;
+  int i;
 
   for(i=3; i<=50; i++)
       /* val += 2.0 * cos(6.283 * i * x)/(i*i*2-1)/(i*i*2-1)/(i*i-4.0)/(i*i-4.0);*/
@@ -178,10 +178,10 @@ rk_sinL4p(double x) {
 }
 
 void
-sinLspline_ker4p(double *x, double *y, long *N, long *M, double *val){
+sinLspline_ker4p(double *x, double *y, int *N, int *M, double *val){
   /* this function is to calculate the rk for cubic spline  */
   /* with domain [0, T].                                    */
-  long i,j;
+  int i,j;
    for(i = 0; i < *N; i++) {
     for(j = 0; j < *M; j++) {
       val[(i*(*M))+j] = rk_sinL4p(x[i]-y[j]);
@@ -192,9 +192,9 @@ sinLspline_ker4p(double *x, double *y, long *N, long *M, double *val){
 
 /***~~~~  factor ~~~~***/
 void
-factor_ker(long *x, long *y, long *N, long *M, long *val){
+factor_ker(int *x, int *y, int *N, int *M, int *val){
 
-  long i,j;
+  int i,j;
    for(i = 0; i < *N; i++) {
     for(j = 0; j < *M; j++) {
       val[(i*(*M))+j] = (x[i]==y[j]);
@@ -215,8 +215,8 @@ rk_linP(double x, double y){
  }
 
 void
-  linPeriod_ker(double *x, double *y, long *N, long *M, double *val){
-  long i,j;
+  linPeriod_ker(double *x, double *y, int *N, int *M, double *val){
+  int i,j;
    for(i = 0; i < *N; i++) {
     for(j = 0; j < *M; j++) {
       val[(i*(*M))+j] = rk_linP(x[i], y[j]);
@@ -234,10 +234,10 @@ rk_logit(double x, double y) {
   return(val);
 }
 void
-logit_ker(double *x, double *y, long *N, long *M, double *val){
+logit_ker(double *x, double *y, int *N, int *M, double *val){
   /* this function is to calculate the rk for cubic spline  */
   /* with domain [0, T].                                    */
-  long i,j;
+  int i,j;
    for(i = 0; i < *N; i++) {
     for(j = 0; j < *M; j++) {
       val[(i*(*M))+j] = rk_logit(x[i], y[j]);
@@ -256,10 +256,10 @@ rk_quint(double x, double y) {
 }
 
 void
-quintic_ker2(double *x, double *y, long *N, long *M, double *val){
+quintic_ker2(double *x, double *y, int *N, int *M, double *val){
   /* this function is to calculate the rk for quint spline  */
   /* with domain [0, T].                                    */
-  long i,j;
+  int i,j;
    for(i = 0; i < *N; i++) {
     for(j = 0; j < *M; j++) {
       val[(i*(*M))+j] = rk_quint(x[i], y[j]);
@@ -294,10 +294,10 @@ quint_rk(double x, double y){
 }
 
 void
-quintic_ker1(double *x, double *y, long *N, long *M, double *val){
+quintic_ker1(double *x, double *y, int *N, int *M, double *val){
   /* this function is to calculate the rk for quint spline  */
   /* with domain [0, 1].                                    */
-  long i,j;
+  int i,j;
    for(i = 0; i < *N; i++) {
     for(j = 0; j < *M; j++) {
       val[(i*(*M))+j] = quint_rk(x[i], y[j]);
@@ -317,8 +317,8 @@ rk_sept(double x, double y) {
 }
 
 void
-septic_ker2(double *x, double *y, long *N, long *M, double *val){                          
-  long i,j;
+septic_ker2(double *x, double *y, int *N, int *M, double *val){                          
+  int i,j;
    for(i = 0; i < *N; i++) {
     for(j = 0; j < *M; j++) {
       val[(i*(*M))+j] = rk_sept(x[i], y[j]);
@@ -354,10 +354,10 @@ sep_rk(double x, double y){
 }
 
 void
-septic_ker1(double *x, double *y, long *N, long *M, double *val){
+septic_ker1(double *x, double *y, int *N, int *M, double *val){
   /* this function is to calculate the rk for septic spline  */
   /* with domain [0, 1].                                    */
-  long i,j;
+  int i,j;
    for(i = 0; i < *N; i++) {
     for(j = 0; j < *M; j++) {
       val[(i*(*M))+j] = sep_rk(x[i], y[j]);
@@ -367,9 +367,9 @@ septic_ker1(double *x, double *y, long *N, long *M, double *val){
 
 /***~~~~   thin-plate ~~~***/
 void
-tp_ker(double *x, double *y, long *d, long *m, long *N, long *M , double *val){
+tp_ker(double *x, double *y, int *d, int *m, int *N, int *M , double *val){
 
-  long i, j, k;
+  int i, j, k;
   double tmp;
 
  for(i=0; i< *N; i++) 
@@ -386,10 +386,10 @@ tp_ker(double *x, double *y, long *d, long *m, long *N, long *M , double *val){
 
 
 void
-tp_term(long *dm, long *order, long *p){
+tp_term(int *dm, int *order, int *p){
 
-long i, j, k, sum;
-long pos=0;
+int i, j, k, sum;
+int pos=0;
 
  for(i=0; i< pow( (*order), *dm); i++){
    k=i;
@@ -423,10 +423,10 @@ rc_lin(double x, double y) {
    }
 
 void
-linear_ker1(double *x, double *y, long *N, long *M, double *val){
+linear_ker1(double *x, double *y, int *N, int *M, double *val){
   /* this function is to calculate the rk for linear spline  */
   /* with domain [0, 1].                                    */
-  long i,j;
+  int i,j;
    for(i = 0; i < *N; i++) {
     for(j = 0; j < *M; j++) {
       val[(i*(*M))+j] = rc_lin(x[i], y[j]);
@@ -444,10 +444,10 @@ rk_lin(double x, double y){
 }
 
 void
-linear_ker2(double *x, double *y, long *N, long *M, double *val){
+linear_ker2(double *x, double *y, int *N, int *M, double *val){
   /* this function is to calculate the rk for linear spline  */
   /* with domain [0, 1].                                    */
-  long i,j;
+  int i,j;
    for(i = 0; i < *N; i++) {
     for(j = 0; j < *M; j++) {
       val[(i*(*M))+j] = rk_lin(x[i], y[j]);
@@ -458,7 +458,7 @@ linear_ker2(double *x, double *y, long *N, long *M, double *val){
 /***===  periodic  ===***/
 static double
 dkp(double x) {
-  long i;
+  int i;
   double val=0;
 
   for(i=1; i<=100; i++)
@@ -467,8 +467,8 @@ dkp(double x) {
 }
 
 void
-dperiod_ker(double *x, double *y, long *N, long *M, double *val){
-  long i,j;
+dperiod_ker(double *x, double *y, int *N, int *M, double *val){
+  int i,j;
    for(i = 0; i < *N; i++) {
     for(j = 0; j < *M; j++) {
       val[(i*(*M))+j] = dkp(x[i]-y[j]);
@@ -488,8 +488,8 @@ dkc(double x, double y) {
 }
 
 void
-dcubic_ker1(double *x, double *y, long *N, long *M, double *val){
-  long i,j;
+dcubic_ker1(double *x, double *y, int *N, int *M, double *val){
+  int i,j;
    for(i = 0; i < *N; i++) {
     for(j = 0; j < *M; j++) {
       val[(i*(*M))+j] = dkc(x[i], y[j]);
@@ -508,8 +508,8 @@ dkc2(double x, double y) {
 }
 
 void
-dcubic_ker2(double *x, double *y, long *N, long *M, double *val){
-  long i,j;
+dcubic_ker2(double *x, double *y, int *N, int *M, double *val){
+  int i,j;
    for(i = 0; i < *N; i++) {
     for(j = 0; j < *M; j++) {
       val[(i*(*M))+j] = dkc2(x[i], y[j]);
@@ -531,9 +531,9 @@ dkexp(double x, double y, double r) {
  }
 
 void
-dexpLspline_ker(double *x, double *y, double *r, long *N, long *M, double *val)
+dexpLspline_ker(double *x, double *y, double *r, int *N, int *M, double *val)
 {
-  long  i, j;
+  int  i, j;
   for(i=0; i< *N; i++)
       for(j=0; j< *M; j++) val[i*(*M)+j]=dkexp(x[i], y[j], *r);
 }   
@@ -542,7 +542,7 @@ dexpLspline_ker(double *x, double *y, double *r, long *N, long *M, double *val)
 static double
 dksin(double x) {
   double val=0;
-  long i;
+  int i;
 
   for(i=2; i<=50; i++)
      val +=  0.008062884*i * sin(6.283 * i * x)/(i*i*2-1)/(i*i*2-1);
@@ -551,8 +551,8 @@ dksin(double x) {
 }
 
 void
-dsinLspline_ker(double *x, double *y, long *N, long *M, double *val){
-   long i,j;
+dsinLspline_ker(double *x, double *y, int *N, int *M, double *val){
+   int i,j;
    for(i = 0; i < *N; i++) {
     for(j = 0; j < *M; j++) {
       val[(i*(*M))+j] = dksin(x[i]-y[j]);
@@ -570,7 +570,7 @@ double cos_angle(double a1, double b1, double a2, double b2)
   return val;
 }
 
-double rk_q(double z, long ord){
+double rk_q(double z, int ord){
   double w, a, c, val;
   if(z>0.9999999){
     switch(ord){
@@ -633,10 +633,10 @@ double rk_q(double z, long ord){
   return val;
  }
   
-void sphere_ker(double *x1, double *y1, double *x2, double *y2, long *len1, 
-               long *len2, long *ord, double *rk)
+void sphere_ker(double *x1, double *y1, double *x2, double *y2, int *len1, 
+               int *len2, int *ord, double *rk)
 {
- long i, j;
+ int i, j;
  
  for(i=0; i< *len1; i++)
     for(j=0; j< *len2; j++){
