@@ -1554,7 +1554,8 @@ c      character*2 vmu
       j=1
 23007 if(.not.(j.le.nobs))goto 23009
       if(.not.(eta(j) .lt. -700.d0))goto 23010
-      tmp = 1.d0
+c      tmp = 1.d0
+      tmp=dexp(-700.d0)
       goto 23011
 23010 continue
       tmp = dexp (-eta(j))

@@ -641,7 +641,7 @@ function(y, q, s, family, vmu = "v", varht = NULL, limnla = c(
 		} 
 		, 
 		poisson = result$fit <- exp(result$eta), 
-		gamma = result$fit <- 1/result$eta) 
+		gamma = result$fit <- exp(result$eta)) 
 	if(result$job > 0) result$score <- result$score[ - length(result$score) 
 			]	 
 ## needed to add something above this line ## 
