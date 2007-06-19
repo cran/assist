@@ -70,7 +70,7 @@ function(Q)
 	tmp <- eigen(Q)
 	num <- sum(tmp$values < 1e-010)
 	n <- ncol(Q) - num
-	matDiag.prod(tmp$vector[, 1:n], sqrt(tmp$values[1:n]), FALSE)
+	matDiag.prod(as.matrix(tmp$vector[, 1:n]), sqrt(tmp$values[1:n]), FALSE)
 }
 cubic<- 
 function(s, t = s) 
@@ -165,7 +165,7 @@ diagComp<-function(mat, vec)
    mlist<- as.list(1:len)
    mlist<- lapply(mlist, function(x, m, v) 
         if(nrow(m)>1) m[, (v[x]+1):v[x+1]] else matrix(m[, (v[x]+1):v[x+1]], nrow=1), 
-        m=mat, v=cvec)
+        m=as.matrix(mat), v=cvec)
    bdiag(mlist)
 }
 dmudr<- 
@@ -260,13 +260,15 @@ function(y, q, s, weight = NULL, vmu = "v", theta = NULL, varht = NULL, tol = 0,
 	tmp.result <- 0 
 	for(i in 1:result$nq) 
 		tmp.result <- tmp.result + (10^(result$theta[i]) * q[,  , i]) 
-	result$penalty <- sum(matVec.prod(tmp.result, result$c) * result$c) 
-	result$fit <- result$fit + tmp.result %*% result$c 
-	resultRss <- sum((y1 - result$fit)^2) 
-	result$df <- length(y1) - resultRss/result$varht[1] 
 	if(vmu == "m") 
 		result$varht <- result$varht[2] 
 	else result$varht <- result$varht[1] 
+	result$penalty <- sum(matVec.prod(tmp.result, result$c) * result$c) 
+	result$fit <- result$fit + tmp.result %*% result$c 
+	resultRss <- sum((y1 - result$fit)^2) 
+	if(vmu=="m") result$df<- (length(y1)*result$score-resultRss)/(2*result$varht)
+	else result$df <- length(y1) - resultRss/result$varht 
+	
 	if(!is.null(weight)) { 
 		result$c <- t(weight) %*% result$c 
 		result$fit <- solve(weight) %*% result$fit 
@@ -348,16 +350,18 @@ function(y, q, s=NULL, weight = NULL, vmu = "v", varht = NULL, limnla = c(-10, 3
 		stop("vmu is out of scope") 
 	else if(result$info > 0) 
 		stop("matrix S is rank deficient: rank(S)+1") 
+      if(vmu == "m") 
+		result$varht <- result$varht[2] 
+	else result$varht <- result$varht[1] 
 	result$penalty <- sum(matVec.prod(q, result$c) * result$c) 
 	result$resi <- 10^(result$nlaht) * result$c 
 	result$fit <- yy - result$resi 
 	resultRss <- sum(result$resi^2) 
-	result$df <- nobs - resultRss/result$varht[1] 
-	if(vmu == "m") 
-		result$varht <- result$varht[2] 
-	else result$varht <- result$varht[1] 
-	if(result$job > 0) 
+	if(result$job > 0){ 
 		result$score <- result$score[ - length(result$score)] 
+	}
+      if(vmu=="u") result$df<- (nobs*min(result$score)-resultRss)/(2*result$varht)
+	else result$df <- nobs - resultRss/result$varht
 	if(!is.null(weight)) { 
 		result$c <- t(weight) %*% result$c 
 		result$fit <- solve(weight) %*% result$fit 
@@ -526,12 +530,14 @@ function(y, q, s, family, vmu = "v", varht = NULL, init = 0,
 				  ), 
 				stop("There are some w's equals to zero")) 
 	} 
-	result$rss <- (10^result$nlaht * result$c)/sqrt(result$w) 
-	result$rss <- sum(result$rss^2) 
-	result$df <- nobs - result$rss/result$varht[1] 
 	if(vmu == "m") 
 		result$varht <- result$varht[2] 
 	else result$varht <- result$varht[1] 
+	result$rss <- (10^result$nlaht * result$c)/sqrt(result$w) 
+	result$rss <- sum(result$rss^2) 
+	if(vmu=="u") result$df<- (nobs*result$score-result$rss)/(2*result$varht)
+	else result$df <- nobs - result$rss/result$varht 
+	
 	switch(family, 
 		binary = result$fit <- alogit(result$eta), 
 		binomial = { 
@@ -540,7 +546,7 @@ function(y, q, s, family, vmu = "v", varht = NULL, init = 0,
 		} 
 		, 
 		poisson = result$fit <- exp(result$eta), 
-		gamma = result$fit <- 1/result$eta) 
+		gamma = result$fit <- exp(result$eta)) 
 	result$vmu <- vmu 
 	result 
 } 
@@ -642,15 +648,16 @@ function(y, q, s, family, vmu = "v", varht = NULL, limnla = c(
 		, 
 		poisson = result$fit <- exp(result$eta), 
 		gamma = result$fit <- exp(result$eta)) 
-	if(result$job > 0) result$score <- result$score[ - length(result$score) 
-			]	 
+	if(result$job > 0) result$score <- result$score[ - length(result$score)]	 
 ## needed to add something above this line ## 
-	result$resi <- (10^result$nlaht * result$c)/sqrt(result$w) 
-	resultRss <- sum(result$resi^2) 
-	result$df <- nobs - resultRss/result$varht[1] 
 	if(vmu == "m") 
 		result$varht <- result$varht[2] 
 	else result$varht <- result$varht[1] 
+	result$resi <- (10^result$nlaht * result$c)/sqrt(result$w) 
+	resultRss <- sum(result$resi^2) 
+	if(vmu=="u") result$df<- (nobs*min(result$score)-resultRss)/(2*result$varht)
+	else result$df <- nobs - resultRss/result$varht 
+
 	result$vmu <- vmu 
 	result$nq <- 1 
 	result 
@@ -2650,6 +2657,7 @@ function (formula, func, params, data = sys.parent(), start,
         }
         control <- defCtrl
     }
+
     convergMethod <- control$converg
     repInd <- rep(1:lengthF, rep(control$backfit, lengthF))
     f.old <- matrix(rep(1, lengthF), nrow = 1)
@@ -2741,14 +2749,14 @@ function (formula, func, params, data = sys.parent(), start,
                 Q[[bF]] <- list(Q[[bF]])
             if (length(Q[[bF]]) == 1) {
                 rkFit[[bF]] <- dsidr(y = yTilde, q = Q[[bF]][[1]], 
-                  s = S[[bF]], weight = wList[[bF]], tol = control$tol, 
-                  vmu = spar, job = control$job, limnla = control$limnla)
+                  s = S[[bF]], weight = wList[[bF]], tol = control$rkpk.control$tol, 
+                  vmu = spar, job = control$rkpk.control$job, limnla = control$rkpk.control$limnla)
             }
             else {
                 rkFit[[bF]] <- dmudr(y = yTilde, q = Q[[bF]], 
-                  s = S[[bF]], weight = wList[[bF]], tol = control$tol, 
-                  vmu = spar, prec = control$prec, maxit = control$maxit, 
-                  init = control$init)
+                  s = S[[bF]], weight = wList[[bF]], tol = control$rkpk.control$tol, 
+                  vmu = spar, prec = control$rkpk.control$prec, maxit = control$rkpk.control$maxit, 
+                  init = control$rkpk.control$init)
             }
             fhat[[bF]] <- rkFit[[bF]]$fit
             yList[[bF]] <- yTilde
@@ -3100,7 +3108,8 @@ predict.snr<- function(object, newdata=NULL, ...)
      for(i in 1:lengthF){
           if(length(ssr.obj$expand.call$formF)>0 && !is.null(ssr.obj$expand.call$formF[[i]])){
           	tmp.s<- model.matrix2(ssr.obj$expand.call$formF[[i]], dataInit[[i]]) 
-          	tmp.s<- fit.y+as.vector(tmp.s%*%ssr.obj$rkpk.obj[[i]]$d)
+#          	tmp.s<- fit.y+as.vector(tmp.s%*%ssr.obj$rkpk.obj[[i]]$d)
+		tmp.s<- as.vector(tmp.s%*%ssr.obj$rkpk.obj[[i]]$d)
           }
           else tmp.s<- 0
      

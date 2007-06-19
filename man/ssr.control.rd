@@ -49,7 +49,7 @@ a list with components for each of the possible arguments.
 \seealso{
 \code{\link{ssr}}
 }
-\example{
+\examples{
 # use regular grid seach method with 100 grid points
 ssr.control(job=99)
 }

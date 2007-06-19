@@ -4137,6 +4137,7 @@ c      if(.not.( vmu .eq. 'u' ))
       deno = deno / dfloat (n)
       score = alph * alph * la * la * nume - 2.d0 * varht(1) * alph * 
      *la * deno
+	varht(2) = alph * la *deno
 23020 continue
       return
       end

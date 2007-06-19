@@ -17,7 +17,7 @@ The [i, j] element is the reproducing kernel evaluated at (s[i], t[j]). }
 \details{
 The general formula of the reproducing kernel is provided in Gu (2001). The close form is not available, so an approximate based on the first 50 terms of the series
 is used.}
-\reference{
+\references{
 Wahba, G. (1990). Spline Models for Observational Data. SIAM, Vol. 59.
 
 Gu, C. (2001). Smoothing Spline ANOVA Modes. Chapman and Hall.

@@ -22,18 +22,18 @@ gdsidr                  Interface of dbsdr, dbisdr, dgsdr, dpsdr in
 hat.ssr                 Extract the Hat Matrix from a ssr Object
 horm.cort               Hormone Measurements of Cortisol
 ident                   Scaling a Vector
-intervals.nnr           Calculate Predictions and Approximate
-                        Posterior Standard Deviations for Spline
-                        Estimates From a nnr Object
+intervals.nnr           Calculate Predictions and Approximate Posterior
+                        Standard Deviations for Spline Estimates From a
+                        nnr Object
 intervals.slm           Calculate Predictions and Posterior Standard
                         Deviations of Spline Estimates From a slm
                         Object
-intervals.snm           Calculate Predictions and Approximate
-                        Posterior Standard Deviations for Spline
-                        Estimate From a snm Object
-intervals.snr           Calculate Predictions and Approximate
-                        Posterior Standard Deviations for Spline
-                        Estimates From a snr Object
+intervals.snm           Calculate Predictions and Approximate Posterior
+                        Standard Deviations for Spline Estimate From a
+                        snm Object
+intervals.snr           Calculate Predictions and Approximate Posterior
+                        Standard Deviations for Spline Estimates From a
+                        snr Object
 kron                    Calculate reproducing kernels for
                         one-dimensional space
 linear                  Calculate Reproducing Kernels for Polynomial
@@ -83,8 +83,7 @@ snr                     Fit A Semi-parametric Nonlinear Regression
 snr.control             Set Control Parameters for snr
 sphere                  Calculate Pseudo Reproducing Kernels for
                         Spherical Splines
-ssr                     Fit a General Smoothing Spline Regression
-                        Model
+ssr                     Fit a General Smoothing Spline Regression Model
 ssr.control             Set Control Parameters for 'ssr'
 ssr.object              A fitted ssr Object
 summary.nnr             Object Summaries

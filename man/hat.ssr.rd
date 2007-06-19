@@ -21,7 +21,7 @@ The hat matrix may be used for diagnosis. Note that the full name hat.ssr shoud 
 \value{
 returned is the hat (influence, smoother) matrix.
 }
-\reference{ 
+\references{ 
 Eubank, R. L. (1984). The Hat Matrix for Smoothing Splines. Statistics and Probability Letters, 2:9-14.
 
 Eubank, R. L. (1985). Diagnostics for Smoothing Splines. Journal of the Royal Statistical Society B. 47: 332-341.
