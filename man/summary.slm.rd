@@ -7,7 +7,7 @@ Object Summaries
 Summarize a \code{slm} object
 }
 \usage{
-summary.slm(object, ...)
+\method{summary}{slm}(object, ...)
 }
 \arguments{
 \item{object}{a fitted \code{slm} object.}

@@ -7,7 +7,7 @@ Object Summaries
 Summarize a 'snr' object
 }
 \usage{
-summary.snr(object, ...)
+\method{summary}{snr}(object, ...)
 }
 \arguments{
 \item{object}{a fitted \code{snr} object.}

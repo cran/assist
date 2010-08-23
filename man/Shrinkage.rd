@@ -3,7 +3,6 @@
 \alias{shrink1}
 \title{Calculate reproducing kernels for Stein shrinkage estimate}
 \description{Return a matrix evaluating reproducing kernels for the discrete shrinkage towards zero or the mean estimate}
-}
 \usage{
 shrink0(x, y=x)
 shrink1(x, y=x)

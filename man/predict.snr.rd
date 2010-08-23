@@ -9,7 +9,7 @@ substituting the unknwon functions together with unknown parameters with their e
 and evaluating the regression functional based on provided or default covariate values.
 }
 \usage{
-predict.snr(object, newdata, ...)
+\method{predict}{snr}(object, newdata, ...)
 }
 \arguments{
 \item{object}{

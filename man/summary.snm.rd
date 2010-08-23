@@ -7,7 +7,7 @@ Object Summaries
 Summarize a \code{snm} object
 }
 \usage{
-summary.snm(object, ...)
+\method{summary}{snm}(object, ...)
 }
 \arguments{
 \item{object}{a fitted 'snm' object.}

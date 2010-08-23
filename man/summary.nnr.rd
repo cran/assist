@@ -7,7 +7,7 @@ Object Summaries
 Summarize a \code{nnr} object
 }
 \usage{
-summary.nnr(object, ...)
+\method{summary}{nnr}(object, ...)
 }
 \arguments{
 \item{object}{a fitted \code{nnr} object.}

@@ -38,11 +38,9 @@ Default is -1.
  \item{ prec}{
   precision requested for the minimum score value, where precision is the weaker of the absolute and relative precisions. Default is 1e-06.
   }
-  \item{ maxit}{
-   maximum number of iterations allowed. Default is 30.
-   }
+  \item{ maxit}{maximum number of iterations allowed. Default is 30.}
 \item{method}{a character string specifying a method for iterations, "GN" for Gauss-Newton and "NR" for Newton-Raphson. Default is "GN".}
-\item{increment} {specifies a small value as increment to calcuate derivatives. Default is 1e-04.}
+\item{increment}{specifies a small value as increment to calcuate derivatives. Default is 1e-04.}
 \item{backfit}{ an integer representing the number of backfitting iterations for multiple functions. Default is 5.}
 \item{converg}{	an optional character, with possible values "coef" and "ortho", specifying the convergence 
 	criterion to be used. "coef" uses the change of estimate of parameters and functions to

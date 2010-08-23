@@ -7,7 +7,7 @@ Print Values
 Print the arguments of a \code{snr} object.
 }
 \usage{
-print.snr(x, ...)
+\method{print}{snr}(x, ...)
 }
 \arguments{
 \item{x}{ a \code{snr} object}

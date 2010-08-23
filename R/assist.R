@@ -266,7 +266,7 @@ function(y, q, s, weight = NULL, vmu = "v", theta = NULL, varht = NULL, tol = 0,
 	result$penalty <- sum(matVec.prod(tmp.result, result$c) * result$c) 
 	result$fit <- result$fit + tmp.result %*% result$c 
 	resultRss <- sum((y1 - result$fit)^2) 
-	if(vmu=="m") result$df<- (length(y1)*result$score-resultRss)/(2*result$varht)
+	if(vmu=="u") result$df<- (length(y1)*result$score-resultRss)/(2*result$varht)
 	else result$df <- length(y1) - resultRss/result$varht 
 	
 	if(!is.null(weight)) { 
@@ -782,7 +782,7 @@ function(ssr.obj)
 				ssr.obj$expand.call$family, vmu = ssr.obj$
 				expand.call$spar, tol1 = ssr.obj$expand.call$
 				control$tol, tol2 = ssr.obj$expand.call$control$
-				tol.g, maxite = ssr.obj$expand.call$control$
+				tol.g, maxit= ssr.obj$expand.call$control$
 				maxit.g, job = ssr.obj$expand.call$control$job, 
 				limnla = ssr.obj$expand.call$limnla, prec = 
 				ssr.obj$expand.call$control$prec)
@@ -1692,6 +1692,33 @@ function(x, order = 2)
 		mat <- rbind(mat, apply(t(x)^result[, i], 2, prod))
 	t(mat)
 }
+tp.linear<-function(x, y=x){
+    if(is.vector(x)) return(kron(x,y))
+    if(is.list(x)){
+		d<- length(x)
+		x<-matrix(unlist(x), ncol=d, byrow=F) 
+	}
+	d<- ncol(x)
+     Tx <- cbind(1,x)
+     Rx <- qr.R(qr(Tx))
+     zx <- Tx%*%solve(Rx)
+     xx <- zx[,-1]	 
+	 if(missing (y)) sumList(sapply(1:d, function(a, b) list(kron(b[,a])), b=xx))
+	 else{
+	 	if(is.list(y)){
+			dy<- length(y)
+			if(dy!=d) stop("y must have the same length as x")
+		    y<-matrix(unlist(y), ncol=dy, byrow=F) 
+	    }
+	    dy<- ncol(y)
+     	Ty <- cbind(1,y)
+     	Ry <- qr.R(qr(Ty))
+     	zy <- Ty%*%solve(Ry)
+     	yy <- zy[,-1]
+     	sumList(sapply(1:d, function(a, b, f) list(kron(b[,a], f[,a])), b=xx, f=yy))
+    }
+}
+
 xyplot2<-
 function(formula, data, type = "l", ...)
 {
@@ -2130,11 +2157,11 @@ function (object, residuals = FALSE, ...)
     })
 }
 
-#.First.lib <- function(lib, pkg)
-#{
-#    library.dynam("assist", pkg, lib)
+.First.lib <- function(lib, pkg)
+{
+    library.dynam("assist", pkg, lib)
 #    require(nlme)
-#}
+}
 #intervals<- function(object, ...) UseMethod("intervals")
 
 #### NNR-Part
@@ -3487,7 +3514,7 @@ slm<- function(formula,
     lme.obj$call$fixed<-formula
     rk.obj<- list(call=match.call(), expand.call=Call, data=data, y=y,
                   re.est=re.est, var.est=var.est, cor.est=cor.est,
-                  rkpk.obj=rk.obj, weight=weight, D=D, coef=list(re.coef=re.coef, 
+                  rkpk.obj=rk.obj, weight=weight, coef=list(re.coef=re.coef, 
                   fixed.coef=fixed.coef, d=rk.obj$d, c=rk.obj$c), vmu="m", family="gaussian",
                   residuals=lme.obj$resi[,2], fit=lme.obj$fit[,2], df=rk.obj$df,
                   lme.obj=lme.obj, s=S, q=Q, lambda=lambda, scale=scale)
@@ -4969,4 +4996,5 @@ dim(x)[1]
 
 .onLoad<- function(...){
   require(nlme)
+  #library.dynam("assist")
 }

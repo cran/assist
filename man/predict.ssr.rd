@@ -7,7 +7,7 @@ Calculate Predictions and Posterior Standard Deviations for a ssr Object
 Provide a way to calculate predictions at any specified values for any combinations of elements in the fitted model. Posterior standard deviations may be used to construct Bayesian confidence intervals. 
 }
 \usage{ 
-predict.ssr(object, newdata=NULL, terms, pstd=TRUE, ...) 
+\method{predict}{ssr}(object, newdata=NULL, terms, pstd=TRUE, ...) 
 }
 \arguments{ 
  \item{object}{

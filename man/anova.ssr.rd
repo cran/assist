@@ -10,7 +10,7 @@ lies in the null space using the local most powerful (LMP) test and
 a GCV or GML test.
 }
 \usage{
-anova.ssr(object, simu.size=100, ...)
+\method{anova}{ssr}(object, simu.size=100, ...)
 }
 \arguments{
 \item{object}{

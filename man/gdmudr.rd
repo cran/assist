@@ -78,7 +78,7 @@ info>0 indicates the matrix S is rank deficient with \eqn{info=rank(S)+1}.
   \item{theta}{
   estimates of parameters \eqn{log10(theta)}. 
   }
-  \itme{nlaht}{
+  \item{nlaht}{
   the estimate of \eqn{log10(nobs*lambda)}.
   }
   \item{score}{

@@ -9,7 +9,7 @@ by replacing the unknown functuons and the unknown parameters with their estimat
 Of note, only a population level of predictions is available. 
 }
 \usage{
-predict.snm(object, newdata, ...)
+\method{predict}{snm}(object, newdata, ...)
 }
 \arguments{
 \item{object}{

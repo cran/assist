@@ -8,7 +8,7 @@ Predicted Values on different levels of random effects with the spline fit
 as part of fixed effects
 }
 \usage{
-predict.slm(object, newdata=NULL, ...)
+\method{predict}{slm}(object, newdata=NULL, ...)
 }
 \arguments{
 \item{object}{

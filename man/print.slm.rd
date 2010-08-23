@@ -8,7 +8,7 @@ Print the arguments of a \code{slm} object.
 }
 
 \usage{
-print.slm(x, ...)
+\method{print}{slm}(x, ...)
 }
 \arguments{
 \item{x}{a \code{slm} object}

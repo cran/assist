@@ -7,7 +7,7 @@ Print Values
 Print the arguments of a 'nnr' object.
 }
 \usage{
-print.nnr(x, ...)
+\method{print}{nnr}(x, ...)
 }
 \arguments{
 \item{x}{a \code{nnr} object}

@@ -55,7 +55,7 @@ Ke, C. and Wang, Y. (2002). Nonlinear Nonparametric Regression Models. Submitted
 }
 \author{Chunlei Ke \email{chunlei\_ke@pstat.ucsb.edu} and Yuedong Wang \email{yuedong@pstat.ucsb.edu}}
 \seealso{
-\code{\link{nnr}}, \code{\link{plot.bCI}}}
+\code{\link{nnr}}, \code{\link{plot.bCI}}
 }
 \examples{
 

@@ -1,6 +1,4 @@
-\name{
-print.ssr
-}
+\name{print.ssr}
 \alias{print.ssr}
 \title{
 Print Values
@@ -9,7 +7,7 @@ Print Values
 Print the arguments of a \code{ssr} object.
 }
 \usage{
-print.ssr(x, ...)
+\method{print}{ssr}(x, ...)
 }
 \arguments{
   \item{x}{a \code{ssr} object}

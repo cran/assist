@@ -20,7 +20,7 @@ For \eqn{p=1}, rk may be specified with given functions. Supported functions are
 "cubic", "quintic", and "septic" for linear, cubic, quintic and septic polynomial 
 splines with "linear2", "cubic2", "quintic2", and "septic2" for another construction;
 "periodic" for periodic splines; "shrink0" and "shrink1" for Stein's shrink-toward-zero and 
-shrink-toward-mean estimates; "tps" for thin-plate-splines; "lspline" for L-splines. 
+shrink-toward-mean estimates; "tp" for thin-plate-splines; "lspline" for L-splines. 
 For details on these kernels, see their help files. Users may also write their own functions.}
   \item{data}{a data frame containing the variables occurring in the formula and the \code{rk}. If this option is not specified, 
 the variables should be on the search list. Missing values are not allowed. }

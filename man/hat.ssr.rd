@@ -2,7 +2,6 @@
 \alias{hat.ssr}
 \title{
 Extract the Hat Matrix from a ssr Object}
-}
 \description{
 Calculate the hat matrix for a \code{ssr} object.
 }

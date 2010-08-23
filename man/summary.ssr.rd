@@ -7,7 +7,7 @@ Summarize a ssr object
 Provides a synopsis of a \code{ssr} object and perform tests.
 }
 \usage{
-summary.ssr(object, ...)
+\method{summary}{ssr}(object, ...)
 }
 \arguments{
   \item{object}{ a fitted \code{ssr} object. }

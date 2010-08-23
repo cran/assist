@@ -5,8 +5,8 @@
 \usage{ kron(x,y=x)
 }
 \arguments{
-   \item{x} {a vector or a list of numerical values which spans the one-dimensional space.}
-   \item{y} {a vector/list ofnumerical values. Default is x.}
+   \item{x}{a vector or a list of numerical values which spans the one-dimensional space.}
+   \item{y}{a vector or a list of numerical values. Default is x.}
 }
 \value{
 a matrix with the numbers of row and column equal to the length of x and y respectively. 
