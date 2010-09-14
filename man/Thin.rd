@@ -1,6 +1,7 @@
 \name{Thin}
 \alias{tp.pseudo}
 \alias{tp}
+\alias{tp.linear}
 \title{
 Calculate Reproducing Kernels for Thin Plate Splines
 }
@@ -10,6 +11,7 @@ Return a matrix evaluating reproducing kernels for thin plate splines at observe
 \usage{
 tp.pseudo(s, u=s, order=2)
 tp(s, u=s, order=2)
+tp.linear(s, u=s)
 }
 \arguments{
 \item{s}{
@@ -27,13 +29,15 @@ dimension of s (and u). Then order must satisfy \eqn{2*order-d>0}.
 }}
 \value{
 a matrix with the numbers of row and column equal to the common length of componets or 
-the number of row of s and t respectively. The [i, j] element is the pseudo or true reproducing kernel
+the number of row of s and t respectively. The [i, j] element is the pseudo, true, or linear reproducing kernel
 evaluated at the ith element of s and jth element of u.
 }
 \details{
 The pseudo kernel, which is conditional definite positive instead of definite positive, is easy to
 calculate, while the true reproducing kernel is complicated. Pseudo Kernels are enough to compute 
 spline estimates, but to calcualte Bayesian confidnece intervals, the true kernel is required.
+For the special case of d=2 and order=2, the function tp.linear computes evaluations of the reproducing kernel
+of the space spanned by linear basis.
 }
 \references{
 Wahba, G. (1990). Spline Models for Observational Data. SIAM, Vol. 59.

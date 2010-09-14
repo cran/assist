@@ -782,7 +782,7 @@ function(ssr.obj)
 				ssr.obj$expand.call$family, vmu = ssr.obj$
 				expand.call$spar, tol1 = ssr.obj$expand.call$
 				control$tol, tol2 = ssr.obj$expand.call$control$
-				tol.g, maxit= ssr.obj$expand.call$control$
+				tol.g, maxit = ssr.obj$expand.call$control$
 				maxit.g, job = ssr.obj$expand.call$control$job, 
 				limnla = ssr.obj$expand.call$limnla, prec = 
 				ssr.obj$expand.call$control$prec)
@@ -1692,26 +1692,26 @@ function(x, order = 2)
 		mat <- rbind(mat, apply(t(x)^result[, i], 2, prod))
 	t(mat)
 }
-tp.linear<-function(x, y=x){
-    if(is.vector(x)) return(kron(x,y))
-    if(is.list(x)){
-		d<- length(x)
-		x<-matrix(unlist(x), ncol=d, byrow=F) 
+tp.linear<-function(s, u=s){
+    if(is.vector(s)) return(kron(s,u))
+    if(is.list(s)){
+		d<- length(u)
+		s<-matrix(unlist(s), ncol=d, byrow=F) 
 	}
-	d<- ncol(x)
-     Tx <- cbind(1,x)
+	d<- ncol(s)
+     Tx <- cbind(1,s)
      Rx <- qr.R(qr(Tx))
      zx <- Tx%*%solve(Rx)
      xx <- zx[,-1]	 
-	 if(missing (y)) sumList(sapply(1:d, function(a, b) list(kron(b[,a])), b=xx))
+	 if(missing (u)) sumList(sapply(1:d, function(a, b) list(kron(b[,a])), b=xx))
 	 else{
-	 	if(is.list(y)){
-			dy<- length(y)
-			if(dy!=d) stop("y must have the same length as x")
-		    y<-matrix(unlist(y), ncol=dy, byrow=F) 
+	 	if(is.list(u)){
+			dy<- length(u)
+			if(dy!=d) stop("u must have the same length as s")
+		    u<-matrix(unlist(u), ncol=dy, byrow=F) 
 	    }
-	    dy<- ncol(y)
-     	Ty <- cbind(1,y)
+	    dy<- ncol(u)
+     	Ty <- cbind(1,u)
      	Ry <- qr.R(qr(Ty))
      	zy <- Ty%*%solve(Ry)
      	yy <- zy[,-1]
@@ -4993,6 +4993,105 @@ function(target, columns.to.sort.by)
 "count.rows.matrix"<-
 function(x, ...)
 dim(x)[1]
+
+
+inc <- function(y, x, spar="v", limnla=c(-6,0), grid=x, 
+                prec=1.e-6, maxit=50, verbose=F)
+{
+ n <- length(x)
+ org.ord <- match(1:n, (1:n)[order(x)])
+ s.x <- sort(x)
+ s.y <- y[order(x)]
+ x1 <- c(0, s.x[-n])
+ x2 <- s.x-x1
+ q.x <- as.vector(rep(1,3)%o%x1+c(0.1127017,0.5,0.8872983)%o%x2)
+
+k1 <- function(x) x-.5
+k2 <- function(x) ((x-.5)^2-1/12)/2
+dk2 <- function(x) x-.5
+dk4 <- function(x) sign(x)*((abs(x)-.5)^3/6-(abs(x)-.5)/24)
+drkcub <- function(x,z) dk2(x)%o%k2(z)-dk4(x%o%rep(1,length(z))-rep(1,length(x))%o%z)
+
+## get starting value
+ ini.fit <- ssr(s.y~I(s.x-.5), cubic(s.x))
+ h.new <- ini.fit$coef$d[2]+drkcub(q.x,x)%*%ini.fit$coef$c
+ h.new <- abs(h.new)+0.005
+
+## begin iteration
+ iter <- cover <- 1  
+ h.old <- h.new 
+ repeat {
+  if(verbose) cat("\n Iteration: ", iter)
+  yhat <- s.y-mono.s(h.new*(1-log(h.new)),s.x)        
+  smat <- cbind(mono.s(h.new, s.x), mono.s(h.new*q.x,s.x))
+  qmat <- mono.rk(s.x,h.new)
+  fit <- ssr(yhat~smat, qmat, spar=spar, limnla=limnla)
+  if(verbose) cat("\nSmoothing parameter: ", fit$rkpk$nlaht)
+  dd <- fit$coef$d
+  cc <- as.vector(fit$coef$c)
+  h.new <- as.vector(exp(cc%*%mono.f(s.x,q.x,h.new)+dd[2]+dd[3]*q.x))
+  cover <- mean((h.new-h.old)^2)     
+  h.old <- h.new
+  if(verbose) cat("\nConvergent Criterion: ", cover, "\n")
+  if(cover<prec || iter>(maxit-1)) break
+  iter <- iter + 1 
+ }
+ if(iter>=maxit) print("convergence not achieved!")
+ y.fit <- (smat[,1]+fit$rkpk$d[1])[org.ord]
+ f.fit <- as.vector(cc%*%mono.f(s.x,grid,h.new)+dd[2]+dd[3]*grid)
+ x1 <- c(0, grid[-length(grid)])
+ x2 <- grid-x1
+ q.x <- as.vector(rep(1,3)%o%x1+c(0.1127017,0.5,0.8872983)%o%x2)
+ h.new <- as.vector(exp(cc%*%mono.f(s.x,q.x,h.new)+dd[2]+dd[3]*q.x))
+ y.pre <- mono.s(h.new,grid)+fit$rkpk$d[1]
+ sigma <- sqrt(sum((y-y.fit)^2)/(length(y)-fit$df))
+# f.fit <- as.vector(cc%*%mono.f(s.x,grid,h.new)+dd[2]+dd[3]*grid)
+# f.pstd <- predict(fit,terms=c(0,1,1,1))$pstd
+ list(fit=fit, iter=c(iter, cover), pred=list(x=grid,y=y.pre,f=f.fit), 
+      y.fit=y.fit, sigma=sigma)
+}    
+
+mono.s <- function(f, x, low = 0)
+{
+ n <- length(x)
+ x <- c(low, x)
+ .C("mono_s",
+    as.double(f),
+    as.double(x),
+    as.integer(n),
+    val = double(n))$val
+}
+
+mono.rk <- function(x, f, low = 0)
+{
+ n <- length(x)  
+ if(length(f) != 3 * n) stop("input not match")
+ x <- c(low, x)
+ res <- matrix(.C("mono_rk",
+                  as.double(x),
+                  as.double(x),
+                  as.double(f),
+                  as.integer(n),
+                  as.integer(n),
+                  val = double(n * n))$val, ncol = n)     
+ res <- apply(res, 1, cumsum)   
+ res
+}
+
+mono.f <- function(x, y, f, low = 0)
+{
+ n1 <- length(x)
+ n2 <- length(y)
+ x <- c(low, x)
+ res <- .C("mono_f",
+           as.double(x),
+           as.double(y),
+           as.double(f),
+           as.integer(n1),
+           as.integer(n2),
+           val = double(n1 * n2))$val
+ matrix(res, ncol = n2, byrow = F)
+}
 
 .onLoad<- function(...){
   require(nlme)

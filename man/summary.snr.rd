@@ -4,7 +4,7 @@
 Object Summaries
 }
 \description{
-Summarize a 'snr' object
+Summarize a \code{snr} object
 }
 \usage{
 \method{summary}{snr}(object, ...)

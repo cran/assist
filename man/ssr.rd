@@ -85,7 +85,7 @@ Ke, C. and Wang, Y. (2002) ASSIST: A Suite of S-plus functions Implementing Spli
 Available at: \url{http://www.pstat.ucsb.edu/faculty/yuedong }}
 \author{Yuedong Wang \email{yuedong@pstat.ucsb.edu} and Chunlei Ke \email{chunlei\_ke@yahoo.com} }
 
-\seealso{ \code{\link{deviance.ssr}}, \code{\link{hat.ssr}},  \code{\link{plot.ssr}}, 
+\seealso{ \code{\link{deviance.ssr}}, \code{\link{hat.ssr}},  \code{\link{plot.ssr}}, \code{\link{ssr.control}},  
 	\code{\link{predict.ssr}}, \code{\link{print.ssr}}, 
 	\code{\link{ssr.object}}, \code{\link{summary.ssr}}, \code{\link{smooth.spline}}.}
 

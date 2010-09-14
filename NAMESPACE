@@ -1,11 +1,11 @@
 useDynLib(assist)
 
 export(alogit, bdiag, chol.new, cubic, cubic2, 
-	dcrdr, dmudr, dsidr, dsms, gdsidr, gdmudr, hat.ssr, ident,
+	dcrdr, dmudr, dsidr, dsms, gdsidr, gdmudr, hat.ssr, ident,inc,
         kron, linear, linear2, lspline,  nnr,
         nnr.control, periodic, quintic, quintic2, rk.prod,
         septic, septic2, shrink0, shrink1, sine4p, slm, snm, snm.control, 
-        snr, snr.control, ssr,  ssr.control, sphere, tp, tp.pseudo, xyplot2)
+        snr, snr.control, ssr,  ssr.control, sphere, tp, tp.pseudo, tp.linear, xyplot2)
 
 importFrom(nlme, intervals)
 
