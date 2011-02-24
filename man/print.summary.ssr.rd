@@ -5,7 +5,7 @@
 Print the arguments of a \code{summary.ssr} object
 }
 \usage{
-print.summary.ssr(x, ...)
+\method{print}{summary.ssr}(x, ...)
 }
 \arguments{
   \item{x}{ an object of class \code{summary.ssr}}

@@ -6,7 +6,7 @@
 Creates a set of plots suitable  for  assessing  a  fitted smoothing spline model of class \code{ssr}.
 }
 \usage{
-plot.ssr(x, ask=FALSE, ...)
+\method{plot}{ssr}(x, ask=FALSE, ...)
 }
 \arguments{
    \item{x}{

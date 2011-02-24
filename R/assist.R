@@ -1498,10 +1498,10 @@ function (formula, rk, data = sys.parent(), subset, weights = NULL,
             if (length(lambda) > 1) {
 ## check the following line
 ##                for (i in 1:length(Q)) tmp.Q <- tmp.Q + Q[[i]] * lambda[i]
-               for (i in 1:length(Q)) tmp.Q <- tmp.Q + Q[[i]] * lambda[i]/n
+               for (i in 1:length(Q)) tmp.Q <- tmp.Q + Q[[i]] * lambda[i]
                 rk.obj <- dsidr(y = y, q = tmp.Q, s = S, weight = weights, 
                   vmu = "m", limnla = 0, tol = ctrl.vals$tol)
-               lamnda<- 1/lambda
+               lambda<- 1/lambda
             }
             else {
                 rk.obj <- dsidr(y = y, q = Q[[1]], s = S, weight = weights, 

@@ -9,7 +9,7 @@ with its (approximate) 95\% Bayesian confidence intervals from
 a ssr/slm/snr/snm object.
 }
 \usage{
-plot.bCI(x, x.val=NULL, type.name=NULL, \dots)
+\method{plot}{bCI}(x, x.val=NULL, type.name=NULL, \dots)
 }
 \arguments{
 \item{x}{

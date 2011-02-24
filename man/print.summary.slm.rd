@@ -5,7 +5,7 @@
 Print the arguments of a \code{summary.slm} object
 }
 \usage{
-print.summary.slm(x, ...)
+\method{print}{summary.slm}(x, ...)
 }
 \arguments{
   \item{x}{ an object of class \code{summary.slm}}

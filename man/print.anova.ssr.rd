@@ -7,7 +7,7 @@ Print an anova.ssr Object
 Calculate and output p-values for tests available.
 }
 \usage{
-print.anova.ssr(x, ...)
+\method{print}{anova.ssr}(x, ...)
 }
 \arguments{
  \item{x}{

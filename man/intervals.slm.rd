@@ -10,7 +10,7 @@ estimate of nonparametric functions from a \code{slm} object, based on which
 approximate Bayesian confidence intervals may be constructed.
 }
 \usage{
-intervals.slm(object, level=0.95, newdata=NULL, terms, pstd=TRUE, ...)
+\method{intervals}{slm}(object, level=0.95, newdata=NULL, terms, pstd=TRUE, ...)
 }
 \arguments{
 \item{object}{

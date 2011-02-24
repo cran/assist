@@ -9,7 +9,7 @@ nonparametric functions from a snr object, based on which approximate Bayesian
 confidence intervals may be constructed.
 }
 \usage{
-intervals.snr(object, level=0.95,newdata=NULL, terms=list(), pstd=TRUE,  ...)
+\method{intervals}{snr}(object, level=0.95,newdata=NULL, terms=list(), pstd=TRUE,  ...)
 }
 \arguments{
 \item{object}{

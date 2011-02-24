@@ -5,6 +5,7 @@ anova.ssr               Testing a Non-parametric Function Fitted via
 Arosa                   Monthly Mean Ozone Thickness in Arosa of
                         Switzerland
 bdiag                   Construct a Block Diagonal Matrix
+bond                    Treasury and GE bonds
 canadaTemp              Monthly Mean Temperatures
 chickenpox              Chickenpox in New York City
 chol.new                A Modified Cholesky Decomposition
@@ -22,6 +23,7 @@ gdsidr                  Interface of dbsdr, dbisdr, dgsdr, dpsdr in
 hat.ssr                 Extract the Hat Matrix from a ssr Object
 horm.cort               Hormone Measurements of Cortisol
 ident                   Scaling a Vector
+inc                     Fit a Monotone Curve Using a Cubic Spline
 intervals.nnr           Calculate Predictions and Approximate Posterior
                         Standard Deviations for Spline Estimates From a
                         nnr Object
@@ -44,6 +46,7 @@ lspline                 Calculate Reproducing Kernels for Some
                         L-splines
 nnr                     Nonlinear Non-parametric Regression
 nnr.control             Set Control Parameters for nnr
+paramecium              Growth of paramecium caudatum population
 periodic                Calculate Reproducing Kernels for Periodic
                         Polynomial Splines with Period 1
 plot.bCI                Bayesian Confidence Interval Plot of a
@@ -69,6 +72,7 @@ print.summary.snm       Print Values
 print.summary.snr       Print Values
 print.summary.ssr       Print Values
 rk.prod                 Calculate product of reproducing kernels
+seizure                 IEEG segments from a seizure patient
 shrink0                 Calculate reproducing kernels for Stein
                         shrinkage estimate
 sine4p                  Calculate Reproducing Kernels for Periodic
@@ -86,6 +90,8 @@ sphere                  Calculate Pseudo Reproducing Kernels for
 ssr                     Fit a General Smoothing Spline Regression Model
 ssr.control             Set Control Parameters for 'ssr'
 ssr.object              A fitted ssr Object
+star                    Magnitude of the Mira Variable R Hydrae
+Stratford               Daily maximum temperatures in Stratford
 summary.nnr             Object Summaries
 summary.slm             Object Summaries
 summary.snm             Object Summaries
@@ -94,6 +100,8 @@ summary.ssr             Summarize a ssr object
 tp.pseudo               Calculate Reproducing Kernels for Thin Plate
                         Splines
 TXtemp                  Texas Historical Climate Data
+ultrasound              Ultrasound imaging of the tongue shape
+USAtemp                 Average Winter temperature in the United States
 wesdr                   Wisconsin Epidemiological Study of Diabetic
                         Retinopathy
 xyplot2                 Extension of XYPLOT
