@@ -4994,7 +4994,6 @@ function(target, columns.to.sort.by)
 function(x, ...)
 dim(x)[1]
 
-
 inc <- function(y, x, spar="v", limnla=c(-6,0), grid=x, 
                 prec=1.e-6, maxit=50, verbose=F)
 {
@@ -5006,30 +5005,31 @@ inc <- function(y, x, spar="v", limnla=c(-6,0), grid=x,
  x2 <- s.x-x1
  q.x <- as.vector(rep(1,3)%o%x1+c(0.1127017,0.5,0.8872983)%o%x2)
 
-k1 <- function(x) x-.5
-k2 <- function(x) ((x-.5)^2-1/12)/2
-dk2 <- function(x) x-.5
-dk4 <- function(x) sign(x)*((abs(x)-.5)^3/6-(abs(x)-.5)/24)
-drkcub <- function(x,z) dk2(x)%o%k2(z)-dk4(x%o%rep(1,length(z))-rep(1,length(x))%o%z)
+ # function for computing derivatives
+ k1 <- function(x) x-.5
+ k2 <- function(x) ((x-.5)^2-1/12)/2
+ dk2 <- function(x) x-.5
+ dk4 <- function(x) sign(x)*((abs(x)-.5)^3/6-(abs(x)-.5)/24)
+ drkcub <- function(x,z) dk2(x)%o%k2(z)-dk4(x%o%rep(1,length(z))-rep(1,length(x))%o%z)
 
-## get starting value
+ # compute starting value
  ini.fit <- ssr(s.y~I(s.x-.5), cubic(s.x))
- h.new <- ini.fit$coef$d[2]+drkcub(q.x,x)%*%ini.fit$coef$c
- h.new <- abs(h.new)+0.005
+ g.der <- ini.fit$coef$d[2]+drkcub(q.x,x)%*%ini.fit$coef$c
+ h.new <- abs(g.der)+0.005
 
-## begin iteration
+ # begin iteration
  iter <- cover <- 1  
  h.old <- h.new 
  repeat {
   if(verbose) cat("\n Iteration: ", iter)
-  yhat <- s.y-mono.s(h.new*(1-log(h.new)),s.x)        
-  smat <- cbind(mono.s(h.new, s.x), mono.s(h.new*q.x,s.x))
-  qmat <- mono.rk(s.x,h.new)
+  yhat <- s.y-int.s(h.new*(1-log(h.new)),s.x)        
+  smat <- cbind(int.s(h.new, s.x), int.s(h.new*q.x,s.x))
+  qmat <- int1(s.x,h.new)
   fit <- ssr(yhat~smat, qmat, spar=spar, limnla=limnla)
   if(verbose) cat("\nSmoothing parameter: ", fit$rkpk$nlaht)
   dd <- fit$coef$d
   cc <- as.vector(fit$coef$c)
-  h.new <- as.vector(exp(cc%*%mono.f(s.x,q.x,h.new)+dd[2]+dd[3]*q.x))
+  h.new <- as.vector(exp(cc%*%int.f(s.x,q.x,h.new)+dd[2]+dd[3]*q.x))
   cover <- mean((h.new-h.old)^2)     
   h.old <- h.new
   if(verbose) cat("\nConvergent Criterion: ", cover, "\n")
@@ -5038,60 +5038,43 @@ drkcub <- function(x,z) dk2(x)%o%k2(z)-dk4(x%o%rep(1,length(z))-rep(1,length(x))
  }
  if(iter>=maxit) print("convergence not achieved!")
  y.fit <- (smat[,1]+fit$rkpk$d[1])[org.ord]
- f.fit <- as.vector(cc%*%mono.f(s.x,grid,h.new)+dd[2]+dd[3]*grid)
+ f.fit <- as.vector(cc%*%int.f(s.x,grid,h.new)+dd[2]+dd[3]*grid)
  x1 <- c(0, grid[-length(grid)])
  x2 <- grid-x1
  q.x <- as.vector(rep(1,3)%o%x1+c(0.1127017,0.5,0.8872983)%o%x2)
- h.new <- as.vector(exp(cc%*%mono.f(s.x,q.x,h.new)+dd[2]+dd[3]*q.x))
- y.pre <- mono.s(h.new,grid)+fit$rkpk$d[1]
+ h.new <- as.vector(exp(cc%*%int.f(s.x,q.x,h.new)+dd[2]+dd[3]*q.x))
+ y.pre <- int.s(h.new,grid)+fit$rkpk$d[1]
  sigma <- sqrt(sum((y-y.fit)^2)/(length(y)-fit$df))
-# f.fit <- as.vector(cc%*%mono.f(s.x,grid,h.new)+dd[2]+dd[3]*grid)
+# f.fit <- as.vector(cc%*%int.f(s.x,grid,h.new)+dd[2]+dd[3]*grid)
 # f.pstd <- predict(fit,terms=c(0,1,1,1))$pstd
  list(fit=fit, iter=c(iter, cover), pred=list(x=grid,y=y.pre,f=f.fit), 
       y.fit=y.fit, sigma=sigma)
 }    
 
-mono.s <- function(f, x, low = 0)
-{
- n <- length(x)
- x <- c(low, x)
- .C("mono_s",
-    as.double(f),
-    as.double(x),
-    as.integer(n),
-    val = double(n))$val
+# functions for computing integrals
+int.s <- function(f, x, low = 0) {
+ n <- length(x); x <- c(low, x)
+ .C("integral_s", as.double(f), as.double(x),
+  as.integer(n), val = double(n))$val
 }
 
-mono.rk <- function(x, f, low = 0)
-{
- n <- length(x)  
- if(length(f) != 3 * n) stop("input not match")
- x <- c(low, x)
- res <- matrix(.C("mono_rk",
-                  as.double(x),
-                  as.double(x),
-                  as.double(f),
-                  as.integer(n),
-                  as.integer(n),
-                  val = double(n * n))$val, ncol = n)     
- res <- apply(res, 1, cumsum)   
- res
+int.f <- function(x, y, f, low = 0) {
+ nx <- length(x); ny <- length(y); x <- c(low, x)
+ res <- .C("integral_f", as.double(x),
+  as.double(y), as.double(f), as.integer(nx),
+  as.integer(ny), val=double(nx*ny))$val
+ matrix(res, ncol=ny, byrow=F)
 }
 
-mono.f <- function(x, y, f, low = 0)
-{
- n1 <- length(x)
- n2 <- length(y)
- x <- c(low, x)
- res <- .C("mono_f",
-           as.double(x),
-           as.double(y),
-           as.double(f),
-           as.integer(n1),
-           as.integer(n2),
-           val = double(n1 * n2))$val
- matrix(res, ncol = n2, byrow = F)
+int1 <- function(x, f.val, low = 0) {
+ n <- length(x); x <- c(low, x)
+ if(length(f.val) != 3 * n) stop("input not match")
+ res <- matrix(.C("integral_1", as.double(x),
+  as.double(x), as.double(f.val), as.integer(n),
+  as.integer(n), val = double(n * n))$val, ncol = n)
+ apply(res, 1, cumsum)
 }
+
 
 .onLoad<- function(...){
   require(nlme)

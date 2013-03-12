@@ -644,22 +644,40 @@ void sphere_ker(double *x1, double *y1, double *x2, double *y2, int *len1,
      }
 }
 
-/*** monotone spline ****/
-/**   cubic on [0, T]  **/
+#include <stdio.h>
+#include <math.h>
+
+/**   cubic on [0, 1]  **/
 static double
-rcc(double x, double y, long ord) {
-  double tmp;
-  tmp=(x+y-fabs(x-y))/2.0;
-  if(ord==1)  tmp=(tmp)*(tmp)*(3.0*(x+y-tmp)-tmp)/6.0;
-  return(tmp);
+k4(double x) {
+  double val;
+  x=fabs(x); 
+  val = x - 0.5;
+  val *= val;
+  val = (val * val - val/2. + 7./240.)/24.;
+  return(val);
 }
 
+static double
+k2(double x) {
+   double value;
+   x= fabs(x);
+   value= x - 0.5 ;
+   value *= value;
+   value= (value-1./12.)/2.;
+   return(value);
+}
 
-/** end of kernels  **/
+static double                              
+rcm(double x, double y) {                   
+   double value;                              
+   value = k2(x) * k2(y)- k4 (x - y);     
+   return(value);                               
+}      
 
 
-void mono_rk(double *x, double *y, double *f,
-        long *n1, long *n2, long *type, double *res)
+void integral_1(double *x, double *y, double *f,
+        long *n1, long *n2, double *res)
 {
   long i,j, t, s;
   double x1, y1, sum=0.0, sum_tmp;
@@ -669,15 +687,15 @@ void mono_rk(double *x, double *y, double *f,
     sum=0.0;
     for(j=0; j< *n2; j++){
       y1=y[j+1]-y[j];
-     sum_tmp= 0.2777778*0.2777778*(f[3*i]*f[3*j])*     rcc(x[i]+x1*0.1127017, y[j]+y1*0.1127017, *type)+
-              0.2777778*0.4444444*((f[3*i]*f[3*j+1])*  rcc(x[i]+x1*0.1127017, y[j]+y1*0.5, *type      )+
- 	           	           (f[3*i+1]*f[3*j])*  rcc(x[i]+x1*0.5,       y[j]+y1*0.1127017, *type));
-     sum_tmp+=0.4444444*0.4444444*((f[3*i+1]*f[3*j+1])*rcc(x[i]+x1*0.5,       y[j]+y1*0.5, *type))+
-              0.2777778*0.2777778*((f[3*i+2]*f[3*j+2])*rcc(x[i]+x1*0.8872983, y[j]+ y1*0.8872983, *type));
-     sum_tmp+=  0.2777778*0.2777778*((f[3*i]*f[3*j+2])*rcc(x[i]+x1*0.1127017, y[j]+y1*0.8872983, *type)+
-                                     (f[3*i+2]*f[3*j])*rcc(x[i]+x1*0.8872983, y[j]+y1*0.1127017, *type))+
-              0.4444444*0.2777778*((f[3*i+1]*f[3*j+2])*rcc(x[i]+x1*0.5,       y[j]+y1*0.8872983, *type)+
-                                   (f[3*i+2]*f[3*j+1])*rcc(x[i]+x1*0.8872983, y[j]+y1*0.5, *type));  
+     sum_tmp= 0.2777778*0.2777778*(f[3*i]*f[3*j])*     rcm(x[i]+x1*0.1127017, y[j]+y1*0.1127017)+
+              0.2777778*0.4444444*((f[3*i]*f[3*j+1])*  rcm(x[i]+x1*0.1127017, y[j]+y1*0.5      )+
+ 	           	           (f[3*i+1]*f[3*j])*  rcm(x[i]+x1*0.5,       y[j]+y1*0.1127017));
+     sum_tmp+=0.4444444*0.4444444*((f[3*i+1]*f[3*j+1])*rcm(x[i]+x1*0.5,       y[j]+y1*0.5))+
+              0.2777778*0.2777778*((f[3*i+2]*f[3*j+2])*rcm(x[i]+x1*0.8872983, y[j]+ y1*0.8872983));
+     sum_tmp+=  0.2777778*0.2777778*((f[3*i]*f[3*j+2])*rcm(x[i]+x1*0.1127017, y[j]+y1*0.8872983)+
+                                     (f[3*i+2]*f[3*j])*rcm(x[i]+x1*0.8872983, y[j]+y1*0.1127017))+
+              0.4444444*0.2777778*((f[3*i+1]*f[3*j+2])*rcm(x[i]+x1*0.5,       y[j]+y1*0.8872983)+
+                                   (f[3*i+2]*f[3*j+1])*rcm(x[i]+x1*0.8872983, y[j]+y1*0.5));  
 
       sum+=sum_tmp*x1*y1;  
       res[i*(*n2)+j]=sum;  
@@ -685,8 +703,9 @@ void mono_rk(double *x, double *y, double *f,
   }
 }
 
-void mono_f(double *x, double *y, double *f,
-        long *nx, long *ny, long *type, double *res)
+
+void integral_f(double *x, double *y, double *f,
+        long *nx, long *ny, double *res)
 {
   
   long i,j;
@@ -696,16 +715,16 @@ void mono_f(double *x, double *y, double *f,
     sum=0.0;    
     for(j=0; j< *nx; j++){
       x1=x[j+1]-x[j];
-      sum+=x1*(0.2777778*(f[3*j]*  rcc(x[j]+x1*0.1127017, y[i], *type)+
-                      f[3*j+2]*rcc(x[j]+x1*0.8872983, y[i], *type))+
-           0.4444444* f[3*j+1]*rcc(x[j]+x1*0.5,       y[i], *type));      
+      sum+=x1*(0.2777778*(f[3*j]*  rcm(x[j]+x1*0.1127017, y[i])+
+                      f[3*j+2]*rcm(x[j]+x1*0.8872983, y[i]))+
+           0.4444444* f[3*j+1]*rcm(x[j]+x1*0.5,       y[i]));      
       res[i*(*nx)+j]=sum;  
     }
   }
 }
 
 
-void mono_s(double *f, double *x, long *n, double *res)
+void integral_s(double *f, double *x, long *n, double *res)
 {
   long i;
   double sum=0.0;
