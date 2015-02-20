@@ -60,6 +60,7 @@ Models. PhD thesis, University of California, Santa Barbara.
 }
 \examples{
 
+\dontrun{
 data(CO2)
 options(contrasts=rep("contr.treatment", 2))  
 
@@ -79,7 +80,7 @@ co2.fit2 <- snr(uptake~exp(a1)*f(exp(a2)*(conc-a3)),
                 start=list(params=co2.fit1$coe$fixed[c(2:4,9,5:8)]), data=CO2)
 
 p.co2.fit2<- intervals(co2.fit2, newdata=data.frame(u=seq(0,10,len=50)))
-
+}
 }
 \keyword{file}
 

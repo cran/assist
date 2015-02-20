@@ -1288,13 +1288,14 @@ function (formula, rk, data = sys.parent(), subset, weights = NULL,
     varht = NULL, limnla = c(-10, 3), control = list()) 
 {
     Call <- match.call()
-    m <- match.call(expand = FALSE)
+    m <- match.call(expand.dots = FALSE)
     m$rk <- m$family <- m$correlation <- m$scale <- m$spar <- m$weights <- m$control <- m$scale <- m$varht <- m$limnla <- m$theta <- NULL
     m$na.action <- na.fail
     m[[1]] <- as.name("model.frame")
     m1 <- eval(m, sys.parent())
     Terms <- attr(m1, "terms")
-    y <- model.extract(m1, response)
+    y <- model.extract(m1, "response")
+#  y<- eval(getResponseFormula(formula)[[2]], data)
     if (family == "binomial") {
         y <- cbind(y[, 1] + y[, 2], y[, 1])
         n <- nrow(y)
@@ -1429,12 +1430,12 @@ function (formula, rk, data = sys.parent(), subset, weights = NULL,
                   lmeData$tmp.z <- tmp.z
 		  lmeData$tmpGrp<- tmpGrp
                   lme.obj <- lme(formula, random = list(tmpGrp=pdIdent(~tmp.z - 
-                    1)), corr = correlation, weights = weights, 
+                    1)), correlation = correlation, weights = weights, 
                     data = lmeData)
                 }
                 else {
                   lme.obj <- lme(formula, random = list(tmpGrp= pdIdent(~tmp.z - 
-                    1)), corr = correlation, weights = weights)
+                    1)), correlation = correlation, weights = weights)
                 }
             }
             else {
@@ -1458,11 +1459,11 @@ function (formula, rk, data = sys.parent(), subset, weights = NULL,
                   lmeData$tmp.num <- c(tmp.num, rep(0, n - length(tmp.num)))
 		  lmeData$tmpGrp<- tmpGrp
                   lme.obj <- lme(formula, random = list(tmpGrp=pdBlocked(tmp.block)), 
-                    corr = correlation, weights = weights, data = lmeData)
+                    correlation = correlation, weights = weights, data = lmeData)
                 }
                 else {
                   lme.obj <- lme(formula, random = list(tmpGrp=pdBlocked(tmp.block)), 
-                    corr = correlation, weights = weights)
+                    correlation = correlation, weights = weights)
                 }
             }
             lambda <- as.vector(coef(lme.obj$modelStruct$reStruct))
@@ -1560,37 +1561,37 @@ function(x)
 	val 
 } 
 
-table2<- 
-function(..., exclude = c(NA, NaN)) 
-{ 
-	args <- list(...) 
-	if((length(args) == 1) && (is.list(args[[1]]))) 
-		args <- args[[1]] 
-	n <- length(args) 
-	if(n == 0) 
-		stop("No arguments") 
-	bin <- 0 
-	lens <- length(args[[1]]) 
-	dims <- numeric(n) 
-	pd <- 1 
-	dn <- vector("list", n) 
-	for(iarg in 1:n) { 
-		i <- args[[iarg]] 
-		if(length(i) != lens) 
-			stop("All arguments must have the same length") 
-		if(!is.category(i)) 
-			i <- category(unlist(i), exclude = exclude) 
-		l <- levels(i) 
-		dims[iarg] <- lenl <- length(l) 
-		dn[[iarg]] <- l 
-		bin <- bin + pd * (as.numeric(i) - 1) 
-		pd <- pd * lenl 
-	} 
-	names(dn) <- names(args) 
-	if(length(wna <- which.na(bin))) 
-		bin <- bin[ - wna] 
-	array(tabulate(bin + 1, pd), dims, dn) 
-} 
+#table2<- 
+#function(..., exclude = c(NA, NaN)) 
+#{ 
+#	args <- list(...) 
+#	if((length(args) == 1) && (is.list(args[[1]]))) 
+#		args <- args[[1]] 
+#	n <- length(args) 
+#	if(n == 0) 
+#		stop("No arguments") 
+#	bin <- 0 
+#	lens <- length(args[[1]]) 
+#	dims <- numeric(n) 
+#	pd <- 1 
+#	dn <- vector("list", n) 
+#	for(iarg in 1:n) { 
+#		i <- args[[iarg]] 
+#		if(length(i) != lens) 
+#			stop("All arguments must have the same length") 
+#		if(!is.category(i)) 
+#			i <- category(unlist(i), exclude = exclude) 
+#		l <- levels(i) 
+#		dims[iarg] <- lenl <- length(l) 
+#		dn[[iarg]] <- l 
+#		bin <- bin + pd * (as.numeric(i) - 1) 
+#		pd <- pd * lenl 
+#	} 
+#	names(dn) <- names(args) 
+#	if(length(wna <- which.na(bin))) 
+#		bin <- bin[ - wna] 
+#	array(tabulate(bin + 1, pd), dims, dn) 
+#} 
 tp<-
 function(s, u = s, order = 2)
 {
@@ -2157,11 +2158,11 @@ function (object, residuals = FALSE, ...)
     })
 }
 
-.First.lib <- function(lib, pkg)
-{
-    library.dynam("assist", pkg, lib)
-#    require(nlme)
-}
+# removed since it creates a NOTE
+#.First.lib <- function(lib, pkg)
+#{
+#    library.dynam("assist", pkg, lib)
+#}
 #intervals<- function(object, ...) UseMethod("intervals")
 
 #### NNR-Part
@@ -2708,8 +2709,8 @@ function (formula, func, params, data = sys.parent(), start,
     .env <- .GlobalEnv
     oldF <- list()
     for (i in 1:lengthF) {
-        if (exists(funcName[i], env = .env)) 
-            oldF[[i]] <- eval(parse(text = funcName[i]), env = .env)
+        if (exists(funcName[i], envir = .env)) 
+            oldF[[i]] <- eval(parse(text = funcName[i]), envir = .env)
         else oldF[[i]] <- FALSE
     }
     repeat {
@@ -2822,7 +2823,7 @@ function (formula, func, params, data = sys.parent(), start,
         }
         x.star <- dataInit
         for (i in 1:lengthF) {
-            assign(funcName[i], spline.f[[i]], env = .env)
+            assign(funcName[i], spline.f[[i]], envir = .env)
         }
         gnls.obj <- gnls(formula, data = data, params = params, 
             start = start.fixed, correlation = correlation, weights = weights, 
@@ -2879,7 +2880,7 @@ function (formula, func, params, data = sys.parent(), start,
     for (i in 1:lengthF) {
         if (is.atomic(oldF[[i]]) && (oldF[[i]] == "FALSE")) 
             do.call("rm", list(list = funcName[i], envir = .env))
-        else assign(funcName[i], oldF[[i]], env = .env)
+        else assign(funcName[i], oldF[[i]], envir = .env)
     }
     if (k > control$maxit.out) 
         warning("convergence not researched")
@@ -3337,12 +3338,13 @@ slm<- function(formula,
 ##fit semi-parametric linear mixed effects models
 {   
   Call <- match.call()   
-  m<- match.call(expand=FALSE)
+  m<- match.call(expand.dots=FALSE)
   m$rk<- m$random<- m$correlation  <- m$weights<- m$scale<- m$control<- NULL
   m[[1]] <- as.name("model.frame")
   m1<- eval(m, sys.parent())
   Terms <- attr(m1, "terms")
-  y <- model.extract(m1, response)
+  y <- model.extract(m1, "response")
+#  y<- eval(getResponseFormula(formula)[[2]], data)
 
 ## calculate S
   S<- model.matrix(Terms, m1, NULL)
@@ -3423,11 +3425,11 @@ slm<- function(formula,
 ## call lme        		
         if(missing(data)){     
              lme.obj<- lme(formula, control=control, random=tmp1,
-                   corr=correlation, weights=weights)
+                   correlation=correlation, weights=weights)
         }
         else{
           lme.obj<- lme(formula, control=control, random=tmp1,
-                   corr=correlation, weights=weights, data=slmData)
+                   correlation=correlation, weights=weights, data=slmData)
         }
 
 ## get back to old cor formula
@@ -4014,7 +4016,7 @@ snm<- function(formula,
 
   oldF<-list()
   for(i in 1:lengthF){
-     if(exists(funcName[i], env=.env)) oldF[[i]]<-eval(parse(text=funcName[i]), env=.env)
+     if(exists(funcName[i], envir=.env)) oldF[[i]]<-eval(parse(text=funcName[i]), envir=.env)
      else oldF[[i]]<-FALSE 
   } 
 
@@ -4025,7 +4027,7 @@ snm<- function(formula,
 
 ## get delta1 and delta2 ##
     for(i in 1:lengthF){
-      assign(funcName[i], spline.f0[[i]], env=.env)      
+      assign(funcName[i], spline.f0[[i]], envir=.env)      
     } 
     delta<- eval(formula[[3]], dataAug)
 
@@ -4126,7 +4128,7 @@ snm<- function(formula,
 ## begin nlme step
     x.star<- dataInit 
     for(i in 1:lengthF){
-         assign(funcName[i], spline.f[[i]], env=.env)
+         assign(funcName[i], spline.f[[i]], envir=.env)
        }
     if(k==1){
         nlme.obj<-nlme(formula, fixed=fixed,
@@ -4203,7 +4205,8 @@ snm<- function(formula,
           V<- diag(varWeights(nlme.obj$modelStruct$varStruct))
       else{
          tmp.V<- 1/varWeights(nlme.obj$modelStruct$varStruct)
-         V<- matDiag(matDiag.prod(V, tmp.V, TRUE), tmp.V, FALSE)
+#         V<- matDiag(matDiag.prod(V, tmp.V, TRUE), tmp.V, FALSE)
+         V<- matDiag.prod(matDiag.prod(V, tmp.V, TRUE), tmp.V, FALSE)
          V<- solve(t(chol( (V+t(V))/2)))
         }
      }
@@ -4295,7 +4298,7 @@ snm<- function(formula,
  for(i in 1:lengthF){
      if(is.atomic(oldF[[i]]) && (oldF[[i]]=="FALSE")) 
         do.call("rm", list(list=funcName[i], envir=.env)) 
-     else  assign(funcName[i], oldF[[i]], env=.env)                    
+     else  assign(funcName[i], oldF[[i]], envir=.env)                    
  }  
 
 ## adjusted sigma
@@ -5076,7 +5079,7 @@ int1 <- function(x, f.val, low = 0) {
 }
 
 
-.onLoad<- function(...){
-  require(nlme)
+#.onLoad<- function(...){
+  #require(nlme)
   #library.dynam("assist")
-}
+#}

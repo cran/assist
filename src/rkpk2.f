@@ -177,13 +177,14 @@ c      if(.not.( vmu .eq. 'u' ))
       integer lds, nobs, nnull, ldqr, ldqc, nq, init, maxite, jpvt(*), 
      *pvtwk(*), info
       double precision s(lds,*), q(ldqr,ldqc,*), y(*), tol, prec, theta(
-     **), nlaht, score, varht(2), c(*), d(*), qraux(*), traux(*), twk(2,
-     **), qwk(nobs,*), ywk(*), thewk(*), hes(nq,*), gra(*), hwk1(nq,*), 
+     **), nlaht, score(*), varht(2), c(*), d(*), qraux(*), traux(*), 
+     *twk(2,*), 
+     *qwk(nobs,*), ywk(*), thewk(*), hes(nq,*), gra(*), hwk1(nq,*), 
      *hwk2(nq,*), gwk1(*), gwk2(*), kwk(nobs-nnull,nobs-nnull,*), work1(
      **), work2(*)
 c      character*1 vmu
       integer vmu
-      double precision alph, scrold, scrwk, nlawk, limnla(2), tmp, 
+      double precision alph, scrold, scrwk(1), nlawk, limnla(2), tmp, 
      *dasum, ddot
       integer n, n0, i, j, iwk, maxitwk, idamax, job
       info = 0
@@ -299,7 +300,7 @@ c      if(.not.( (vmu .ne. 'v' .and. vmu .ne. 'm' .and. vmu .ne. 'u')
       if(.not.(info .ne. 0 ))goto 23049
       return
 23049 continue
-      if(.not.( scrold .lt. scrwk ))goto 23051
+      if(.not.( scrold .lt. scrwk(1) ))goto 23051
       tmp = dabs (gwk1(idamax (nq, gwk1, 1)))
       if(.not.( alph * tmp .gt. - prec ))goto 23053
       info = -5
@@ -386,16 +387,16 @@ c      if(.not.( (vmu .ne. 'v' .and. vmu .ne. 'm' .and. vmu .ne. 'u')
 23080 continue
       call dcopy (nq, thewk, 1, theta, 1)
       tmp = gra(idamax (nq, gra, 1)) ** 2
-      if(.not.( tmp .lt. prec ** 2 .or. scrold - scrwk .lt. prec * (
-     *scrwk + 1.d0) .and. tmp .lt. prec * (scrwk + 1.d0) ** 2 ))goto 230
-     *83
+      if(.not.( tmp .lt. prec ** 2 .or. scrold - scrwk(1) .lt. prec * (
+     *scrwk(1) + 1.d0) .and. tmp .lt. prec * (scrwk(1) + 1.d0) ** 2 ))
+     *goto 23083
       goto 23035
 23083 continue
       if(.not.( maxitwk .lt. 1 ))goto 23085
       info = -4
       return
 23085 continue
-      scrold = scrwk
+      scrold = scrwk(1)
       i=1
 23087 if(.not.(i.le.nq))goto 23089
       thewk(i) = thewk(i) + alph * gwk1(i)

@@ -7,7 +7,8 @@ Nonlinear Non-parametric Regression
 Fit a nonlinear nonparametric regression models with spline smoothing based on extended Gauss-Newton/Newton-Raphson and backfitting.
 }
 \usage{
-nnr(formula, func, spar="v", data=sys.parent(), start=list(),verbose=FALSE,  control=list())
+nnr(formula, func, spar="v", data=sys.parent(),
+    start=list(),verbose=FALSE,  control=list())
 }
 \arguments{
 \item{formula}{

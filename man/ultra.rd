@@ -19,7 +19,7 @@ length a numeric vector of toungue length in mm
 
 time a numeric vector of time in ms
 
-env a factor with three levels: 1 2 and 3 for environment '2words', 'cluster' and 'schwa' respectively
+env a factor with three levels: 1 2 and 3 for environment '2words', 'cluster' and 'Schwa' respectively
 }
 \details{
 A Russian speaker produced the consonant sequence, /gd/, in three different linguistic environments: '2words', 'cluster' 

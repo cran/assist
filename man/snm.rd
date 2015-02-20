@@ -95,6 +95,7 @@ and S-PLUS. Springer.
 \code{\link{print.snm}},\code{\link{summary.snm}}
 }
 \examples{
+\dontrun{
 data(CO2)
 
 options(contrasts=rep("contr.treatment", 2))	
@@ -110,5 +111,6 @@ co2.fit2 <- snm(uptake~exp(a1)*f(exp(a2)*(conc-a3)),
                 fixed=list(a1~M-1,a3~1,a2~Type*Treatment),
                 random=list(a1~1), group=~Plant, verbose=TRUE,
                 start=co2.fit1$coe$fixed[c(2:4,9,5:8)], data=CO2)
+}
 }
 \keyword{file}

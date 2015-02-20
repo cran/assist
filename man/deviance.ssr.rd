@@ -1,14 +1,12 @@
 \name{deviance.ssr}
 \alias{deviance.ssr}
-\title{
-Model Deviance
-} 
+\title{Model Deviance} 
 \description{
 Extract deviance from a fitted ssr object
 }
 
 \usage{
-deviance.ssr(object,residuals=FALSE, ...)
+\method{deviance}{ssr}(object,residuals=FALSE, ...)
 }
 \arguments{
   \item{object}{a fitted \code{ssr} object}.
@@ -23,4 +21,3 @@ deviance.ssr(object,residuals=FALSE, ...)
 \author{Chunlei Ke \email{chunlei\_ke@pstat.ucsb.edu} and Yuedong Wang \email{yuedong@pstat.ucsb.edu}}
 \seealso{ \code{\link{ssr}}}
 \keyword{file}
-

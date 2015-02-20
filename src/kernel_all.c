@@ -677,9 +677,9 @@ rcm(double x, double y) {
 
 
 void integral_1(double *x, double *y, double *f,
-        long *n1, long *n2, double *res)
+        int *n1, int *n2, double *res)
 {
-  long i,j, t, s;
+  int i,j;
   double x1, y1, sum=0.0, sum_tmp;
 
   for(i=0;i< *n1; i++){
@@ -705,11 +705,11 @@ void integral_1(double *x, double *y, double *f,
 
 
 void integral_f(double *x, double *y, double *f,
-        long *nx, long *ny, double *res)
+        int *nx, int *ny, double *res)
 {
   
-  long i,j;
-  double x1, y1, sum=0.0;
+  int i,j;
+  double x1, sum=0.0;
 
   for(i=0;i< *ny; i++){
     sum=0.0;    
@@ -724,9 +724,9 @@ void integral_f(double *x, double *y, double *f,
 }
 
 
-void integral_s(double *f, double *x, long *n, double *res)
+void integral_s(double *f, double *x, int *n, double *res)
 {
-  long i;
+  int i;
   double sum=0.0;
 
   for(i=0;i< *n; i++){ 

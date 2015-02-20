@@ -90,6 +90,7 @@ Wahba, G. (1990). Spline Models for Observational Data. SIAM, Vol. 59.
 \code{\link{intervals.snr}},  \code{\link{predict.snr}}, \code{\link{snr.control}}
 }
 \examples{
+\dontrun{
 data(CO2)
 options(contrasts=rep("contr.treatment", 2))    
 co2.fit1 <- nlme(uptake~exp(a1)*(1-exp(-exp(a2)*(conc-a3))), 
@@ -105,5 +106,6 @@ co2.fit2 <- snr(uptake~exp(a1)*f(exp(a2)*(conc-a3)),
                 func=f(u)~list(~I(1-exp(-u))-1,lspline(u, type="exp")),
                 params=list(a1~M-1, a3~1, a2~Type*Treatment),
                 start=list(params=co2.fit1$coe$fixed[c(2:4,9,5:8)]), data=CO2)
+}
 }
 \keyword{file}

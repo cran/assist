@@ -1,13 +1,17 @@
 useDynLib(assist)
 
 export(alogit, bdiag, chol.new, cubic, cubic2, 
-	dcrdr, dmudr, dsidr, dsms, gdsidr, gdmudr, hat.ssr, ident,inc,
+	dcrdr, dmudr, dsidr, dsms, gdsidr, gdmudr, hat.ssr, ident,
         kron, linear, linear2, lspline,  nnr,
         nnr.control, periodic, quintic, quintic2, rk.prod,
         septic, septic2, shrink0, shrink1, sine4p, slm, snm, snm.control, 
-        snr, snr.control, ssr,  ssr.control, sphere, tp, tp.pseudo, tp.linear, xyplot2)
+        snr, snr.control, ssr,  ssr.control, sphere, tp, tp.pseudo, tp.linear, xyplot2, inc)
 
-importFrom(nlme, intervals)
+importFrom(nlme, intervals, lme, nlme, fixef, splitFormula, 
+           getResponseFormula, getCovariateFormula, reStruct, 
+           getGroupsFormula, getGroups, corMatrix, varWeights,
+           pdMatrix, gnls, pdIdent, pdBlocked)
+importFrom(lattice, xyplot, strip.default, panel.xyplot, panel.superpose)
 
 # used internally - not intended to be visible to users
 # export(addCorrGroup, diagComp,exponen, getFunInfo,

@@ -1,100 +1,11 @@
-   
-      DOUBLE PRECISION FUNCTION DASUM(N,DX,INCX)
-C
-C     TAKES THE SUM OF THE ABSOLUTE VALUES.
-C     JACK DONGARRA, LINPACK, 3/11/78.
-C
-      DOUBLE PRECISION DX(1),DTEMP
-      INTEGER I,INCX,M,MP1,N,NINCX
-C
-      DASUM = 0.0D0
-      DTEMP = 0.0D0
-      IF(N.LE.0)RETURN
-      IF(INCX.EQ.1)GO TO 20
-C
-C        CODE FOR INCREMENT NOT EQUAL TO 1
-C
-      NINCX = N*INCX
-      DO 10 I = 1,NINCX,INCX
-        DTEMP = DTEMP + DABS(DX(I))
-   10 CONTINUE
-      DASUM = DTEMP
-      RETURN
-C
-C        CODE FOR INCREMENT EQUAL TO 1
-C
-C
-C        CLEAN-UP LOOP
-C
-   20 M = MOD(N,6)
-      IF( M .EQ. 0 ) GO TO 40
-      DO 30 I = 1,M
-        DTEMP = DTEMP + DABS(DX(I))
-   30 CONTINUE
-      IF( N .LT. 6 ) GO TO 60
-   40 MP1 = M + 1
-      DO 50 I = MP1,N,6
-        DTEMP = DTEMP + DABS(DX(I)) + DABS(DX(I + 1)) + DABS(DX(I + 2))
-     *  + DABS(DX(I + 3)) + DABS(DX(I + 4)) + DABS(DX(I + 5))
-   50 CONTINUE
-   60 DASUM = DTEMP
-      RETURN
-      END
-      SUBROUTINE DAXPY(N,DA,DX,INCX,DY,INCY)
-C
-C     CONSTANT TIMES A VECTOR PLUS A VECTOR.
-C     USES UNROLLED LOOPS FOR INCREMENTS EQUAL TO ONE.
-C     JACK DONGARRA, LINPACK, 3/11/78.
-C
-      DOUBLE PRECISION DX(1),DY(1),DA
-      INTEGER I,INCX,INCY,M,MP1,N
-C
-      IF(N.LE.0)RETURN
-      IF (DA .EQ. 0.0D0) RETURN
-      IF(INCX.EQ.1.AND.INCY.EQ.1)GO TO 20
-C
-C        CODE FOR UNEQUAL INCREMENTS OR EQUAL INCREMENTS
-C          NOT EQUAL TO 1
-C
-      IX = 1
-      IY = 1
-      IF(INCX.LT.0)IX = (-N+1)*INCX + 1
-      IF(INCY.LT.0)IY = (-N+1)*INCY + 1
-      DO 10 I = 1,N
-        DY(IY) = DY(IY) + DA*DX(IX)
-        IX = IX + INCX
-        IY = IY + INCY
-   10 CONTINUE
-      RETURN
-C
-C        CODE FOR BOTH INCREMENTS EQUAL TO 1
-C
-C
-C        CLEAN-UP LOOP
-C
-   20 M = MOD(N,4)
-      IF( M .EQ. 0 ) GO TO 40
-      DO 30 I = 1,M
-        DY(I) = DY(I) + DA*DX(I)
-   30 CONTINUE
-      IF( N .LT. 4 ) RETURN
-   40 MP1 = M + 1
-      DO 50 I = MP1,N,4
-        DY(I) = DY(I) + DA*DX(I)
-        DY(I + 1) = DY(I + 1) + DA*DX(I + 1)
-        DY(I + 2) = DY(I + 2) + DA*DX(I + 2)
-        DY(I + 3) = DY(I + 3) + DA*DX(I + 3)
-   50 CONTINUE
-      RETURN
-      END
       subroutine dbimdr (vmu, s, lds, nobs, nnull, q, ldqr, ldqc, nq, y,
      * tol1, tol2, init, prec1, maxiter1, prec2, maxiter2, theta, nlaht,
      * score, varht, c, d, eta, wk, swk, qwk, ywk, u, w, info)
       integer lds, nobs, nnull, ldqr, ldqc, nq, init, maxiter1, 
      *maxiter2, info
       double precision s(lds,*), q(ldqr,ldqc,*), y(2,*), tol1, tol2, 
-     *prec1, prec2, theta(*), nlaht, score, varht, c(*), d(*), wk(*), 
-     *eta(*), swk(lds,*), qwk(ldqr,ldqc,*), ywk(*), u(*), w(*)
+     *prec1, prec2, theta(*), nlaht, score(*), varht(2), c(*), d(*), 
+     *wk(*), eta(*), swk(lds,*), qwk(ldqr,ldqc,*), ywk(*), u(*), w(*)
 c      character*2 vmu
       integer vmu
       double precision mse, tmp, dasum, mtol
@@ -152,15 +63,15 @@ c      character*2 vmu
 23021 continue
 c      if(.not.(vmu .eq. 'u~'))
       if(.not.(vmu .eq. 3))goto 23025
-      varht = 0.d0
+      varht(1) = 0.d0
       vmu=2
       j=1
 23027 if(.not.(j.le.nobs))goto 23029
-      varht = varht + u(j)**2 / w(j)
+      varht(1) = varht(1) + u(j)**2 / w(j)
       j=j+1
       goto 23027
 23029 continue
-      varht = varht / dble (nobs)
+      varht(1) = varht(1) / dble (nobs)
 23025 continue
       call dcopy (nobs, ywk, 1, u, 1)
       call dmudr (vmu, swk, lds, nobs, nnull, qwk, ldqr, ldqc, nq, ywk, 
@@ -199,8 +110,8 @@ c      character*2 vmu
       integer vmu
       integer lds, nobs, nnull, ldq, job, jpvt(*), info, maxiter
       double precision s(lds,*), y(2,*), q(ldq,*), tol1, tol2, limnla(2)
-     *, nlaht, score(*), varht, c(*), d(*), qraux(*), wk(*), prec, eta(*
-     *), swk(lds,*), qwk(ldq,*), ywk(*), u(*), w(*)
+     *, nlaht, score(*), varht(2), c(*), d(*), qraux(*), wk(*), prec, et
+     *a(*), swk(lds,*), qwk(ldq,*), ywk(*), u(*), w(*)
       double precision mse, tmp, dasum, mtol
       integer i, j
       info = 0
@@ -251,15 +162,15 @@ c      character*2 vmu
 23021 continue
 c      if(.not.(vmu .eq. 'u~'))
       if(.not.(vmu .eq. 3))goto 23022
-      varht = 0.d0
+      varht(1) = 0.d0
       vmu=2
       j=1
 23024 if(.not.(j.le.nobs))goto 23026
-      varht = varht + u(j)**2 / w(j)
+      varht(1) = varht(1) + u(j)**2 / w(j)
       j=j+1
       goto 23024
 23026 continue
-      varht = varht / dble (nobs)
+      varht(1) = varht(1) / dble (nobs)
 23022 continue
       call dcopy (nobs, ywk, 1, u, 1)
       call dsidr (vmu, swk, lds, nobs, nnull, ywk, qwk, ldq, tol2, job, 
@@ -295,7 +206,8 @@ c      if(.not.(vmu .eq. 'u~'))
       integer lds, nobs, nnull, ldqr, ldqc, nq, init, maxiter1, 
      *maxiter2, info
       double precision s(lds,*), q(ldqr,ldqc,*), y(*), tol1, tol2, 
-     *prec1, prec2, theta(*), nlaht, score, varht, c(*), d(*), wk(*), 
+     *prec1, prec2, theta(*), nlaht, score(*), varht(2), c(*), d(*), 
+     *wk(*), 
      *eta(*), swk(lds,*), qwk(ldqr,ldqc,*), ywk(*), u(*), w(*)
 c      character*2 vmu
       integer vmu
@@ -354,15 +266,15 @@ c      character*2 vmu
 23021 continue
 c      if(.not.(vmu .eq. 'u~'))
       if(.not.(vmu .eq. 3))goto 23025
-      varht = 0.d0
+      varht(1) = 0.d0
       vmu=2
       j=1
 23027 if(.not.(j.le.nobs))goto 23029
-      varht = varht + u(j)**2 / w(j)
+      varht(1) = varht(1) + u(j)**2 / w(j)
       j=j+1
       goto 23027
 23029 continue
-      varht = varht / dble (nobs)
+      varht(1) = varht(1) / dble (nobs)
 23025 continue
       call dcopy (nobs, ywk, 1, u, 1)
       call dmudr (vmu, swk, lds, nobs, nnull, qwk, ldqr, ldqc, nq, ywk, 
@@ -493,55 +405,6 @@ c      if(.not.(vmu .eq. 'u~'))
 23006 continue
       return
       end
-      SUBROUTINE  DCOPY(N,DX,INCX,DY,INCY)
-C
-C     COPIES A VECTOR, X, TO A VECTOR, Y.
-C     USES UNROLLED LOOPS FOR INCREMENTS EQUAL TO ONE.
-C     JACK DONGARRA, LINPACK, 3/11/78.
-C
-      DOUBLE PRECISION DX(1),DY(1)
-      INTEGER I,INCX,INCY,IX,IY,M,MP1,N
-C
-      IF(N.LE.0)RETURN
-      IF(INCX.EQ.1.AND.INCY.EQ.1)GO TO 20
-C
-C        CODE FOR UNEQUAL INCREMENTS OR EQUAL INCREMENTS
-C          NOT EQUAL TO 1
-C
-      IX = 1
-      IY = 1
-      IF(INCX.LT.0)IX = (-N+1)*INCX + 1
-      IF(INCY.LT.0)IY = (-N+1)*INCY + 1
-      DO 10 I = 1,N
-        DY(IY) = DX(IX)
-        IX = IX + INCX
-        IY = IY + INCY
-   10 CONTINUE
-      RETURN
-C
-C        CODE FOR BOTH INCREMENTS EQUAL TO 1
-C
-C
-C        CLEAN-UP LOOP
-C
-   20 M = MOD(N,7)
-      IF( M .EQ. 0 ) GO TO 40
-      DO 30 I = 1,M
-        DY(I) = DX(I)
-   30 CONTINUE
-      IF( N .LT. 7 ) RETURN
-   40 MP1 = M + 1
-      DO 50 I = MP1,N,7
-        DY(I) = DX(I)
-        DY(I + 1) = DX(I + 1)
-        DY(I + 2) = DX(I + 2)
-        DY(I + 3) = DX(I + 3)
-        DY(I + 4) = DX(I + 4)
-        DY(I + 5) = DX(I + 5)
-        DY(I + 6) = DX(I + 6)
-   50 CONTINUE
-      RETURN
-      END
       subroutine ddeev (vmu, nobs, q, ldqr, ldqc, n, nq, u, ldu, uaux, 
      *t, x, theta, nlaht, score, varht, hes, ldh, gra, hwk1, hwk2, gwk1,
      * gwk2, kwk, ldk, work1, work2, work3, info)
@@ -549,10 +412,11 @@ c      character*1 vmu
       integer vmu
       integer nobs, ldqr, ldqc, n, nq, ldu, ldh, ldk, info
       double precision q(ldqr,ldqc,*), u(ldu,*), uaux(*), t(2,*), x(*), 
-     *theta(*), nlaht, score, varht(2), hes(ldh,*), gra(*), hwk1(nq,*), 
+     *theta(*), nlaht, score(*), varht(2), hes(ldh,*), gra(*), 
+     *hwk1(nq,*), 
      *hwk2(nq,*), gwk1(*), gwk2(*), kwk(ldk,ldk,*), work1(*), work2(*), 
      *work3(*)
-      double precision trc, det, dum, ddot
+      double precision trc, det, dum, ddot, wk(1)
       integer i, j, m
       info = 0
       call dset (nq, 0.d0, gra, 1)
@@ -583,8 +447,8 @@ c      if(.not.( vmu .ne. 'v' .and. vmu .ne. 'm' .and. vmu .ne. 'u' ))
 23011 continue
       call dqrslm (u, ldu, n-1, n-2, uaux, kwk(2,2,i), n, 0, info, 
      *work1)
-      call dqrsl (u, ldu, n-1, n-2, uaux, kwk(2,1,i), dum, kwk(2,1,i), 
-     *dum, dum, dum, 01000, info)
+      call dqrsl (u, ldu, n-1, n-2, uaux, kwk(2,1,i), wk, kwk(2,1,i), 
+     *wk, wk, wk, 01000, info)
 23005 i=i+1
       goto 23004
 23006 continue
@@ -806,13 +670,13 @@ c      if(.not.( vmu .ne. 'm' ))
 23107 continue
 c      if(.not.( vmu .eq. 'v' ))
       if(.not.( vmu .eq. 0 ))goto 23110
-      trc = dfloat (nobs) * 10.d0 ** (-nlaht) * varht(1) / score
+      trc = dfloat (nobs) * 10.d0 ** (-nlaht) * varht(1) / score(1)
       i=1
 23112 if(.not.(i.le.nq))goto 23114
       if(.not.( theta(i) .le. -25.d0 ))goto 23115
       goto 23113
 23115 continue
-      gra(i) = gwk1(i) / trc / trc - 2.d0 * score * gwk2(i) / trc / 
+      gra(i) = gwk1(i) / trc / trc - 2.d0 * score(1) * gwk2(i) / trc / 
      *dfloat(nobs)
 23113 i=i+1
       goto 23112
@@ -835,14 +699,14 @@ c      if(.not.( vmu .eq. 'u' ))
 23117 continue
 c      if(.not.( vmu .eq. 'm' ))
       if(.not.( vmu .eq. 1 ))goto 23124
-      det = 10.d0 ** (-nlaht) * varht(2) / score
+      det = 10.d0 ** (-nlaht) * varht(2) / score(1)
       i=1
 23126 if(.not.(i.le.nq))goto 23128
       if(.not.( theta(i) .le. -25.d0 ))goto 23129
       goto 23127
 23129 continue
-      gra(i) = gwk1(i) / det - dfloat (nobs) / dfloat (n) * score * 
-     *gwk2(i)
+      gra(i) = gwk1(i) / det - dfloat (nobs) / dfloat (n) * score(1) 
+     * *gwk2(i)
 23127 i=i+1
       goto 23126
 23128 continue
@@ -861,9 +725,9 @@ c      if(.not.( vmu .eq. 'v' ))
       goto 23139
 23141 continue
       hes(i,j) = hwk1(i,j) / trc / trc - 2.d0 * gwk1(i) * gwk2(j) / trc 
-     *** 3 - 2.d0 * gwk1(j) * gwk2(i) / trc ** 3 - 2.d0 * score * hwk2(
-     *i,j) / trc / dfloat (nobs) + 6.d0 * score * gwk2(i) * gwk2(j) / 
-     *trc / trc / dfloat (nobs)
+     *** 3 - 2.d0 * gwk1(j) * gwk2(i) / trc ** 3 - 2.d0 * score(1) * 
+     *hwk2(i,j) / trc / dfloat (nobs) + 6.d0 * score(1) * gwk2(i) * 
+     *gwk2(j) / trc / trc / dfloat (nobs)
 23139 j=j+1
       goto 23138
 23140 continue
@@ -908,7 +772,8 @@ c      if(.not.( vmu .eq. 'm' ))
 23165 continue
       hes(i,j) = hwk1(i,j) / det - gwk1(i) * gwk2(j) / det / dfloat (n) 
      *- gwk1(j) * gwk2(i) / det / dfloat (n) - dfloat (nobs) / dfloat (
-     *n) * score * hwk2(i,j) + dfloat (nobs) / dfloat (n) ** 2 * score *
+     *n) * score(1) * hwk2(i,j) + dfloat (nobs) / dfloat (n) ** 2 * 
+     *score(1) *
      * gwk2(i) * gwk2(j)
 23163 j=j+1
       goto 23162
@@ -920,54 +785,6 @@ c      if(.not.( vmu .eq. 'm' ))
 23155 continue
       return
       end
-      DOUBLE PRECISION FUNCTION DDOT(N,DX,INCX,DY,INCY)
-C
-C     FORMS THE DOT PRODUCT OF TWO VECTORS.
-C     USES UNROLLED LOOPS FOR INCREMENTS EQUAL TO ONE.
-C     JACK DONGARRA, LINPACK, 3/11/78.
-C
-      DOUBLE PRECISION DX(1),DY(1),DTEMP
-      INTEGER I,INCX,INCY,IX,IY,M,MP1,N
-C
-      DDOT = 0.0D0
-      DTEMP = 0.0D0
-      IF(N.LE.0)RETURN
-      IF(INCX.EQ.1.AND.INCY.EQ.1)GO TO 20
-C
-C        CODE FOR UNEQUAL INCREMENTS OR EQUAL INCREMENTS
-C          NOT EQUAL TO 1
-C
-      IX = 1
-      IY = 1
-      IF(INCX.LT.0)IX = (-N+1)*INCX + 1
-      IF(INCY.LT.0)IY = (-N+1)*INCY + 1
-      DO 10 I = 1,N
-        DTEMP = DTEMP + DX(IX)*DY(IY)
-        IX = IX + INCX
-        IY = IY + INCY
-   10 CONTINUE
-      DDOT = DTEMP
-      RETURN
-C
-C        CODE FOR BOTH INCREMENTS EQUAL TO 1
-C
-C
-C        CLEAN-UP LOOP
-C
-   20 M = MOD(N,5)
-      IF( M .EQ. 0 ) GO TO 40
-      DO 30 I = 1,M
-        DTEMP = DTEMP + DX(I)*DY(I)
-   30 CONTINUE
-      IF( N .LT. 5 ) GO TO 60
-   40 MP1 = M + 1
-      DO 50 I = MP1,N,5
-        DTEMP = DTEMP + DX(I)*DY(I) + DX(I + 1)*DY(I + 1) +
-     *   DX(I + 2)*DY(I + 2) + DX(I + 3)*DY(I + 3) + DX(I + 4)*DY(I + 4)
-   50 CONTINUE
-   60 DDOT = DTEMP
-      RETURN
-      END
       subroutine deval (vmu, q, ldq, n, z, nint, low, upp, nlaht, score,
      * varht, info, twk, work)
 c      character*1 vmu
@@ -1018,326 +835,14 @@ c      if(.not.( (vmu .ne. 'v' .and. vmu .ne. 'm' .and. vmu .ne. 'u')
       varht(2) = varhtwk(2)
       return
       end
-      DOUBLE PRECISION FUNCTION devlpl(a,n,x)
-C
-C**********************************************************************
-C
-C     DOUBLE PRECISION FUNCTION DEVLPL(A,N,X)
-C              Double precision EVALuate a PoLynomial at X
-C
-C
-C                              Function
-C
-C
-C     returns
-C          A(1) + A(2)*X + ... + A(N)*X**(N-1)
-C
-C
-C                              Arguments
-C
-C
-C     A --> Array of coefficients of the polynomial.
-C                                        A is DOUBLE PRECISION(N)
-C
-C     N --> Length of A, also degree of polynomial - 1.
-C                                        N is INTEGER
-C
-C     X --> Point at which the polynomial is to be evaluated.
-C                                        X is DOUBLE PRECISION
-C
-C**********************************************************************
-C
-C     .. Scalar Arguments ..
-      DOUBLE PRECISION x
-      INTEGER n
-C     ..
-C     .. Array Arguments ..
-      DOUBLE PRECISION a(n)
-C     ..
-C     .. Local Scalars ..
-      DOUBLE PRECISION term
-      INTEGER i
-C     ..
-C     .. Executable Statements ..
-      term = a(n)
-      DO 10,i = n - 1,1,-1
-          term = a(i) + term*x
-   10 CONTINUE
-      devlpl = term
-      RETURN
-
-      END
-************************************************************************
-*
-      SUBROUTINE DGEMV ( TRANS, M, N, ALPHA, A, LDA, X, INCX,
-     $                   BETA, Y, INCY )
-*     .. Scalar Arguments ..
-      DOUBLE PRECISION   ALPHA, BETA
-      INTEGER            INCX, INCY, LDA, M, N
-      CHARACTER*1        TRANS
-*     .. Array Arguments ..
-      DOUBLE PRECISION   A( LDA, * ), X( * ), Y( * )
-*     ..
-*
-*  Purpose
-*  =======
-*
-*  DGEMV  performs one of the matrix-vector operations
-*
-*     y := alpha*A*x + beta*y,   or   y := alpha*A'*x + beta*y,
-*
-*  where alpha and beta are scalars, x and y are vectors and A is an
-*  m by n matrix.
-*
-*  Parameters
-*  ==========
-*
-*  TRANS  - CHARACTER*1.
-*           On entry, TRANS specifies the operation to be performed as
-*           follows:
-*
-*              TRANS = 'N' or 'n'   y := alpha*A*x + beta*y.
-*
-*              TRANS = 'T' or 't'   y := alpha*A'*x + beta*y.
-*
-*              TRANS = 'C' or 'c'   y := alpha*A'*x + beta*y.
-*
-*           Unchanged on exit.
-*
-*  M      - INTEGER.
-*           On entry, M specifies the number of rows of the matrix A.
-*           M must be at least zero.
-*           Unchanged on exit.
-*
-*  N      - INTEGER.
-*           On entry, N specifies the number of columns of the matrix A.
-*           N must be at least zero.
-*           Unchanged on exit.
-*
-*  ALPHA  - DOUBLE PRECISION.
-*           On entry, ALPHA specifies the scalar alpha.
-*           Unchanged on exit.
-*
-*  A      - DOUBLE PRECISION array of DIMENSION ( LDA, n ).
-*           Before entry, the leading m by n part of the array A must
-*           contain the matrix of coefficients.
-*           Unchanged on exit.
-*
-*  LDA    - INTEGER.
-*           On entry, LDA specifies the first dimension of A as declared
-*           in the calling (sub) program. LDA must be at least
-*           max( 1, m ).
-*           Unchanged on exit.
-*
-*  X      - DOUBLE PRECISION array of DIMENSION at least
-*           ( 1 + ( n - 1 )*abs( INCX ) ) when TRANS = 'N' or 'n'
-*           and at least
-*           ( 1 + ( m - 1 )*abs( INCX ) ) otherwise.
-*           Before entry, the incremented array X must contain the
-*           vector x.
-*           Unchanged on exit.
-*
-*  INCX   - INTEGER.
-*           On entry, INCX specifies the increment for the elements of
-*           X. INCX must not be zero.
-*           Unchanged on exit.
-*
-*  BETA   - DOUBLE PRECISION.
-*           On entry, BETA specifies the scalar beta. When BETA is
-*           supplied as zero then Y need not be set on input.
-*           Unchanged on exit.
-*
-*  Y      - DOUBLE PRECISION array of DIMENSION at least
-*           ( 1 + ( m - 1 )*abs( INCY ) ) when TRANS = 'N' or 'n'
-*           and at least
-*           ( 1 + ( n - 1 )*abs( INCY ) ) otherwise.
-*           Before entry with BETA non-zero, the incremented array Y
-*           must contain the vector y. On exit, Y is overwritten by the
-*           updated vector y.
-*
-*  INCY   - INTEGER.
-*           On entry, INCY specifies the increment for the elements of
-*           Y. INCY must not be zero.
-*           Unchanged on exit.
-*
-*
-*  Level 2 Blas routine.
-*
-*  -- Written on 22-October-1986.
-*     Jack Dongarra, Argonne National Lab.
-*     Jeremy Du Croz, Nag Central Office.
-*     Sven Hammarling, Nag Central Office.
-*     Richard Hanson, Sandia National Labs.
-*
-*
-*     .. Parameters ..
-      DOUBLE PRECISION   ONE         , ZERO
-      PARAMETER        ( ONE = 1.0D+0, ZERO = 0.0D+0 )
-*     .. Local Scalars ..
-      DOUBLE PRECISION   TEMP
-      INTEGER            I, INFO, IX, IY, J, JX, JY, KX, KY, LENX, LENY
-*     .. External Functions ..
-      LOGICAL            LSAME
-      EXTERNAL           LSAME
-*     .. External Subroutines ..
-      EXTERNAL           XERBLA
-*     .. Intrinsic Functions ..
-      INTRINSIC          MAX
-*     ..
-*     .. Executable Statements ..
-*
-*     Test the input parameters.
-*
-      INFO = 0
-      IF     ( .NOT.LSAME( TRANS, 'N' ).AND.
-     $         .NOT.LSAME( TRANS, 'T' ).AND.
-     $         .NOT.LSAME( TRANS, 'C' )      )THEN
-         INFO = 1
-      ELSE IF( M.LT.0 )THEN
-         INFO = 2
-      ELSE IF( N.LT.0 )THEN
-         INFO = 3
-      ELSE IF( LDA.LT.MAX( 1, M ) )THEN
-         INFO = 6
-      ELSE IF( INCX.EQ.0 )THEN
-         INFO = 8
-      ELSE IF( INCY.EQ.0 )THEN
-         INFO = 11
-      END IF
-      IF( INFO.NE.0 )THEN
-         CALL XERBLA( 'DGEMV ', INFO )
-         RETURN
-      END IF
-*
-*     Quick return if possible.
-*
-      IF( ( M.EQ.0 ).OR.( N.EQ.0 ).OR.
-     $    ( ( ALPHA.EQ.ZERO ).AND.( BETA.EQ.ONE ) ) )
-     $   RETURN
-*
-*     Set  LENX  and  LENY, the lengths of the vectors x and y, and set
-*     up the start points in  X  and  Y.
-*
-      IF( LSAME( TRANS, 'N' ) )THEN
-         LENX = N
-         LENY = M
-      ELSE
-         LENX = M
-         LENY = N
-      END IF
-      IF( INCX.GT.0 )THEN
-         KX = 1
-      ELSE
-         KX = 1 - ( LENX - 1 )*INCX
-      END IF
-      IF( INCY.GT.0 )THEN
-         KY = 1
-      ELSE
-         KY = 1 - ( LENY - 1 )*INCY
-      END IF
-*
-*     Start the operations. In this version the elements of A are
-*     accessed sequentially with one pass through A.
-*
-*     First form  y := beta*y.
-*
-      IF( BETA.NE.ONE )THEN
-         IF( INCY.EQ.1 )THEN
-            IF( BETA.EQ.ZERO )THEN
-               DO 10, I = 1, LENY
-                  Y( I ) = ZERO
-   10          CONTINUE
-            ELSE
-               DO 20, I = 1, LENY
-                  Y( I ) = BETA*Y( I )
-   20          CONTINUE
-            END IF
-         ELSE
-            IY = KY
-            IF( BETA.EQ.ZERO )THEN
-               DO 30, I = 1, LENY
-                  Y( IY ) = ZERO
-                  IY      = IY   + INCY
-   30          CONTINUE
-            ELSE
-               DO 40, I = 1, LENY
-                  Y( IY ) = BETA*Y( IY )
-                  IY      = IY           + INCY
-   40          CONTINUE
-            END IF
-         END IF
-      END IF
-      IF( ALPHA.EQ.ZERO )
-     $   RETURN
-      IF( LSAME( TRANS, 'N' ) )THEN
-*
-*        Form  y := alpha*A*x + y.
-*
-         JX = KX
-         IF( INCY.EQ.1 )THEN
-            DO 60, J = 1, N
-               IF( X( JX ).NE.ZERO )THEN
-                  TEMP = ALPHA*X( JX )
-                  DO 50, I = 1, M
-                     Y( I ) = Y( I ) + TEMP*A( I, J )
-   50             CONTINUE
-               END IF
-               JX = JX + INCX
-   60       CONTINUE
-         ELSE
-            DO 80, J = 1, N
-               IF( X( JX ).NE.ZERO )THEN
-                  TEMP = ALPHA*X( JX )
-                  IY   = KY
-                  DO 70, I = 1, M
-                     Y( IY ) = Y( IY ) + TEMP*A( I, J )
-                     IY      = IY      + INCY
-   70             CONTINUE
-               END IF
-               JX = JX + INCX
-   80       CONTINUE
-         END IF
-      ELSE
-*
-*        Form  y := alpha*A'*x + y.
-*
-         JY = KY
-         IF( INCX.EQ.1 )THEN
-            DO 100, J = 1, N
-               TEMP = ZERO
-               DO 90, I = 1, M
-                  TEMP = TEMP + A( I, J )*X( I )
-   90          CONTINUE
-               Y( JY ) = Y( JY ) + ALPHA*TEMP
-               JY      = JY      + INCY
-  100       CONTINUE
-         ELSE
-            DO 120, J = 1, N
-               TEMP = ZERO
-               IX   = KX
-               DO 110, I = 1, M
-                  TEMP = TEMP + A( I, J )*X( IX )
-                  IX   = IX   + INCX
-  110          CONTINUE
-               Y( JY ) = Y( JY ) + ALPHA*TEMP
-              JY      = JY      + INCY
-  120       CONTINUE
-         END IF
-      END IF
-*
-      RETURN
-*
-*     End of DGEMV .
-*
-      END
-*
       subroutine dgmdr (vmu, s, lds, nobs, nnull, q, ldqr, ldqc, nq, y, 
      *tol1, tol2, init, prec1, maxiter1, prec2, maxiter2, theta, nlaht, 
      *score, varht, c, d, eta, wk, swk, qwk, ywk, u, w, info)
       integer lds, nobs, nnull, ldqr, ldqc, nq, init, maxiter1, 
      *maxiter2, info
       double precision s(lds,*), q(ldqr,ldqc,*), y(*), tol1, tol2, 
-     *prec1, prec2, theta(*), nlaht, score, varht, c(*), d(*), wk(*), 
+     *prec1, prec2, theta(*), nlaht, score(*), varht(2), c(*), d(*), 
+     *wk(*), 
      *eta(*), swk(lds,*), qwk(ldqr,ldqc,*), ywk(*), u(*), w(*)
 c      character*2 vmu
       integer vmu
@@ -1396,15 +901,15 @@ c      character*2 vmu
 23021 continue
 c      if(.not.(vmu .eq. 'u~'))
       if(.not.(vmu .eq. 3))goto 23025
-      varht = 0.d0
+      varht(1) = 0.d0
       vmu=2
       j=1
 23027 if(.not.(j.le.nobs))goto 23029
-      varht = varht + u(j)**2 / w(j)
+      varht(1) = varht(1) + u(j)**2 / w(j)
       j=j+1
       goto 23027
 23029 continue
-      varht = varht / dble (nobs)
+      varht(1) = varht(1) / dble (nobs)
 23025 continue
       call dcopy (nobs, ywk, 1, u, 1)
       call dmudr (vmu, swk, lds, nobs, nnull, qwk, ldqr, ldqc, nq, ywk, 
@@ -1441,9 +946,9 @@ c      if(.not.(vmu .eq. 'u~'))
 c      character*1 vmu
       integer vmu
       integer ldq, n, info
-      double precision q(ldq,*), z(*), low, upp, nlaht, score, varht(2),
-     * twk(2,*), work(*)
-      double precision ratio, mlo, mup, tmpl, tmpu
+      double precision q(ldq,*), z(*), low, upp, nlaht, score(*), 
+     * varht(2), twk(2,*), work(*)
+      double precision ratio, mlo, mup, tmpl(1), tmpu(1)
       ratio = ( dsqrt (5.d0) - 1.d0 ) / 2.d0
       info = 0
       if(.not.( upp .lt. low ))goto 23000
@@ -1485,10 +990,10 @@ c      if(.not.( vmu .ne. 'v' .and. vmu .ne. 'm' .and. vmu .ne. 'u' ))
       if(.not.( mup - mlo .lt. 1.d-7 ))goto 23013
       goto 23012
 23013 continue
-      if(.not.( tmpl .lt. tmpu ))goto 23015
+      if(.not.( tmpl(1) .lt. tmpu(1) ))goto 23015
       upp = mup
       mup = mlo
-      tmpu = tmpl
+      tmpu(1) = tmpl(1)
       mlo = upp - ratio * (upp - low)
       call dset (n, 10.d0 ** (mlo), twk(2,1), 2)
       call daxpy (n, 1.d0, q, ldq+1, twk(2,1), 2)
@@ -1503,7 +1008,7 @@ c      if(.not.( vmu .ne. 'v' .and. vmu .ne. 'm' .and. vmu .ne. 'u' ))
 23015 continue
       low = mlo
       mlo = mup
-      tmpl = tmpu
+      tmpl(1) = tmpu(1)
       mup = low + ratio * (upp - low)
       call dset (n, 10.d0 ** (mup), twk(2,1), 2)
       call daxpy (n, 1.d0, q, ldq+1, twk(2,1), 2)
@@ -1536,7 +1041,8 @@ c      character*2 vmu
       integer vmu
       integer lds, nobs, nnull, ldq, job, jpvt(*), info, maxiter
       double precision s(lds,*), y(*), q(ldq,*), tol1, tol2, limnla(2), 
-     *nlaht, score(*), varht, c(*), d(*), qraux(*), wk(*), prec, eta(*),
+     *nlaht, score(*), varht(2), c(*), d(*), qraux(*), wk(*), prec, 
+     *eta(*),
      * swk(lds,*), qwk(ldq,*), ywk(*), u(*), w(*)
       double precision mse, tmp, dasum, mtol
       integer i, j
@@ -1589,15 +1095,15 @@ c      tmp = 1.d0
 23021 continue
 c      if(.not.(vmu .eq. 'u~'))
       if(.not.(vmu .eq. 3))goto 23022
-      varht = 0.d0
+      varht(1) = 0.d0
       vmu=2
       j=1
 23024 if(.not.(j.le.nobs))goto 23026
-      varht = varht + u(j)**2 / w(j)
+      varht(1) = varht(1) + u(j)**2 / w(j)
       j=j+1
       goto 23024
 23026 continue
-      varht = varht / dble (nobs)
+      varht(1) = varht(1) / dble (nobs)
 23022 continue
       call dcopy (nobs, ywk, 1, u, 1)
       call dsidr (vmu, swk, lds, nobs, nnull, ywk, qwk, ldq, tol2, job, 
@@ -1627,145 +1133,6 @@ c      if(.not.(vmu .eq. 'u~'))
 23006 continue
       return
       end
-      DOUBLE PRECISION FUNCTION dlanor(x)
-C**********************************************************************
-C
-C      DOUBLE PRECISION FUNCTION DLANOR( X )
-C           Double precision Logarith of the Asymptotic Normal
-C
-C
-C                              Function
-C
-C
-C      Computes the logarithm of the cumulative normal distribution
-C      from abs( x ) to infinity for abs( x ) >= 5.
-C
-C
-C                              Arguments
-C
-C
-C      X --> Value at which cumulative normal to be evaluated
-C                     DOUBLE PRECISION X
-C
-C
-C                              Method
-C
-C
-C      23 term expansion of formula 26.2.12 of Abramowitz and Stegun.
-C      The relative error at X = 5 is about 0.5E-5.
-C
-C
-C                              Note
-C
-C
-C      ABS(X) must be >= 5 else there is an error stop.
-C
-C**********************************************************************
-C     .. Parameters ..
-      DOUBLE PRECISION dlsqpi
-      PARAMETER (dlsqpi=0.91893853320467274177D0)
-C     ..
-C     .. Scalar Arguments ..
-      DOUBLE PRECISION x
-C     ..
-C     .. Local Scalars ..
-      DOUBLE PRECISION approx,correc,xx,xx2
-C     ..
-C     .. Local Arrays ..
-      DOUBLE PRECISION coef(12)
-C     ..
-C     .. External Functions ..
-      DOUBLE PRECISION devlpl,dln1px
-      EXTERNAL devlpl,dln1px
-C     ..
-C     .. Intrinsic Functions ..
-      INTRINSIC abs,log
-C     ..
-C     .. Data statements ..
-      DATA coef/-1.0D0,3.0D0,-15.0D0,105.0D0,-945.0D0,10395.0D0,
-     +     -135135.0D0,2027025.0D0,-34459425.0D0,654729075.0D0,
-     +     -13749310575D0,316234143225.0D0/
-C     ..
-C     .. Executable Statements ..
-
-      xx = abs(x)
-      IF (xx.LT.5.0D0) STOP ' Argument too small in DLANOR'
-
-      approx = -dlsqpi - 0.5*xx*xx - log(xx)
-
-      xx2 = xx*xx
-      correc = devlpl(coef,12,1.0D0/xx2)/xx2
-      correc = dln1px(correc)
-
-      dlanor = approx + correc
-
-      RETURN
-
-      END
-      DOUBLE PRECISION FUNCTION dln1px(a)
-C**********************************************************************
-C
-C     DOUBLE PRECISION FUNCTION DLN1PX(X)
-C               Double precision LN(1+X)
-C
-C
-C                              Function
-C
-C
-C     Returns ln(1+x)
-C     Note that the obvious code of
-C               LOG(1.0+X)
-C     won't work for small X because 1.0+X loses accuracy
-C
-C
-C                              Arguments
-C
-C
-C     X --> Value for which ln(1-x) is desired.
-C                                        X is DOUBLE PRECISION
-C
-C
-C                              Method
-C
-C
-C     Renames ALNREL from:
-C     DiDinato, A. R. and Morris,  A.   H.  Algorithm 708: Significant
-C     Digit Computation of the Incomplete  Beta  Function Ratios.  ACM
-C     Trans. Math.  Softw. 18 (1993), 360-373.
-C
-C**********************************************************************
-C-----------------------------------------------------------------------
-C            EVALUATION OF THE FUNCTION LN(1 + A)
-C-----------------------------------------------------------------------
-C     .. Scalar Arguments ..
-      DOUBLE PRECISION a
-C     ..
-C     .. Local Scalars ..
-      DOUBLE PRECISION p1,p2,p3,q1,q2,q3,t,t2,w,x
-C     ..
-C     .. Intrinsic Functions ..
-      INTRINSIC abs,dble,dlog
-C     ..
-C     .. Data statements ..
-      DATA p1/-.129418923021993D+01/,p2/.405303492862024D+00/,
-     +     p3/-.178874546012214D-01/
-      DATA q1/-.162752256355323D+01/,q2/.747811014037616D+00/,
-     +     q3/-.845104217945565D-01/
-C     ..
-C     .. Executable Statements ..
-C--------------------------
-      IF (abs(a).GT.0.375D0) GO TO 10
-      t = a/ (a+2.0D0)
-      t2 = t*t
-      w = (((p3*t2+p2)*t2+p1)*t2+1.0D0)/ (((q3*t2+q2)*t2+q1)*t2+1.0D0)
-      dln1px = 2.0D0*t*w
-      RETURN
-C
-   10 x = 1.D0 + dble(a)
-      dln1px = dlog(x)
-      RETURN
-
-      END
       subroutine dmcdc (a, lda, p, e, jpvt, info)
       integer lda, p, jpvt(*), info
       double precision a(lda,*), e(*)
@@ -1861,7 +1228,7 @@ C
      *info)
       integer lds, nobs, nnull, ldqr, ldqc, nq, init, maxite, info
       double precision s(lds,*), q(ldqr,ldqc,*), y(*), tol, prec, theta(
-     **), nlaht, score, varht(2), c(*), d(*), wk(*)
+     **), nlaht, score(*), varht(2), c(*), d(*), wk(*)
 c      character*1 vmu
       integer vmu
       integer n, n0
@@ -1898,7 +1265,8 @@ c      character*1 vmu
      *c, d, wk, ok, info)
       integer lds, nobs, nnull, ldqr, ldqc, init, maxite, info, nq, ok
       double precision s(lds,*),q(ldqr,ldqc,*), y(*), tol, prec, theta(*
-     *), nlaht, score, varht, c(*), d(*), wk(*), q1(ldqr,*), q2(ldqr,*)
+     *), nlaht, score(*), varht(2), c(*), d(*), wk(*), q1(ldqr,*), 
+     *q2(ldqr,*)
 c      character * 1 vmu
       integer vmu
       integer i, j
@@ -1921,128 +1289,6 @@ c      character * 1 vmu
 23006 continue
       return
       end
-      DOUBLE PRECISION FUNCTION DNRM2 ( N, DX, INCX)
-      INTEGER          NEXT
-      DOUBLE PRECISION   DX(1), CUTLO, CUTHI, HITEST, SUM, XMAX,ZERO,ONE
-      DATA   ZERO, ONE /0.0D0, 1.0D0/
-C
-C     EUCLIDEAN NORM OF THE N-VECTOR STORED IN DX() WITH STORAGE
-C     INCREMENT INCX .
-C     IF    N .LE. 0 RETURN WITH RESULT = 0.
-C     IF N .GE. 1 THEN INCX MUST BE .GE. 1
-C
-C           C.L.LAWSON, 1978 JAN 08
-C
-C     FOUR PHASE METHOD     USING TWO BUILT-IN CONSTANTS THAT ARE
-C     HOPEFULLY APPLICABLE TO ALL MACHINES.
-C         CUTLO = MAXIMUM OF  DSQRT(U/EPS)  OVER ALL KNOWN MACHINES.
-C         CUTHI = MINIMUM OF  DSQRT(V)      OVER ALL KNOWN MACHINES.
-C     WHERE
-C         EPS = SMALLEST NO. SUCH THAT EPS + 1. .GT. 1.
-C         U   = SMALLEST POSITIVE NO.   (UNDERFLOW LIMIT)
-C         V   = LARGEST  NO.            (OVERFLOW  LIMIT)
-C
-C     BRIEF OUTLINE OF ALGORITHM..
-C
-C     PHASE 1    SCANS ZERO COMPONENTS.
-C     MOVE TO PHASE 2 WHEN A COMPONENT IS NONZERO AND .LE. CUTLO
-C     MOVE TO PHASE 3 WHEN A COMPONENT IS .GT. CUTLO
-C     MOVE TO PHASE 4 WHEN A COMPONENT IS .GE. CUTHI/M
-C     WHERE M = N FOR X() REAL AND M = 2*N FOR COMPLEX.
-C
-C     VALUES FOR CUTLO AND CUTHI..
-C     FROM THE ENVIRONMENTAL PARAMETERS LISTED IN THE IMSL CONVERTER
-C     DOCUMENT THE LIMITING VALUES ARE AS FOLLOWS..
-C     CUTLO, S.P.   U/EPS = 2**(-102) FOR  HONEYWELL.  CLOSE SECONDS ARE
-C                   UNIVAC AND DEC AT 2**(-103)
-C                   THUS CUTLO = 2**(-51) = 4.44089E-16
-C     CUTHI, S.P.   V = 2**127 FOR UNIVAC, HONEYWELL, AND DEC.
-C                   THUS CUTHI = 2**(63.5) = 1.30438E19
-C     CUTLO, D.P.   U/EPS = 2**(-67) FOR HONEYWELL AND DEC.
-C                   THUS CUTLO = 2**(-33.5) = 8.23181D-11
-C     CUTHI, D.P.   SAME AS S.P.  CUTHI = 1.30438D19
-C     DATA CUTLO, CUTHI / 8.232D-11,  1.304D19 /
-C     DATA CUTLO, CUTHI / 4.441E-16,  1.304E19 /
-      DATA CUTLO, CUTHI / 8.232D-11,  1.304D19 /
-C
-      IF(N .GT. 0) GO TO 10
-         DNRM2  = ZERO
-         GO TO 300
-C
-   10 ASSIGN 30 TO NEXT
-      SUM = ZERO
-      NN = N * INCX
-C                                                 BEGIN MAIN LOOP
-      I = 1
-   20    GO TO NEXT,(30, 50, 70, 110)
-   30 IF( DABS(DX(I)) .GT. CUTLO) GO TO 85
-      ASSIGN 50 TO NEXT
-      XMAX = ZERO
-C
-C                        PHASE 1.  SUM IS ZERO
-C
-   50 IF( DX(I) .EQ. ZERO) GO TO 200
-      IF( DABS(DX(I)) .GT. CUTLO) GO TO 85
-C
-C                                PREPARE FOR PHASE 2.
-      ASSIGN 70 TO NEXT
-      GO TO 105
-C
-C                                PREPARE FOR PHASE 4.
-C
-  100 I = J
-      ASSIGN 110 TO NEXT
-      SUM = (SUM / DX(I)) / DX(I)
-  105 XMAX = DABS(DX(I))
-      GO TO 115
-C
-C                   PHASE 2.  SUM IS SMALL.
-C                             SCALE TO AVOID DESTRUCTIVE UNDERFLOW.
-C
-   70 IF( DABS(DX(I)) .GT. CUTLO ) GO TO 75
-C
-C                     COMMON CODE FOR PHASES 2 AND 4.
-C                     IN PHASE 4 SUM IS LARGE.  SCALE TO AVOID OVERFLOW.
-C
-  110 IF( DABS(DX(I)) .LE. XMAX ) GO TO 115
-         SUM = ONE + SUM * (XMAX / DX(I))**2
-         XMAX = DABS(DX(I))
-         GO TO 200
-C
-  115 SUM = SUM + (DX(I)/XMAX)**2
-      GO TO 200
-C
-C
-C                  PREPARE FOR PHASE 3.
-C
-   75 SUM = (SUM * XMAX) * XMAX
-C
-C
-C     FOR REAL OR D.P. SET HITEST = CUTHI/N
-C     FOR COMPLEX      SET HITEST = CUTHI/(2*N)
-C
-   85 HITEST = CUTHI/FLOAT( N )
-C
-C                   PHASE 3.  SUM IS MID-RANGE.  NO SCALING.
-C
-      DO 95 J =I,NN,INCX
-      IF(DABS(DX(J)) .GE. HITEST) GO TO 100
-   95    SUM = SUM + DX(J)**2
-      DNRM2 = DSQRT( SUM )
-      GO TO 300
-C
-  200 CONTINUE
-      I = I + INCX
-      IF ( I .LE. NN ) GO TO 20
-C
-C              END OF MAIN LOOP.
-C
-C              COMPUTE SQUARE ROOT AND ADJUST FOR SCALING.
-C
-      DNRM2 = XMAX * DSQRT(SUM)
-  300 CONTINUE
-      RETURN
-      END
       SUBROUTINE DPBFA(ABD,LDA,N,M,INFO)
       INTEGER LDA,N,M,INFO
       DOUBLE PRECISION ABD(LDA,1)
@@ -2224,7 +1470,8 @@ C
       integer lds, nobs, nnull, ldqr, ldqc, nq, init, maxiter1, 
      *maxiter2, info
       double precision s(lds,*), q(ldqr,ldqc,*), y(*), tol1, tol2, 
-     *prec1, prec2, theta(*), nlaht, score, varht, c(*), d(*), wk(*), 
+     *prec1, prec2, theta(*), nlaht, score(*), varht(2), c(*), d(*), 
+     *wk(*), 
      *eta(*), swk(lds,*), qwk(ldqr,ldqc,*), ywk(*), u(*), w(*)
 c      character*2 vmu
       integer vmu
@@ -2282,15 +1529,15 @@ c      character*2 vmu
 23021 continue
 c      if(.not.(vmu .eq. 'u~'))
       if(.not.(vmu .eq. 3))goto 23025
-      varht = 0.d0
+      varht(1) = 0.d0
       vmu=2
       j=1
 23027 if(.not.(j.le.nobs))goto 23029
-      varht = varht + u(j)**2 / w(j)
+      varht(1) = varht(1) + u(j)**2 / w(j)
       j=j+1
       goto 23027
 23029 continue
-      varht = varht / dble (nobs)
+      varht(1) = varht(1) / dble (nobs)
 23025 continue
       call dcopy (nobs, ywk, 1, u, 1)
       call dmudr (vmu, swk, lds, nobs, nnull, qwk, ldqr, ldqc, nq, ywk, 
@@ -2849,280 +2096,280 @@ C
   200 CONTINUE
       RETURN
       END
-      SUBROUTINE DQRSL(X,LDX,N,K,QRAUX,Y,QY,QTY,B,RSD,XB,JOB,INFO)
-      INTEGER LDX,N,K,JOB,INFO
-      DOUBLE PRECISION X(LDX,1),QRAUX(1),Y(1),QY(1),QTY(1),B(1),RSD(1),
-     *                 XB(1)
-C
-C     DQRSL APPLIES THE OUTPUT OF DQRDC TO COMPUTE COORDINATE
-C     TRANSFORMATIONS, PROJECTIONS, AND LEAST SQUARES SOLUTIONS.
-C     FOR K .LE. MIN(N,P), LET XK BE THE MATRIX
-C
-C            XK = (X(JPVT(1)),X(JPVT(2)), ... ,X(JPVT(K)))
-C
-C     FORMED FROM COLUMNNS JPVT(1), ... ,JPVT(K) OF THE ORIGINAL
-C     N X P MATRIX X THAT WAS INPUT TO DQRDC (IF NO PIVOTING WAS
-C     DONE, XK CONSISTS OF THE FIRST K COLUMNS OF X IN THEIR
-C     ORIGINAL ORDER).  DQRDC PRODUCES A FACTORED ORTHOGONAL MATRIX Q
-C     AND AN UPPER TRIANGULAR MATRIX R SUCH THAT
-C
-C              XK = Q * (R)
-C                       (0)
-C
-C     THIS INFORMATION IS CONTAINED IN CODED FORM IN THE ARRAYS
-C     X AND QRAUX.
-C
-C     ON ENTRY
-C
-C        X      DOUBLE PRECISION(LDX,P).
-C               X CONTAINS THE OUTPUT OF DQRDC.
-C
-C        LDX    INTEGER.
-C               LDX IS THE LEADING DIMENSION OF THE ARRAY X.
-C
-C        N      INTEGER.
-C               N IS THE NUMBER OF ROWS OF THE MATRIX XK.  IT MUST
-C               HAVE THE SAME VALUE AS N IN DQRDC.
-C
-C        K      INTEGER.
-C               K IS THE NUMBER OF COLUMNS OF THE MATRIX XK.  K
-C               MUST NNOT BE GREATER THAN MIN(N,P), WHERE P IS THE
-C               SAME AS IN THE CALLING SEQUENCE TO DQRDC.
-C
-C        QRAUX  DOUBLE PRECISION(P).
-C               QRAUX CONTAINS THE AUXILIARY OUTPUT FROM DQRDC.
-C
-C        Y      DOUBLE PRECISION(N)
-C               Y CONTAINS AN N-VECTOR THAT IS TO BE MANIPULATED
-C               BY DQRSL.
-C
-C        JOB    INTEGER.
-C               JOB SPECIFIES WHAT IS TO BE COMPUTED.  JOB HAS
-C               THE DECIMAL EXPANSION ABCDE, WITH THE FOLLOWING
-C               MEANING.
-C
-C                    IF A.NE.0, COMPUTE QY.
-C                    IF B,C,D, OR E .NE. 0, COMPUTE QTY.
-C                    IF C.NE.0, COMPUTE B.
-C                    IF D.NE.0, COMPUTE RSD.
-C                    IF E.NE.0, COMPUTE XB.
-C
-C               NOTE THAT A REQUEST TO COMPUTE B, RSD, OR XB
-C               AUTOMATICALLY TRIGGERS THE COMPUTATION OF QTY, FOR
-C               WHICH AN ARRAY MUST BE PROVIDED IN THE CALLING
-C               SEQUENCE.
-C
-C     ON RETURN
-C
-C        QY     DOUBLE PRECISION(N).
-C               QY CONNTAINS Q*Y, IF ITS COMPUTATION HAS BEEN
-C               REQUESTED.
-C
-C        QTY    DOUBLE PRECISION(N).
-C               QTY CONTAINS TRANS(Q)*Y, IF ITS COMPUTATION HAS
-C               BEEN REQUESTED.  HERE TRANS(Q) IS THE
-C               TRANSPOSE OF THE MATRIX Q.
-C
-C        B      DOUBLE PRECISION(K)
-C               B CONTAINS THE SOLUTION OF THE LEAST SQUARES PROBLEM
-C
-C                    MINIMIZE NORM2(Y - XK*B),
-C
-C               IF ITS COMPUTATION HAS BEEN REQUESTED.  (NOTE THAT
-C               IF PIVOTING WAS REQUESTED IN DQRDC, THE J-TH
-C               COMPONENT OF B WILL BE ASSOCIATED WITH COLUMN JPVT(J)
-C               OF THE ORIGINAL MATRIX X THAT WAS INPUT INTO DQRDC.)
-C
-C        RSD    DOUBLE PRECISION(N).
-C               RSD CONTAINS THE LEAST SQUARES RESIDUAL Y - XK*B,
-C               IF ITS COMPUTATION HAS BEEN REQUESTED.  RSD IS
-C               ALSO THE ORTHOGONAL PROJECTION OF Y ONTO THE
-C               ORTHOGONAL COMPLEMENT OF THE COLUMN SPACE OF XK.
-C
-C        XB     DOUBLE PRECISION(N).
-C               XB CONTAINS THE LEAST SQUARES APPROXIMATION XK*B,
-C               IF ITS COMPUTATION HAS BEEN REQUESTED.  XB IS ALSO
-C               THE ORTHOGONAL PROJECTION OF Y ONTO THE COLUMN SPACE
-C               OF X.
-C
-C        INFO   INTEGER.
-C               INFO IS ZERO UNLESS THE COMPUTATION OF B HAS
-C               BEEN REQUESTED AND R IS EXACTLY SINGULAR.  IN
-C               THIS CASE, INFO IS THE INDEX OF THE FIRST ZERO
-C               DIAGONAL ELEMENT OF R AND B IS LEFT UNALTERED.
-C
-C     THE PARAMETERS QY, QTY, B, RSD, AND XB ARE NOT REFERENCED
-C     IF THEIR COMPUTATION IS NOT REQUESTED AND IN THIS CASE
-C     CAN BE REPLACED BY DUMMY VARIABLES IN THE CALLING PROGRAM.
-C     TO SAVE STORAGE, THE USER MAY IN SOME CASES USE THE SAME
-C     ARRAY FOR DIFFERENT PARAMETERS IN THE CALLING SEQUENCE.  A
-C     FREQUENTLY OCCURING EXAMPLE IS WHEN ONE WISHES TO COMPUTE
-C     ANY OF B, RSD, OR XB AND DOES NOT NEED Y OR QTY.  IN THIS
-C     CASE ONE MAY IDENTIFY Y, QTY, AND ONE OF B, RSD, OR XB, WHILE
-C     PROVIDING SEPARATE ARRAYS FOR ANYTHING ELSE THAT IS TO BE
-C     COMPUTED.  THUS THE CALLING SEQUENCE
-C
-C          CALL DQRSL(X,LDX,N,K,QRAUX,Y,DUM,Y,B,Y,DUM,110,INFO)
-C
-C     WILL RESULT IN THE COMPUTATION OF B AND RSD, WITH RSD
-C     OVERWRITING Y.  MORE GENERALLY, EACH ITEM IN THE FOLLOWING
-C     LIST CONTAINS GROUPS OF PERMISSIBLE IDENTIFICATIONS FOR
-C     A SINGLE CALLINNG SEQUENCE.
-C
-C          1. (Y,QTY,B) (RSD) (XB) (QY)
-C
-C          2. (Y,QTY,RSD) (B) (XB) (QY)
-C
-C          3. (Y,QTY,XB) (B) (RSD) (QY)
-C
-C          4. (Y,QY) (QTY,B) (RSD) (XB)
-C
-C          5. (Y,QY) (QTY,RSD) (B) (XB)
-C
-C          6. (Y,QY) (QTY,XB) (B) (RSD)
-C
-C     IN ANY GROUP THE VALUE RETURNED IN THE ARRAY ALLOCATED TO
-C     THE GROUP CORRESPONDS TO THE LAST MEMBER OF THE GROUP.
-C
-C     LINPACK. THIS VERSION DATED 08/14/78 .
-C     G.W. STEWART, UNIVERSITY OF MARYLAND, ARGONNE NATIONAL LAB.
-C
-C     DQRSL USES THE FOLLOWING FUNCTIONS AND SUBPROGRAMS.
-C
-C     BLAS DAXPY,DCOPY,DDOT
-C     FORTRAN DABS,MIN0,MOD
-C
-C     INTERNAL VARIABLES
-C
-      INTEGER I,J,JJ,JU,KP1
-      DOUBLE PRECISION DDOT,T,TEMP
-      LOGICAL CB,CQY,CQTY,CR,CXB
-C
-C
-C     SET INFO FLAG.
-C
-      INFO = 0
-C
-C     DETERMINE WHAT IS TO BE COMPUTED.
-C
-      CQY = JOB/10000 .NE. 0
-      CQTY = MOD(JOB,10000) .NE. 0
-      CB = MOD(JOB,1000)/100 .NE. 0
-      CR = MOD(JOB,100)/10 .NE. 0
-      CXB = MOD(JOB,10) .NE. 0
-      JU = MIN0(K,N-1)
-C
-C     SPECIAL ACTION WHEN N=1.
-C
-      IF (JU .NE. 0) GO TO 40
-         IF (CQY) QY(1) = Y(1)
-         IF (CQTY) QTY(1) = Y(1)
-         IF (CXB) XB(1) = Y(1)
-         IF (.NOT.CB) GO TO 30
-            IF (X(1,1) .NE. 0.0D0) GO TO 10
-               INFO = 1
-            GO TO 20
-   10       CONTINUE
-               B(1) = Y(1)/X(1,1)
-   20       CONTINUE
-   30    CONTINUE
-         IF (CR) RSD(1) = 0.0D0
-      GO TO 250
-   40 CONTINUE
-C
-C        SET UP TO COMPUTE QY OR QTY.
-C
-         IF (CQY) CALL DCOPY(N,Y,1,QY,1)
-         IF (CQTY) CALL DCOPY(N,Y,1,QTY,1)
-         IF (.NOT.CQY) GO TO 70
-C
-C           COMPUTE QY.
-C
-            DO 60 JJ = 1, JU
-               J = JU - JJ + 1
-               IF (QRAUX(J) .EQ. 0.0D0) GO TO 50
-                  TEMP = X(J,J)
-                  X(J,J) = QRAUX(J)
-                  T = -DDOT(N-J+1,X(J,J),1,QY(J),1)/X(J,J)
-                  CALL DAXPY(N-J+1,T,X(J,J),1,QY(J),1)
-                  X(J,J) = TEMP
-   50          CONTINUE
-   60       CONTINUE
-   70    CONTINUE
-         IF (.NOT.CQTY) GO TO 100
-C
-C           COMPUTE TRANS(Q)*Y.
-C
-            DO 90 J = 1, JU
-               IF (QRAUX(J) .EQ. 0.0D0) GO TO 80
-                  TEMP = X(J,J)
-                  X(J,J) = QRAUX(J)
-                  T = -DDOT(N-J+1,X(J,J),1,QTY(J),1)/X(J,J)
-                  CALL DAXPY(N-J+1,T,X(J,J),1,QTY(J),1)
-                  X(J,J) = TEMP
-   80          CONTINUE
-   90       CONTINUE
-  100    CONTINUE
-C
-C        SET UP TO COMPUTE B, RSD, OR XB.
-C
-         IF (CB) CALL DCOPY(K,QTY,1,B,1)
-         KP1 = K + 1
-         IF (CXB) CALL DCOPY(K,QTY,1,XB,1)
-         IF (CR .AND. K .LT. N) CALL DCOPY(N-K,QTY(KP1),1,RSD(KP1),1)
-         IF (.NOT.CXB .OR. KP1 .GT. N) GO TO 120
-            DO 110 I = KP1, N
-               XB(I) = 0.0D0
-  110       CONTINUE
-  120    CONTINUE
-         IF (.NOT.CR) GO TO 140
-            DO 130 I = 1, K
-               RSD(I) = 0.0D0
-  130       CONTINUE
-  140    CONTINUE
-         IF (.NOT.CB) GO TO 190
-C
-C           COMPUTE B.
-C
-            DO 170 JJ = 1, K
-               J = K - JJ + 1
-               IF (X(J,J) .NE. 0.0D0) GO TO 150
-                  INFO = J
-C           ......EXIT
-                  GO TO 180
-  150          CONTINUE
-               B(J) = B(J)/X(J,J)
-               IF (J .EQ. 1) GO TO 160
-                  T = -B(J)
-                  CALL DAXPY(J-1,T,X(1,J),1,B,1)
-  160          CONTINUE
-  170       CONTINUE
-  180       CONTINUE
-  190    CONTINUE
-         IF (.NOT.CR .AND. .NOT.CXB) GO TO 240
-C
-C           COMPUTE RSD OR XB AS REQUIRED.
-C
-            DO 230 JJ = 1, JU
-               J = JU - JJ + 1
-               IF (QRAUX(J) .EQ. 0.0D0) GO TO 220
-                  TEMP = X(J,J)
-                  X(J,J) = QRAUX(J)
-                  IF (.NOT.CR) GO TO 200
-                     T = -DDOT(N-J+1,X(J,J),1,RSD(J),1)/X(J,J)
-                     CALL DAXPY(N-J+1,T,X(J,J),1,RSD(J),1)
-  200             CONTINUE
-                  IF (.NOT.CXB) GO TO 210
-                     T = -DDOT(N-J+1,X(J,J),1,XB(J),1)/X(J,J)
-                     CALL DAXPY(N-J+1,T,X(J,J),1,XB(J),1)
-  210             CONTINUE
-                  X(J,J) = TEMP
-  220          CONTINUE
-  230       CONTINUE
-  240    CONTINUE
-  250 CONTINUE
-      RETURN
-      END
+c     dqrsl applies the output of dqrdc to compute coordinate
+c     transformations, projections, and least squares solutions.
+c     for k .le. min(n,p), let xk be the matrix
+c
+c            xk = (x(jpvt(1)),x(jpvt(2)), ... ,x(jpvt(k)))
+c
+c     formed from columnns jpvt(1), ... ,jpvt(k) of the original
+c     n x p matrix x that was input to dqrdc (if no pivoting was
+c     done, xk consists of the first k columns of x in their
+c     original order).  dqrdc produces a factored orthogonal matrix q
+c     and an upper triangular matrix r such that
+c
+c              xk = q * (r)
+c                       (0)
+c
+c     this information is contained in coded form in the arrays
+c     x and qraux.
+c
+c     on entry
+c
+c        x      double precision(ldx,p).
+c               x contains the output of dqrdc.
+c
+c        ldx    integer.
+c               ldx is the leading dimension of the array x.
+c
+c        n      integer.
+c               n is the number of rows of the matrix xk.  it must
+c               have the same value as n in dqrdc.
+c
+c        k      integer.
+c               k is the number of columns of the matrix xk.  k
+c               must nnot be greater than min(n,p), where p is the
+c               same as in the calling sequence to dqrdc.
+c
+c        qraux  double precision(p).
+c               qraux contains the auxiliary output from dqrdc.
+c
+c        y      double precision(n)
+c               y contains an n-vector that is to be manipulated
+c               by dqrsl.
+c
+c        job    integer.
+c               job specifies what is to be computed.  job has
+c               the decimal expansion abcde, with the following
+c               meaning.
+c
+c                    if a.ne.0, compute qy.
+c                    if b,c,d, or e .ne. 0, compute qty.
+c                    if c.ne.0, compute b.
+c                    if d.ne.0, compute rsd.
+c                    if e.ne.0, compute xb.
+c
+c               note that a request to compute b, rsd, or xb
+c               automatically triggers the computation of qty, for
+c               which an array must be provided in the calling
+c               sequence.
+c
+c     on return
+c
+c        qy     double precision(n).
+c               qy conntains q*y, if its computation has been
+c               requested.
+c
+c        qty    double precision(n).
+c               qty contains trans(q)*y, if its computation has
+c               been requested.  here trans(q) is the
+c               transpose of the matrix q.
+c
+c        b      double precision(k)
+c               b contains the solution of the least squares problem
+c
+c                    minimize norm2(y - xk*b),
+c
+c               if its computation has been requested.  (note that
+c               if pivoting was requested in dqrdc, the j-th
+c               component of b will be associated with column jpvt(j)
+c               of the original matrix x that was input into dqrdc.)
+c
+c        rsd    double precision(n).
+c               rsd contains the least squares residual y - xk*b,
+c               if its computation has been requested.  rsd is
+c               also the orthogonal projection of y onto the
+c               orthogonal complement of the column space of xk.
+c
+c        xb     double precision(n).
+c               xb contains the least squares approximation xk*b,
+c               if its computation has been requested.  xb is also
+c               the orthogonal projection of y onto the column space
+c               of x.
+c
+c        info   integer.
+c               info is zero unless the computation of b has
+c               been requested and r is exactly singular.  in
+c               this case, info is the index of the first zero
+c               diagonal element of r and b is left unaltered.
+c
+c     the parameters qy, qty, b, rsd, and xb are not referenced
+c     if their computation is not requested and in this case
+c     can be replaced by dummy variables in the calling program.
+c     to save storage, the user may in some cases use the same
+c     array for different parameters in the calling sequence.  a
+c     frequently occuring example is when one wishes to compute
+c     any of b, rsd, or xb and does not need y or qty.  in this
+c     case one may identify y, qty, and one of b, rsd, or xb, while
+c     providing separate arrays for anything else that is to be
+c     computed.  thus the calling sequence
+c
+c          call dqrsl(x,ldx,n,k,qraux,y,dum,y,b,y,dum,110,info)
+c
+c     will result in the computation of b and rsd, with rsd
+c     overwriting y.  more generally, each item in the following
+c     list contains groups of permissible identifications for
+c     a single callinng sequence.
+c
+c          1. (y,qty,b) (rsd) (xb) (qy)
+c
+c          2. (y,qty,rsd) (b) (xb) (qy)
+c
+c          3. (y,qty,xb) (b) (rsd) (qy)
+c
+c          4. (y,qy) (qty,b) (rsd) (xb)
+c
+c          5. (y,qy) (qty,rsd) (b) (xb)
+c
+c          6. (y,qy) (qty,xb) (b) (rsd)
+c
+c     in any group the value returned in the array allocated to
+c     the group corresponds to the last member of the group.
+c
+c     linpack. this version dated 08/14/78 .
+c     g.w. stewart, university of maryland, argonne national lab.
+c
+c     dqrsl uses the following functions and subprograms.
+c
+c     BLAS      daxpy,dcopy,ddot
+c     Fortran   dabs,min0,mod
+c
+      subroutine dqrsl(x,ldx,n,k,qraux,y,qy,qty,b,rsd,xb,job,info)
+      integer ldx,n,k,job,info
+      double precision x(ldx,*),qraux(*),y(*),qy(*),qty(*),b(*),rsd(*),
+     *                 xb(*)
+c
+c     internal variables
+c
+      integer i,j,jj,ju,kp1
+      double precision ddot,t,temp
+      logical cb,cqy,cqty,cr,cxb
+c
+c
+c     set info flag.
+c
+      info = 0
+c
+c     determine what is to be computed.
+c
+      cqy = job/10000 .ne. 0
+      cqty = mod(job,10000) .ne. 0
+      cb = mod(job,1000)/100 .ne. 0
+      cr = mod(job,100)/10 .ne. 0
+      cxb = mod(job,10) .ne. 0
+      ju = min0(k,n-1)
+c
+c     special action when n=1.
+c
+      if (ju .ne. 0) go to 40
+         if (cqy) qy(1) = y(1)
+         if (cqty) qty(1) = y(1)
+         if (cxb) xb(1) = y(1)
+         if (.not.cb) go to 30
+            if (x(1,1) .ne. 0.0d0) go to 10
+               info = 1
+            go to 20
+ 10                continue
+               b(1) = y(1)/x(1,1)
+ 20                   continue
+ 30                       continue
+         if (cr) rsd(1) = 0.0d0
+      go to 250
+ 40    continue
+c
+c        set up to compute qy or qty.
+c
+         if (cqy) call dcopy(n,y,1,qy,1)
+         if (cqty) call dcopy(n,y,1,qty,1)
+         if (.not.cqy) go to 70
+c
+c           compute qy.
+c
+            do 60 jj = 1, ju
+               j = ju - jj + 1
+               if (qraux(j) .eq. 0.0d0) go to 50
+                  temp = x(j,j)
+                  x(j,j) = qraux(j)
+                  t = -ddot(n-j+1,x(j,j),1,qy(j),1)/x(j,j)
+                  call daxpy(n-j+1,t,x(j,j),1,qy(j),1)
+                  x(j,j) = temp
+ 50                         continue
+ 60                                continue
+ 70                                    continue
+         if (.not.cqty) go to 100
+c
+c           compute trans(q)*y.
+c
+            do 90 j = 1, ju
+               if (qraux(j) .eq. 0.0d0) go to 80
+                  temp = x(j,j)
+                  x(j,j) = qraux(j)
+                  t = -ddot(n-j+1,x(j,j),1,qty(j),1)/x(j,j)
+                  call daxpy(n-j+1,t,x(j,j),1,qty(j),1)
+                  x(j,j) = temp
+ 80                         continue
+ 90                                continue
+ 100                                   continue
+c
+c        set up to compute b, rsd, or xb.
+c
+         if (cb) call dcopy(k,qty,1,b,1)
+         kp1 = k + 1
+         if (cxb) call dcopy(k,qty,1,xb,1)
+         if (cr .and. k .lt. n) call dcopy(n-k,qty(kp1),1,rsd(kp1),1)
+         if (.not.cxb .or. kp1 .gt. n) go to 120
+            do 110 i = kp1, n
+               xb(i) = 0.0d0
+ 110                  continue
+ 120                      continue
+         if (.not.cr) go to 140
+            do 130 i = 1, k
+               rsd(i) = 0.0d0
+ 130                  continue
+ 140                      continue
+         if (.not.cb) go to 190
+c
+c           compute b.
+c
+            do 170 jj = 1, k
+               j = k - jj + 1
+               if (x(j,j) .ne. 0.0d0) go to 150
+                  info = j
+c           ......exit
+                  go to 180
+ 150                        continue
+               b(j) = b(j)/x(j,j)
+               if (j .eq. 1) go to 160
+                  t = -b(j)
+                  call daxpy(j-1,t,x(1,j),1,b,1)
+ 160                        continue
+ 170                               continue
+ 180                                      continue
+ 190                                          continue
+         if (.not.cr .and. .not.cxb) go to 240
+c
+c           compute rsd or xb as required.
+c
+            do 230 jj = 1, ju
+               j = ju - jj + 1
+               if (qraux(j) .eq. 0.0d0) go to 220
+                  temp = x(j,j)
+                  x(j,j) = qraux(j)
+                  if (.not.cr) go to 200
+                     t = -ddot(n-j+1,x(j,j),1,rsd(j),1)/x(j,j)
+                     call daxpy(n-j+1,t,x(j,j),1,rsd(j),1)
+ 200                              continue
+                  if (.not.cxb) go to 210
+                     t = -ddot(n-j+1,x(j,j),1,xb(j),1)/x(j,j)
+                     call daxpy(n-j+1,t,x(j,j),1,xb(j),1)
+ 210                              continue
+                  x(j,j) = temp
+ 220                        continue
+ 230                               continue
+ 240                                   continue
+ 250                                    continue
+      return
+      end
       subroutine dqrslm (x, ldx, n, k, qraux, a, lda, job, info, work)
       integer ldx, n, k, lda, job, info
       double precision x(ldx,*), qraux(*), a(lda,*), work(*)
@@ -3171,47 +2418,6 @@ C
 23007 continue
       return
       end
-      SUBROUTINE  DSCAL(N,DA,DX,INCX)
-C
-C     SCALES A VECTOR BY A CONSTANT.
-C     USES UNROLLED LOOPS FOR INCREMENT EQUAL TO ONE.
-C     JACK DONGARRA, LINPACK, 3/11/78.
-C
-      DOUBLE PRECISION DA,DX(1)
-      INTEGER I,INCX,M,MP1,N,NINCX
-C
-      IF(N.LE.0)RETURN
-      IF(INCX.EQ.1)GO TO 20
-C
-C        CODE FOR INCREMENT NOT EQUAL TO 1
-C
-      NINCX = N*INCX
-      DO 10 I = 1,NINCX,INCX
-        DX(I) = DA*DX(I)
-   10 CONTINUE
-      RETURN
-C
-C        CODE FOR INCREMENT EQUAL TO 1
-C
-C
-C        CLEAN-UP LOOP
-C
-   20 M = MOD(N,5)
-      IF( M .EQ. 0 ) GO TO 40
-      DO 30 I = 1,M
-        DX(I) = DA*DX(I)
-   30 CONTINUE
-      IF( N .LT. 5 ) RETURN
-   40 MP1 = M + 1
-      DO 50 I = MP1,N,5
-        DX(I) = DA*DX(I)
-        DX(I + 1) = DA*DX(I + 1)
-        DX(I + 2) = DA*DX(I + 2)
-        DX(I + 3) = DA*DX(I + 3)
-        DX(I + 4) = DA*DX(I + 4)
-   50 CONTINUE
-      RETURN
-      END
       subroutine  dset(n,da,dx,incx)
       integer n,incx
       double precision da,dx(*)
@@ -3267,7 +2473,7 @@ c
      *ldsms, wk, info)
       integer lds, nobs, nnull, jpvt(*), ldq, ldsms, info
       double precision s(lds,*), q(ldq,*), nlaht, sms(ldsms,*), wk(2,*)
-      double precision dum, ddot
+      double precision dum(1), ddot
       integer i, j, n, n0
       info = 0
       if(.not.( nnull .lt. 1 .or. nnull .ge. nobs .or. nobs .gt. lds 
@@ -3355,52 +2561,11 @@ c
 23033 continue
       return
       end
-c      this is a subroutine to sort a arrary, using heapsrot method
-c      see "numerical recipes"
-      
-       subroutine dsort(n,ra)
-       integer n
-       double precision ra(n)
-
-       l=n/2+1
-       ir=n
- 10    continue
-           if (l .gt. 1) then
-               l=l-1
-	       rra=ra(l)
-	   else
-	       rra=ra(ir)
-	       ra(ir)=ra(1)
-	       ir=ir-1
-	       if (ir .eq. 1) then
-		   ra(1)=rra
-		   return
-	       endif
-            endif	 		
-	    i=l
-	    j=l+l
- 20         if (j .le. ir) then
-                if (j .lt. ir) then
-	            if (ra(j) .lt. ra(j+1)) j=j+1
-                endif
-	        if (rra .lt. ra(j)) then
-		    ra(i)=ra(j)
-		    i=j
-		    j=j+j
-		else
-		    j=ir+1
-		endif
- 	    go to 20
-	    endif
-	    ra(i)=rra
-       go to 10
-       end
-
       subroutine dstup (s, lds, nobs, nnull, qraux, jpvt, y, q, ldqr, 
-     *ldqc, nq, info, work)
+     *ldqc, nq, info, work, dum)
       integer lds, nobs, nnull, jpvt(*), ldqr, ldqc, nq, info
       double precision s(lds,*), y(*), qraux(*), q(ldqr,ldqc,*), work(*)
-      double precision dum
+      double precision dum(1)
       integer j
       info = 0
       if(.not.( nobs .lt. 1 .or. nobs .gt. lds .or. nobs .gt. ldqr .or. 
@@ -3429,559 +2594,136 @@ c      see "numerical recipes"
 23009 continue
       return
       end
-      SUBROUTINE  DSWAP (N,DX,INCX,DY,INCY)
+      subroutine dtrev (vmu, t, ldt, n, z, score, varht, info, work)      
+c      character*1 vmu
+      integer vmu
+      integer n, info
+      double precision t(ldt,*), z(*), score(*), varht(2), work(*)
+      double precision nume, deno, tmp, alph, la, dasum, ddot
+      integer j
+      info = 0
+c      if(.not.( vmu .ne. 'v' .and. vmu .ne. 'm' .and. vmu .ne. 'u' ))
+      if(.not.( vmu .ne. 0 .and. vmu .ne. 1 .and. vmu .ne. 2 ))
+     *goto 23000
+      info = -3
+      return
+23000 continue
+      la = t(1,1)
+      alph = dfloat (n) / dasum (n, t(2,1), ldt)
+      call dscal (n, alph, t(2,1), ldt)
+      call dscal (n-1, alph, t(1,2), ldt)
+      call dpbfa (t, ldt, n, 1, info)
+      if(.not.( info .ne. 0 ))goto 23002
+      return
+23002 continue
+      call dcopy (n, z, 1, work, 1)
+      call dpbsl (t, ldt, n, 1, work)
+c      if(.not.( vmu .eq. 'v' ))
+      if(.not.( vmu .eq. 0 ))goto 23004
+      tmp = 1.d0 / t(2,n) / t(2,n)
+      deno = tmp
+      j=n-1
+23006 if(.not.(j.gt.0))goto 23008
+      tmp = ( 1.d0 + t(1,j+1) * t(1,j+1) * tmp ) / t(2,j) / t(2,j)
+      deno = deno + tmp
+      j=j-1
+      goto 23006
+23008 continue
+      nume = ddot (n, work, 1, work, 1) / dfloat (n)
+      deno = deno / dfloat (n)
+      varht(1) = alph * la * nume / deno
+      score(1) = nume / deno / deno
+      deno = dlog (t(2,n))
+      j=n-1
+23009 if(.not.(j.gt.0))goto 23011
+      deno = deno + dlog (t(2,j))
+      j=j-1
+      goto 23009
+23011 continue
+      nume = ddot (n, z, 1, work, 1) / dfloat (n)
+      varht(2) = alph * la * nume
+23004 continue
+c      if(.not.( vmu .eq. 'm' ))
+      if(.not.( vmu .eq. 1 ))goto 23012
+      deno = dlog (t(2,n))
+      j=n-1
+23014 if(.not.(j.gt.0))goto 23016
+      deno = deno + dlog (t(2,j))
+      j=j-1
+      goto 23014
+23016 continue
+      nume = ddot (n, z, 1, work, 1) / dfloat (n)
+      varht(2) = alph * la * nume
+      score(1) = nume * dexp (2.d0 * deno / dfloat (n))
+      tmp = 1.d0 / t(2,n) / t(2,n)
+      deno = tmp
+      j=n-1
+23017 if(.not.(j.gt.0))goto 23019
+      tmp = ( 1.d0 + t(1,j+1) * t(1,j+1) * tmp ) / t(2,j) / t(2,j)
+      deno = deno + tmp
+      j=j-1
+      goto 23017
+23019 continue
+      nume = ddot (n, work, 1, work, 1) / dfloat (n)
+      deno = deno / dfloat (n)
+      varht(1) = alph * la * nume / deno
+23012 continue
+c      if(.not.( vmu .eq. 'u' ))
+      if(.not.( vmu .eq. 2 ))goto 23020
+      nume = ddot (n, work, 1, work, 1) / dfloat (n)
+      tmp = 1.d0 / t(2,n) / t(2,n)
+      deno = tmp
+      j=n-1
+23022 if(.not.(j.gt.0))goto 23024
+      tmp = ( 1.d0 + t(1,j+1) * t(1,j+1) * tmp ) / t(2,j) / t(2,j)
+      deno = deno + tmp
+      j=j-1
+      goto 23022
+23024 continue
+      deno = deno / dfloat (n)
+      score(1) = alph * alph * la * la * nume - 2.d0 * varht(1) * 
+     *alph * la * deno
+      varht(2) = alph * la *deno
+23020 continue
+      return
+      end
+      INTEGER FUNCTION IDAMAX(N,DX,INCX)
 C
-C     INTERCHANGES TWO VECTORS.
-C     USES UNROLLED LOOPS FOR INCREMENTS EQUAL ONE.
+C     FINDS THE INDEX OF ELEMENT HAVING MAX. ABSOLUTE VALUE.
 C     JACK DONGARRA, LINPACK, 3/11/78.
 C
-      DOUBLE PRECISION DX(1),DY(1),DTEMP
-      INTEGER I,INCX,INCY,IX,IY,M,MP1,N
+      DOUBLE PRECISION DX(1),DMAX
+      INTEGER I,INCX,IX,N
 C
-      IF(N.LE.0)RETURN
-      IF(INCX.EQ.1.AND.INCY.EQ.1)GO TO 20
+      IDAMAX = 0
+      IF( N .LT. 1 ) RETURN
+      IDAMAX = 1
+      IF(N.EQ.1)RETURN
+      IF(INCX.EQ.1)GO TO 20
 C
-C       CODE FOR UNEQUAL INCREMENTS OR EQUAL INCREMENTS NOT EQUAL
-C         TO 1
+C        CODE FOR INCREMENT NOT EQUAL TO 1
 C
       IX = 1
-      IY = 1
-      IF(INCX.LT.0)IX = (-N+1)*INCX + 1
-      IF(INCY.LT.0)IY = (-N+1)*INCY + 1
-      DO 10 I = 1,N
-        DTEMP = DX(IX)
-        DX(IX) = DY(IY)
-        DY(IY) = DTEMP
-        IX = IX + INCX
-        IY = IY + INCY
+      DMAX = DABS(DX(1))
+      IX = IX + INCX
+      DO 10 I = 2,N
+         IF(DABS(DX(IX)).LE.DMAX) GO TO 5
+         IDAMAX = I
+         DMAX = DABS(DX(IX))
+    5    IX = IX + INCX
    10 CONTINUE
       RETURN
 C
-C       CODE FOR BOTH INCREMENTS EQUAL TO 1
+C        CODE FOR INCREMENT EQUAL TO 1
 C
-C
-C       CLEAN-UP LOOP
-C
-   20 M = MOD(N,3)
-      IF( M .EQ. 0 ) GO TO 40
-      DO 30 I = 1,M
-        DTEMP = DX(I)
-        DX(I) = DY(I)
-        DY(I) = DTEMP
+   20 DMAX = DABS(DX(1))
+      DO 30 I = 2,N
+         IF(DABS(DX(I)).LE.DMAX) GO TO 30
+         IDAMAX = I
+         DMAX = DABS(DX(I))
    30 CONTINUE
-      IF( N .LT. 3 ) RETURN
-   40 MP1 = M + 1
-      DO 50 I = MP1,N,3
-        DTEMP = DX(I)
-        DX(I) = DY(I)
-        DY(I) = DTEMP
-        DTEMP = DX(I + 1)
-        DX(I + 1) = DY(I + 1)
-        DY(I + 1) = DTEMP
-        DTEMP = DX(I + 2)
-        DX(I + 2) = DY(I + 2)
-        DY(I + 2) = DTEMP
-   50 CONTINUE
       RETURN
       END
-************************************************************************
-*
-      SUBROUTINE DSYMV ( UPLO, N, ALPHA, A, LDA, X, INCX,
-     $                   BETA, Y, INCY )
-*     .. Scalar Arguments ..
-      DOUBLE PRECISION   ALPHA, BETA
-      INTEGER            INCX, INCY, LDA, N
-      CHARACTER*1        UPLO
-*     .. Array Arguments ..
-      DOUBLE PRECISION   A( LDA, * ), X( * ), Y( * )
-*     ..
-*
-*  Purpose
-*  =======
-*
-*  DSYMV  performs the matrix-vector  operation
-*
-*     y := alpha*A*x + beta*y,
-*
-*  where alpha and beta are scalars, x and y are n element vectors and
-*  A is an n by n symmetric matrix.
-*
-*  Parameters
-*  ==========
-*
-*  UPLO   - CHARACTER*1.
-*           On entry, UPLO specifies whether the upper or lower
-*           triangular part of the array A is to be referenced as
-*           follows:
-*
-*              UPLO = 'U' or 'u'   Only the upper triangular part of A
-*                                  is to be referenced.
-*
-*              UPLO = 'L' or 'l'   Only the lower triangular part of A
-*                                  is to be referenced.
-*
-*           Unchanged on exit.
-*
-*  N      - INTEGER.
-*           On entry, N specifies the order of the matrix A.
-*           N must be at least zero.
-*           Unchanged on exit.
-*
-*  ALPHA  - DOUBLE PRECISION.
-*           On entry, ALPHA specifies the scalar alpha.
-*           Unchanged on exit.
-*
-*  A      - DOUBLE PRECISION array of DIMENSION ( LDA, n ).
-*           Before entry with  UPLO = 'U' or 'u', the leading n by n
-*           upper triangular part of the array A must contain the upper
-*           triangular part of the symmetric matrix and the strictly
-*           lower triangular part of A is not referenced.
-*           Before entry with UPLO = 'L' or 'l', the leading n by n
-*           lower triangular part of the array A must contain the lower
-*           triangular part of the symmetric matrix and the strictly
-*           upper triangular part of A is not referenced.
-*           Unchanged on exit.
-*
-*  LDA    - INTEGER.
-*           On entry, LDA specifies the first dimension of A as declared
-*           in the calling (sub) program. LDA must be at least
-*           max( 1, n ).
-*           Unchanged on exit.
-*
-*  X      - DOUBLE PRECISION array of dimension at least
-*           ( 1 + ( n - 1 )*abs( INCX ) ).
-*           Before entry, the incremented array X must contain the n
-*           element vector x.
-*           Unchanged on exit.
-*
-*  INCX   - INTEGER.
-*           On entry, INCX specifies the increment for the elements of
-*           X. INCX must not be zero.
-*           Unchanged on exit.
-*
-*  BETA   - DOUBLE PRECISION.
-*           On entry, BETA specifies the scalar beta. When BETA is
-*           supplied as zero then Y need not be set on input.
-*           Unchanged on exit.
-*
-*  Y      - DOUBLE PRECISION array of dimension at least
-*           ( 1 + ( n - 1 )*abs( INCY ) ).
-*           Before entry, the incremented array Y must contain the n
-*           element vector y. On exit, Y is overwritten by the updated
-*           vector y.
-*
-*  INCY   - INTEGER.
-*           On entry, INCY specifies the increment for the elements of
-*           Y. INCY must not be zero.
-*           Unchanged on exit.
-*
-*
-*  Level 2 Blas routine.
-*
-*  -- Written on 22-October-1986.
-*     Jack Dongarra, Argonne National Lab.
-*     Jeremy Du Croz, Nag Central Office.
-*     Sven Hammarling, Nag Central Office.
-*     Richard Hanson, Sandia National Labs.
-*
-*
-*     .. Parameters ..
-      DOUBLE PRECISION   ONE         , ZERO
-      PARAMETER        ( ONE = 1.0D+0, ZERO = 0.0D+0 )
-*     .. Local Scalars ..
-      DOUBLE PRECISION   TEMP1, TEMP2
-      INTEGER            I, INFO, IX, IY, J, JX, JY, KX, KY
-*     .. External Functions ..
-      LOGICAL            LSAME
-      EXTERNAL           LSAME
-*     .. External Subroutines ..
-      EXTERNAL           XERBLA
-*     .. Intrinsic Functions ..
-      INTRINSIC          MAX
-*     ..
-*     .. Executable Statements ..
-*
-*     Test the input parameters.
-*
-      INFO = 0
-      IF     ( .NOT.LSAME( UPLO, 'U' ).AND.
-     $         .NOT.LSAME( UPLO, 'L' )      )THEN
-         INFO = 1
-      ELSE IF( N.LT.0 )THEN
-         INFO = 2
-      ELSE IF( LDA.LT.MAX( 1, N ) )THEN
-         INFO = 5
-      ELSE IF( INCX.EQ.0 )THEN
-         INFO = 7
-      ELSE IF( INCY.EQ.0 )THEN
-         INFO = 10
-      END IF
-      IF( INFO.NE.0 )THEN
-         CALL XERBLA( 'DSYMV ', INFO )
-         RETURN
-      END IF
-*
-*     Quick return if possible.
-*
-      IF( ( N.EQ.0 ).OR.( ( ALPHA.EQ.ZERO ).AND.( BETA.EQ.ONE ) ) )
-     $   RETURN
-*
-*     Set up the start points in  X  and  Y.
-*
-      IF( INCX.GT.0 )THEN
-         KX = 1
-      ELSE
-         KX = 1 - ( N - 1 )*INCX
-      END IF
-      IF( INCY.GT.0 )THEN
-         KY = 1
-      ELSE
-         KY = 1 - ( N - 1 )*INCY
-      END IF
-*
-*     Start the operations. In this version the elements of A are
-*     accessed sequentially with one pass through the triangular part
-*     of A.
-*
-*     First form  y := beta*y.
-*
-      IF( BETA.NE.ONE )THEN
-         IF( INCY.EQ.1 )THEN
-            IF( BETA.EQ.ZERO )THEN
-               DO 10, I = 1, N
-                  Y( I ) = ZERO
-   10          CONTINUE
-            ELSE
-               DO 20, I = 1, N
-                  Y( I ) = BETA*Y( I )
-   20          CONTINUE
-            END IF
-         ELSE
-            IY = KY
-            IF( BETA.EQ.ZERO )THEN
-               DO 30, I = 1, N
-                  Y( IY ) = ZERO
-                  IY      = IY   + INCY
-   30          CONTINUE
-            ELSE
-               DO 40, I = 1, N
-                  Y( IY ) = BETA*Y( IY )
-                  IY      = IY           + INCY
-   40          CONTINUE
-            END IF
-         END IF
-      END IF
-      IF( ALPHA.EQ.ZERO )
-     $   RETURN
-      IF( LSAME( UPLO, 'U' ) )THEN
-*
-*        Form  y  when A is stored in upper triangle.
-*
-         IF( ( INCX.EQ.1 ).AND.( INCY.EQ.1 ) )THEN
-            DO 60, J = 1, N
-               TEMP1 = ALPHA*X( J )
-               TEMP2 = ZERO
-               DO 50, I = 1, J - 1
-                  Y( I ) = Y( I ) + TEMP1*A( I, J )
-                  TEMP2  = TEMP2  + A( I, J )*X( I )
-   50          CONTINUE
-               Y( J ) = Y( J ) + TEMP1*A( J, J ) + ALPHA*TEMP2
-   60       CONTINUE
-         ELSE
-            JX = KX
-            JY = KY
-            DO 80, J = 1, N
-               TEMP1 = ALPHA*X( JX )
-               TEMP2 = ZERO
-               IX    = KX
-               IY    = KY
-               DO 70, I = 1, J - 1
-                  Y( IY ) = Y( IY ) + TEMP1*A( I, J )
-                  TEMP2   = TEMP2   + A( I, J )*X( IX )
-                  IX      = IX      + INCX
-                  IY      = IY      + INCY
-   70          CONTINUE
-               Y( JY ) = Y( JY ) + TEMP1*A( J, J ) + ALPHA*TEMP2
-               JX      = JX      + INCX
-               JY      = JY      + INCY
-   80       CONTINUE
-         END IF
-      ELSE
-*
-*        Form  y  when A is stored in lower triangle.
-*
-         IF( ( INCX.EQ.1 ).AND.( INCY.EQ.1 ) )THEN
-            DO 100, J = 1, N
-               TEMP1  = ALPHA*X( J )
-               TEMP2  = ZERO
-               Y( J ) = Y( J )       + TEMP1*A( J, J )
-               DO 90, I = J + 1, N
-                  Y( I ) = Y( I ) + TEMP1*A( I, J )
-                  TEMP2  = TEMP2  + A( I, J )*X( I )
-   90          CONTINUE
-               Y( J ) = Y( J ) + ALPHA*TEMP2
-  100       CONTINUE
-         ELSE
-            JX = KX
-            JY = KY
-            DO 120, J = 1, N
-               TEMP1   = ALPHA*X( JX )
-               TEMP2   = ZERO
-               Y( JY ) = Y( JY )       + TEMP1*A( J, J )
-               IX      = JX
-               IY      = JY
-               DO 110, I = J + 1, N
-                  IX      = IX      + INCX
-                  IY      = IY      + INCY
-                  Y( IY ) = Y( IY ) + TEMP1*A( I, J )
-                  TEMP2   = TEMP2   + A( I, J )*X( IX )
-  110          CONTINUE
-               Y( JY ) = Y( JY ) + ALPHA*TEMP2
-               JX      = JX      + INCX
-               JY      = JY      + INCY
-  120       CONTINUE
-         END IF
-      END IF
-*
-      RETURN
-*
-*     End of DSYMV .
-*
-      END
-*
-************************************************************************
-*
-      SUBROUTINE DSYR2 ( UPLO, N, ALPHA, X, INCX, Y, INCY, A, LDA )
-*     .. Scalar Arguments ..
-      DOUBLE PRECISION   ALPHA
-      INTEGER            INCX, INCY, LDA, N
-      CHARACTER*1        UPLO
-*     .. Array Arguments ..
-      DOUBLE PRECISION   A( LDA, * ), X( * ), Y( * )
-*     ..
-*
-*  Purpose
-*  =======
-*
-*  DSYR2  performs the symmetric rank 2 operation
-*
-*     A := alpha*x*y' + alpha*y*x' + A,
-*
-*  where alpha is a scalar, x and y are n element vectors and A is an n
-*  by n symmetric matrix.
-*
-*  Parameters
-*  ==========
-*
-*  UPLO   - CHARACTER*1.
-*           On entry, UPLO specifies whether the upper or lower
-*           triangular part of the array A is to be referenced as
-*           follows:
-*
-*              UPLO = 'U' or 'u'   Only the upper triangular part of A
-*                                  is to be referenced.
-*
-*              UPLO = 'L' or 'l'   Only the lower triangular part of A
-*                                  is to be referenced.
-*
-*           Unchanged on exit.
-*
-*  N      - INTEGER.
-*           On entry, N specifies the order of the matrix A.
-*           N must be at least zero.
-*           Unchanged on exit.
-*
-*  ALPHA  - DOUBLE PRECISION.
-*           On entry, ALPHA specifies the scalar alpha.
-*           Unchanged on exit.
-*
-*  X      - DOUBLE PRECISION array of dimension at least
-*           ( 1 + ( n - 1 )*abs( INCX ) ).
-*           Before entry, the incremented array X must contain the n
-*           element vector x.
-*           Unchanged on exit.
-*
-*  INCX   - INTEGER.
-*           On entry, INCX specifies the increment for the elements of
-*           X. INCX must not be zero.
-*           Unchanged on exit.
-*
-*  Y      - DOUBLE PRECISION array of dimension at least
-*           ( 1 + ( n - 1 )*abs( INCY ) ).
-*           Before entry, the incremented array Y must contain the n
-*           element vector y.
-*           Unchanged on exit.
-*
-*  INCY   - INTEGER.
-*           On entry, INCY specifies the increment for the elements of
-*           Y. INCY must not be zero.
-*           Unchanged on exit.
-*
-*  A      - DOUBLE PRECISION array of DIMENSION ( LDA, n ).
-*           Before entry with  UPLO = 'U' or 'u', the leading n by n
-*           upper triangular part of the array A must contain the upper
-*           triangular part of the symmetric matrix and the strictly
-*           lower triangular part of A is not referenced. On exit, the
-*           upper triangular part of the array A is overwritten by the
-*           upper triangular part of the updated matrix.
-*           Before entry with UPLO = 'L' or 'l', the leading n by n
-*           lower triangular part of the array A must contain the lower
-*           triangular part of the symmetric matrix and the strictly
-*           upper triangular part of A is not referenced. On exit, the
-*           lower triangular part of the array A is overwritten by the
-*           lower triangular part of the updated matrix.
-*
-*  LDA    - INTEGER.
-*           On entry, LDA specifies the first dimension of A as declared
-*           in the calling (sub) program. LDA must be at least
-*           max( 1, n ).
-*           Unchanged on exit.
-*
-*
-*  Level 2 Blas routine.
-*
-*  -- Written on 22-October-1986.
-*     Jack Dongarra, Argonne National Lab.
-*     Jeremy Du Croz, Nag Central Office.
-*     Sven Hammarling, Nag Central Office.
-*     Richard Hanson, Sandia National Labs.
-*
-*
-*     .. Parameters ..
-      DOUBLE PRECISION   ZERO
-      PARAMETER        ( ZERO = 0.0D+0 )
-*     .. Local Scalars ..
-      DOUBLE PRECISION   TEMP1, TEMP2
-      INTEGER            I, INFO, IX, IY, J, JX, JY, KX, KY
-*     .. External Functions ..
-      LOGICAL            LSAME
-      EXTERNAL           LSAME
-*     .. External Subroutines ..
-      EXTERNAL           XERBLA
-*     .. Intrinsic Functions ..
-      INTRINSIC          MAX
-*     ..
-*     .. Executable Statements ..
-*
-*     Test the input parameters.
-*
-      INFO = 0
-      IF     ( .NOT.LSAME( UPLO, 'U' ).AND.
-     $         .NOT.LSAME( UPLO, 'L' )      )THEN
-         INFO = 1
-      ELSE IF( N.LT.0 )THEN
-         INFO = 2
-      ELSE IF( INCX.EQ.0 )THEN
-         INFO = 5
-      ELSE IF( INCY.EQ.0 )THEN
-         INFO = 7
-      ELSE IF( LDA.LT.MAX( 1, N ) )THEN
-         INFO = 9
-      END IF
-      IF( INFO.NE.0 )THEN
-         CALL XERBLA( 'DSYR2 ', INFO )
-         RETURN
-      END IF
-*
-*     Quick return if possible.
-*
-      IF( ( N.EQ.0 ).OR.( ALPHA.EQ.ZERO ) )
-     $   RETURN
-*
-*     Set up the start points in X and Y if the increments are not both
-*     unity.
-*
-      IF( ( INCX.NE.1 ).OR.( INCY.NE.1 ) )THEN
-         IF( INCX.GT.0 )THEN
-            KX = 1
-         ELSE
-            KX = 1 - ( N - 1 )*INCX
-         END IF
-         IF( INCY.GT.0 )THEN
-            KY = 1
-         ELSE
-            KY = 1 - ( N - 1 )*INCY
-         END IF
-         JX = KX
-         JY = KY
-      END IF
-*
-*     Start the operations. In this version the elements of A are
-*     accessed sequentially with one pass through the triangular part
-*     of A.
-*
-      IF( LSAME( UPLO, 'U' ) )THEN
-*
-*        Form  A  when A is stored in the upper triangle.
-*
-         IF( ( INCX.EQ.1 ).AND.( INCY.EQ.1 ) )THEN
-            DO 20, J = 1, N
-               IF( ( X( J ).NE.ZERO ).OR.( Y( J ).NE.ZERO ) )THEN
-                  TEMP1 = ALPHA*Y( J )
-                  TEMP2 = ALPHA*X( J )
-                  DO 10, I = 1, J
-                     A( I, J ) = A( I, J ) + X( I )*TEMP1 + Y( I )*TEMP2
-   10             CONTINUE
-               END IF
-   20       CONTINUE
-         ELSE
-            DO 40, J = 1, N
-               IF( ( X( JX ).NE.ZERO ).OR.( Y( JY ).NE.ZERO ) )THEN
-                  TEMP1 = ALPHA*Y( JY )
-                  TEMP2 = ALPHA*X( JX )
-                  IX    = KX
-                  IY    = KY
-                  DO 30, I = 1, J
-                     A( I, J ) = A( I, J ) + X( IX )*TEMP1
-     $                                     + Y( IY )*TEMP2
-                     IX        = IX        + INCX
-                     IY        = IY        + INCY
-   30             CONTINUE
-               END IF
-               JX = JX + INCX
-               JY = JY + INCY
-   40       CONTINUE
-         END IF
-      ELSE
-*
-*        Form  A  when A is stored in the lower triangle.
-*
-         IF( ( INCX.EQ.1 ).AND.( INCY.EQ.1 ) )THEN
-            DO 60, J = 1, N
-               IF( ( X( J ).NE.ZERO ).OR.( Y( J ).NE.ZERO ) )THEN
-                  TEMP1 = ALPHA*Y( J )
-                  TEMP2 = ALPHA*X( J )
-                  DO 50, I = J, N
-                     A( I, J ) = A( I, J ) + X( I )*TEMP1 + Y( I )*TEMP2
-   50             CONTINUE
-               END IF
-   60       CONTINUE
-         ELSE
-            DO 80, J = 1, N
-               IF( ( X( JX ).NE.ZERO ).OR.( Y( JY ).NE.ZERO ) )THEN
-                  TEMP1 = ALPHA*Y( JY )
-                  TEMP2 = ALPHA*X( JX )
-                  IX    = JX
-                  IY    = JY
-                  DO 70, I = J, N
-                     A( I, J ) = A( I, J ) + X( IX )*TEMP1
-     $                                     + Y( IY )*TEMP2
-                     IX        = IX        + INCX
-                     IY        = IY        + INCY
-   70             CONTINUE
-               END IF
-               JX = JX + INCX
-               JY = JY + INCY
-   80       CONTINUE
-         END IF
-      END IF
-*
-      RETURN
-*
-*     End of DSYR2 .
-*
-      END
-*
       subroutine dsytr (x, ldx, n, tol, info, work)
       integer ldx, n, info
       double precision x(ldx,*), tol, work(*)
@@ -4048,890 +2790,3 @@ C
       x(n-1,n) = x(n,n-1)
       return
       end
-      subroutine dtrev (vmu, t, ldt, n, z, score, varht, info, work)      
-c      character*1 vmu
-      integer vmu
-      integer n, info
-      double precision t(ldt,*), z(*), score, varht(2), work(*)
-      double precision nume, deno, tmp, alph, la, dasum, ddot
-      integer j
-      info = 0
-c      if(.not.( vmu .ne. 'v' .and. vmu .ne. 'm' .and. vmu .ne. 'u' ))
-      if(.not.( vmu .ne. 0 .and. vmu .ne. 1 .and. vmu .ne. 2 ))
-     *goto 23000
-      info = -3
-      return
-23000 continue
-      la = t(1,1)
-      alph = dfloat (n) / dasum (n, t(2,1), ldt)
-      call dscal (n, alph, t(2,1), ldt)
-      call dscal (n-1, alph, t(1,2), ldt)
-      call dpbfa (t, ldt, n, 1, info)
-      if(.not.( info .ne. 0 ))goto 23002
-      return
-23002 continue
-      call dcopy (n, z, 1, work, 1)
-      call dpbsl (t, ldt, n, 1, work)
-c      if(.not.( vmu .eq. 'v' ))
-      if(.not.( vmu .eq. 0 ))goto 23004
-      tmp = 1.d0 / t(2,n) / t(2,n)
-      deno = tmp
-      j=n-1
-23006 if(.not.(j.gt.0))goto 23008
-      tmp = ( 1.d0 + t(1,j+1) * t(1,j+1) * tmp ) / t(2,j) / t(2,j)
-      deno = deno + tmp
-      j=j-1
-      goto 23006
-23008 continue
-      nume = ddot (n, work, 1, work, 1) / dfloat (n)
-      deno = deno / dfloat (n)
-      varht(1) = alph * la * nume / deno
-      score = nume / deno / deno
-      deno = dlog (t(2,n))
-      j=n-1
-23009 if(.not.(j.gt.0))goto 23011
-      deno = deno + dlog (t(2,j))
-      j=j-1
-      goto 23009
-23011 continue
-      nume = ddot (n, z, 1, work, 1) / dfloat (n)
-      varht(2) = alph * la * nume
-23004 continue
-c      if(.not.( vmu .eq. 'm' ))
-      if(.not.( vmu .eq. 1 ))goto 23012
-      deno = dlog (t(2,n))
-      j=n-1
-23014 if(.not.(j.gt.0))goto 23016
-      deno = deno + dlog (t(2,j))
-      j=j-1
-      goto 23014
-23016 continue
-      nume = ddot (n, z, 1, work, 1) / dfloat (n)
-      varht(2) = alph * la * nume
-      score = nume * dexp (2.d0 * deno / dfloat (n))
-      tmp = 1.d0 / t(2,n) / t(2,n)
-      deno = tmp
-      j=n-1
-23017 if(.not.(j.gt.0))goto 23019
-      tmp = ( 1.d0 + t(1,j+1) * t(1,j+1) * tmp ) / t(2,j) / t(2,j)
-      deno = deno + tmp
-      j=j-1
-      goto 23017
-23019 continue
-      nume = ddot (n, work, 1, work, 1) / dfloat (n)
-      deno = deno / dfloat (n)
-      varht(1) = alph * la * nume / deno
-23012 continue
-c      if(.not.( vmu .eq. 'u' ))
-      if(.not.( vmu .eq. 2 ))goto 23020
-      nume = ddot (n, work, 1, work, 1) / dfloat (n)
-      tmp = 1.d0 / t(2,n) / t(2,n)
-      deno = tmp
-      j=n-1
-23022 if(.not.(j.gt.0))goto 23024
-      tmp = ( 1.d0 + t(1,j+1) * t(1,j+1) * tmp ) / t(2,j) / t(2,j)
-      deno = deno + tmp
-      j=j-1
-      goto 23022
-23024 continue
-      deno = deno / dfloat (n)
-      score = alph * alph * la * la * nume - 2.d0 * varht(1) * alph * 
-     *la * deno
-	varht(2) = alph * la *deno
-23020 continue
-      return
-      end
-      SUBROUTINE DTRSL(T,LDT,N,B,JOB,INFO)
-      INTEGER LDT,N,JOB,INFO
-      DOUBLE PRECISION T(LDT,1),B(1)
-C
-C
-C     DTRSL SOLVES SYSTEMS OF THE FORM
-C
-C                   T * X = B
-C     OR
-C                   TRANS(T) * X = B
-C
-C     WHERE T IS A TRIANGULAR MATRIX OF ORDER N. HERE TRANS(T)
-C     DENOTES THE TRANSPOSE OF THE MATRIX T.
-C
-C     ON ENTRY
-C
-C         T         DOUBLE PRECISION(LDT,N)
-C                   T CONTAINS THE MATRIX OF THE SYSTEM. THE ZERO
-C                   ELEMENTS OF THE MATRIX ARE NOT REFERENCED, AND
-C                   THE CORRESPONDING ELEMENTS OF THE ARRAY CAN BE
-C                   USED TO STORE OTHER INFORMATION.
-C
-C         LDT       INTEGER
-C                   LDT IS THE LEADING DIMENSION OF THE ARRAY T.
-C
-C         N         INTEGER
-C                   N IS THE ORDER OF THE SYSTEM.
-C
-C         B         DOUBLE PRECISION(N).
-C                   B CONTAINS THE RIGHT HAND SIDE OF THE SYSTEM.
-C
-C         JOB       INTEGER
-C                   JOB SPECIFIES WHAT KIND OF SYSTEM IS TO BE SOLVED.
-C                   IF JOB IS
-C
-C                        00   SOLVE T*X=B, T LOWER TRIANGULAR,
-C                        01   SOLVE T*X=B, T UPPER TRIANGULAR,
-C                        10   SOLVE TRANS(T)*X=B, T LOWER TRIANGULAR,
-C                        11   SOLVE TRANS(T)*X=B, T UPPER TRIANGULAR.
-C
-C     ON RETURN
-C
-C         B         B CONTAINS THE SOLUTION, IF INFO .EQ. 0.
-C                   OTHERWISE B IS UNALTERED.
-C
-C         INFO      INTEGER
-C                   INFO CONTAINS ZERO IF THE SYSTEM IS NONSINGULAR.
-C                   OTHERWISE INFO CONTAINS THE INDEX OF
-C                   THE FIRST ZERO DIAGONAL ELEMENT OF T.
-C
-C     LINPACK. THIS VERSION DATED 08/14/78 .
-C     G. W. STEWART, UNIVERSITY OF MARYLAND, ARGONNE NATIONAL LAB.
-C
-C     SUBROUTINES AND FUNCTIONS
-C
-C     BLAS DAXPY,DDOT
-C     FORTRAN MOD
-C
-C     INTERNAL VARIABLES
-C
-      DOUBLE PRECISION DDOT,TEMP
-      INTEGER CASE,J,JJ
-C
-C     BEGIN BLOCK PERMITTING ...EXITS TO 150
-C
-C        CHECK FOR ZERO DIAGONAL ELEMENTS.
-C
-         DO 10 INFO = 1, N
-C     ......EXIT
-            IF (T(INFO,INFO) .EQ. 0.0D0) GO TO 150
-   10    CONTINUE
-         INFO = 0
-C
-C        DETERMINE THE TASK AND GO TO IT.
-C
-         CASE = 1
-         IF (MOD(JOB,10) .NE. 0) CASE = 2
-         IF (MOD(JOB,100)/10 .NE. 0) CASE = CASE + 2
-         GO TO (20,50,80,110), CASE
-C
-C        SOLVE T*X=B FOR T LOWER TRIANGULAR
-C
-   20    CONTINUE
-            B(1) = B(1)/T(1,1)
-            IF (N .LT. 2) GO TO 40
-            DO 30 J = 2, N
-               TEMP = -B(J-1)
-               CALL DAXPY(N-J+1,TEMP,T(J,J-1),1,B(J),1)
-               B(J) = B(J)/T(J,J)
-   30       CONTINUE
-   40       CONTINUE
-         GO TO 140
-C
-C        SOLVE T*X=B FOR T UPPER TRIANGULAR.
-C
-   50    CONTINUE
-            B(N) = B(N)/T(N,N)
-            IF (N .LT. 2) GO TO 70
-            DO 60 JJ = 2, N
-               J = N - JJ + 1
-               TEMP = -B(J+1)
-               CALL DAXPY(J,TEMP,T(1,J+1),1,B(1),1)
-               B(J) = B(J)/T(J,J)
-   60       CONTINUE
-   70       CONTINUE
-         GO TO 140
-C
-C        SOLVE TRANS(T)*X=B FOR T LOWER TRIANGULAR.
-C
-   80    CONTINUE
-            B(N) = B(N)/T(N,N)
-            IF (N .LT. 2) GO TO 100
-            DO 90 JJ = 2, N
-               J = N - JJ + 1
-               B(J) = B(J) - DDOT(JJ-1,T(J+1,J),1,B(J+1),1)
-               B(J) = B(J)/T(J,J)
-   90       CONTINUE
-  100       CONTINUE
-         GO TO 140
-C
-C        SOLVE TRANS(T)*X=B FOR T UPPER TRIANGULAR.
-C
-  110    CONTINUE
-            B(1) = B(1)/T(1,1)
-            IF (N .LT. 2) GO TO 130
-            DO 120 J = 2, N
-               B(J) = B(J) - DDOT(J-1,T(1,J),1,B(1),1)
-               B(J) = B(J)/T(J,J)
-  120       CONTINUE
-  130       CONTINUE
-  140    CONTINUE
-  150 CONTINUE
-      RETURN
-      END
-      DOUBLE PRECISION FUNCTION dumnor(x)
-C**********************************************************************
-C
-C     DOUBLE PRECISION FUNCTION DUMNOR(X)
-C
-C
-C                              Function
-C
-C
-C     Computes the cumulative  of    the  normal   distribution,   i.e.,
-C     the integral from -infinity to x of
-C          (1/sqrt(2*pi)) exp(-u*u/2) du
-C
-C
-C                              Method
-C
-C
-C     The    rational function  approximation   from pages   90  - 92 of
-C     Kennedy  and Gentle,  Statistical  Computing,  Marcel  Dekker,  NY
-C     1980.
-C
-C
-C                              Arguments
-C
-C
-C     X --> Argument at which cumulative normal is evaluated
-C                    DOUBLE PRECISION X
-C
-C**********************************************************************
-C
-C
-C     PIM12 IS PI**(-1/2)
-C     SQRT2 IS SQRT(2)
-C
-C
-C
-C     .. Scalar Arguments ..
-      DOUBLE PRECISION x
-C     ..
-C     .. Local Scalars ..
-      DOUBLE PRECISION derf,derfc,pim12,sqrt2,z,z2,zm2
-      LOGICAL qdirct
-C     ..
-C     .. Local Arrays ..
-      DOUBLE PRECISION xden1(4),xden2(8),xden3(5),xnum1(4),xnum2(8),
-     +                 xnum3(5)
-C     ..
-C     .. External Functions ..
-      DOUBLE PRECISION devlpl,dlanor
-      EXTERNAL devlpl,dlanor
-C     ..
-C     .. Intrinsic Functions ..
-      INTRINSIC abs,exp
-C     ..
-C     .. Data statements ..
-      DATA xnum1/2.4266795523053175D2,2.1979261618294152D1,
-     +     6.9963834886191355D0,-3.5609843701815385D-2/
-      DATA xden1/2.1505887586986120D2,9.1164905404514901D1,
-     +     1.5082797630407787D1,1.0000000000000000D0/
-      DATA xnum2/3.004592610201616005D2,4.519189537118729422D2,
-     +     3.393208167343436870D2,1.529892850469404039D2,
-     +     4.316222722205673530D1,7.211758250883093659D0,
-     +     5.641955174789739711D-1,-1.368648573827167067D-7/
-      DATA xden2/3.004592609569832933D2,7.909509253278980272D2,
-     +     9.313540948506096211D2,6.389802644656311665D2,
-     +     2.775854447439876434D2,7.700015293522947295D1,
-     +     1.278272731962942351D1,1.000000000000000000D0/
-      DATA xnum3/-2.99610707703542174D-3,-4.94730910623250734D-2,
-     +     -2.26956593539686930D-1,-2.78661308609647788D-1,
-     +     -2.23192459734184686D-2/
-      DATA xden3/1.06209230528467918D-2,1.91308926107829841D-1,
-     +     1.05167510706793207D0,1.98733201817135256D0,
-     +     1.00000000000000000D0/
-      DATA pim12/0.5641895835477562869480795D0/
-      DATA sqrt2/1.4142135623730950488D0/
-C     ..
-C     .. Executable Statements ..
-      IF (.NOT. (abs(x).LT.1.0E-30)) GO TO 10
-      dumnor = 0.5
-      RETURN
-
-      GO TO 50
-
-   10 IF (.NOT. (x.LE.-38.0)) GO TO 20
-      dumnor = 0.0
-      RETURN
-
-      GO TO 50
-
-   20 IF (.NOT. (x.LE.-15.0)) GO TO 30
-      dumnor = exp(dlanor(x))
-      RETURN
-
-      GO TO 50
-
-   30 IF (.NOT. (x.GT.6.0)) GO TO 40
-      dumnor = 1.0
-      RETURN
-
-      GO TO 50
-
-   40 CONTINUE
-   50 z = abs(x/sqrt2)
-      z2 = z*z
-      zm2 = 1.0D0/z2
-      IF (z.LT.0.5D0) THEN
-          derf = z*devlpl(xnum1,4,z2)/devlpl(xden1,4,z2)
-          qdirct = .TRUE.
-
-      ELSE IF (z.LT.4.0D0) THEN
-          derfc = exp(-z2)*devlpl(xnum2,8,z)/devlpl(xden2,8,z)
-          qdirct = .FALSE.
-
-      ELSE
-          derfc = (exp(-z2)/z)* (pim12+zm2*devlpl(xnum3,5,zm2)/
-     +            devlpl(xden3,5,zm2))
-          qdirct = .FALSE.
-      END IF
-
-      IF (.NOT. (x.GE.0.0)) GO TO 60
-      IF (.NOT. (qdirct)) derf = 1.0D0 - derfc
-      dumnor = (1.0D0+derf)/2.0D0
-      GO TO 70
-
-   60 IF (qdirct) derfc = 1.0D0 - derf
-      dumnor = derfc/2.0D0
-   70 RETURN
-
-      END
-      INTEGER FUNCTION IDAMAX(N,DX,INCX)
-C
-C     FINDS THE INDEX OF ELEMENT HAVING MAX. ABSOLUTE VALUE.
-C     JACK DONGARRA, LINPACK, 3/11/78.
-C
-      DOUBLE PRECISION DX(1),DMAX
-      INTEGER I,INCX,IX,N
-C
-      IDAMAX = 0
-      IF( N .LT. 1 ) RETURN
-      IDAMAX = 1
-      IF(N.EQ.1)RETURN
-      IF(INCX.EQ.1)GO TO 20
-C
-C        CODE FOR INCREMENT NOT EQUAL TO 1
-C
-      IX = 1
-      DMAX = DABS(DX(1))
-      IX = IX + INCX
-      DO 10 I = 2,N
-         IF(DABS(DX(IX)).LE.DMAX) GO TO 5
-         IDAMAX = I
-         DMAX = DABS(DX(IX))
-    5    IX = IX + INCX
-   10 CONTINUE
-      RETURN
-C
-C        CODE FOR INCREMENT EQUAL TO 1
-C
-   20 DMAX = DABS(DX(1))
-      DO 30 I = 2,N
-         IF(DABS(DX(I)).LE.DMAX) GO TO 30
-         IDAMAX = I
-         DMAX = DABS(DX(I))
-   30 CONTINUE
-      RETURN
-      END
-      REAL FUNCTION invnor(p)
-C
-C**********************************************************************
-C
-C     REAL FUNCTION INVNOR(P)
-C                    NORmal distribution INVerse
-C
-C
-C                              Function
-C
-C
-C     Returns X  such that CUMNOR(X)  =   P,  i.e., the  integral from -
-C     infinity to X of (1/SQRT(2*PI)) EXP(-U*U) dU is P
-C
-C
-C                              Arguments
-C
-C
-C     P --> The probability whose normal deviate is sought.
-C                    P is REAL
-C
-C
-C                              Method
-C
-C
-C     The  rational   function   on  page 95    of Kennedy  and  Gentle,
-C     Statistical Computing, Marcel Dekker, NY , 1980.
-C
-C
-C                              Note
-C
-C
-C     If P .lt. 1.0e-20 then INVNOR returns -10.0.
-C     If P .ge. 1.0 then INVNOR returns 10.0.
-C
-C**********************************************************************
-C
-C     .. Scalar Arguments ..
-      REAL p
-C     ..
-C     .. Local Scalars ..
-      DOUBLE PRECISION sign,y,z
-C     ..
-C     .. Local Arrays ..
-      DOUBLE PRECISION xden(5),xnum(5)
-C     ..
-C     .. External Functions ..
-      DOUBLE PRECISION devlpl
-      EXTERNAL devlpl
-C     ..
-C     .. Intrinsic Functions ..
-      INTRINSIC dble,log,sqrt
-C     ..
-C     .. Data statements ..
-      DATA xnum/-0.322232431088D0,-1.000000000000D0,-0.342242088547D0,
-     +     -0.204231210245D-1,-0.453642210148D-4/
-      DATA xden/0.993484626060D-1,0.588581570495D0,0.531103462366D0,
-     +     0.103537752850D0,0.38560700634D-2/
-C     ..
-C     .. Executable Statements ..
-      IF (.NOT. (p.LT.1.0E-20)) GO TO 10
-      invnor = -10.0
-      RETURN
-
-   10 IF (.NOT. (p.GE.1.0)) GO TO 20
-      invnor = 10.0
-      RETURN
-
-   20 IF (.NOT. (p.LE.0.5D0)) GO TO 30
-      sign = -1.0D0
-      z = p
-      GO TO 40
-
-   30 sign = 1.0D0
-      z = 1.0D0 - dble(p)
-   40 y = sqrt(-2.0D0*log(z))
-      invnor = y + devlpl(xnum,5,y)/devlpl(xden,5,y)
-      invnor = sign*invnor
-      RETURN
-
-      END
-      LOGICAL FUNCTION LSAME ( CA, CB )
-*     .. Scalar Arguments ..
-      CHARACTER*1            CA, CB
-*     ..
-*
-*  Purpose
-*  =======
-*
-*  LSAME  tests if CA is the same letter as CB regardless of case.
-*  CB is assumed to be an upper case letter. LSAME returns .TRUE. if
-*  CA is either the same as CB or the equivalent lower case letter.
-*
-*  N.B. This version of the routine is only correct for ASCII code.
-*       Installers must modify the routine for other character-codes.
-*
-*       For EBCDIC systems the constant IOFF must be changed to -64.
-*       For CDC systems using 6-12 bit representations, the system-
-*       specific code in comments must be activated.
-*
-*  Parameters
-*  ==========
-*
-*  CA     - CHARACTER*1
-*  CB     - CHARACTER*1
-*           On entry, CA and CB specify characters to be compared.
-*           Unchanged on exit.
-*
-*
-*  Auxiliary routine for Level 2 Blas.
-*
-*  -- Written on 20-July-1986
-*     Richard Hanson, Sandia National Labs.
-*     Jeremy Du Croz, Nag Central Office.
-*
-*     .. Parameters ..
-      INTEGER                IOFF
-      PARAMETER            ( IOFF=32 )
-*     .. Intrinsic Functions ..
-      INTRINSIC              ICHAR
-*     .. Executable Statements ..
-*
-*     Test if the characters are equal
-*
-      LSAME = CA .EQ. CB
-*
-*     Now test for equivalence
-*
-      IF ( .NOT.LSAME ) THEN
-         LSAME = ICHAR(CA) - IOFF .EQ. ICHAR(CB)
-      END IF
-*
-      RETURN
-*
-*  The following comments contain code for CDC systems using 6-12 bit
-*  representations.
-*
-*     .. Parameters ..
-*     INTEGER                ICIRFX
-*     PARAMETER            ( ICIRFX=62 )
-*     .. Scalar Arguments ..
-*     CHARACTER*1            CB
-*     .. Array Arguments ..
-*     CHARACTER*1            CA(*)
-*     .. Local Scalars ..
-*     INTEGER                IVAL
-*     .. Intrinsic Functions ..
-*     INTRINSIC              ICHAR, CHAR
-*     .. Executable Statements ..
-*
-*     See if the first character in string CA equals string CB.
-*
-*     LSAME = CA(1) .EQ. CB .AND. CA(1) .NE. CHAR(ICIRFX)
-*
-*     IF (LSAME) RETURN
-*
-*     The characters are not identical. Now check them for equivalence.
-*     Look for the 'escape' character, circumflex, followed by the
-*     letter.
-*
-*     IVAL = ICHAR(CA(2))
-*     IF (IVAL.GE.ICHAR('A') .AND. IVAL.LE.ICHAR('Z')) THEN
-*        LSAME = CA(1) .EQ. CHAR(ICIRFX) .AND. CA(2) .EQ. CB
-*     END IF
-*
-*     RETURN
-*
-*     End of LSAME.
-*
-      END
-      real function rnor(jd)
-c***begin prologue  rnor
-c***date written   810915
-c***revision date  830805
-c***category no.  l6a14
-c***keywords  random numbers, uniform random numbers
-c***author    kahaner, david, scientific computing division, nbs
-c             marsaglia, george, computer science dept., wash state univ
-c
-c***purpose  generates quasi normal random numbers, with mean zero and
-c             unit standard deviation, and can be used with any computer
-c             with integers at least as large as 32767.
-c***description
-c
-c       rnor generates quasi normal random numbers with zero mean and
-c       unit standard deviation.
-c       it can be used with any computer with integers at least as
-c       large as 32767.
-c
-c
-c   use
-c       first time....
-c                   z = rnor(jd)
-c                     here jd is any  n o n - z e r o  integer.
-c                     this causes initialization of the program
-c                     and the first random number to be returned as z.
-c       subsequent times...
-c                   z = rnor(0)
-c                     causes the next random number to be returned as z.
-c
-c.....................................................................
-c
-c    note: users who wish to transport this program to other
-c           computers should read the following ....
-c
-c   machine dependencies...
-c      mdig = a lower bound on the number of binary digits available
-c              for representing integers, including the sign bit.
-c              this must be at least 16, but can be increased in
-c              line with remark a below.
-c
-c   remarks...
-c     a. this program can be used in two ways:
-c        (1) to obtain repeatable results on different computers,
-c            set 'mdig' to the smallest of its values on each, or,
-c        (2) to allow the longest sequence of random numbers to be
-c            generated without cycling (repeating) set 'mdig' to the
-c            largest possible value.
-c     b. the sequence of numbers generated depends on the initial
-c          input 'jd' as well as the value of 'mdig'.
-c          if mdig=16 one should find that
-c            the first evaluation
-c              z=rnor(87) gives  z=-.40079207...
-c            the second evaluation
-c              z=rnor(0) gives   z=-1.8728870...
-c            the third evaluation
-c              z=rnor(0) gives   z=1.8216004...
-c            the fourth evaluation
-c              z=rnor(0) gives   z=.69410355...
-c            the thousandth evaluation
-c              z=rnor(0) gives   z=.96782424...
-c
-c***references  marsaglia & tsang, "a fast, easily implemented
-c                 method for sampling from decreasing or
-c                 symmetric unimodal density functions", to be
-c                 published in siam j sisc 1983.
-c***routines called  i1mach,xerror
-c***end prologue  rnor
-      real v(65),w(65)
-      integer m(17)
-      save i1,j1,m,m1,m2,rmax
-      data aa,b,c,rmax/12.37586,.4878992,12.67706,3.0518509e-5/
-      data c1,c2,pc,xn/.9689279,1.301198,.1958303e-1,2.776994/
-      data v/ .3409450, .4573146, .5397793, .6062427, .6631691
-     +, .7136975, .7596125, .8020356, .8417227, .8792102, .9148948
-     +, .9490791, .9820005, 1.0138492, 1.0447810, 1.0749254, 1.1043917
-     +,1.1332738, 1.1616530, 1.1896010, 1.2171815, 1.2444516, 1.2714635
-     +,1.2982650, 1.3249008, 1.3514125, 1.3778399, 1.4042211, 1.4305929
-     +,1.4569915, 1.4834526, 1.5100121, 1.5367061, 1.5635712, 1.5906454
-     +,1.6179680, 1.6455802, 1.6735255, 1.7018503, 1.7306045, 1.7598422
-     +,1.7896223, 1.8200099, 1.8510770, 1.8829044, 1.9155830, 1.9492166
-     +,1.9839239, 2.0198430, 2.0571356, 2.0959930, 2.1366450, 2.1793713
-     +,2.2245175, 2.2725185, 2.3239338, 2.3795007, 2.4402218, 2.5075117
-     +,2.5834658, 2.6713916, 2.7769943, 2.7769943, 2.7769943, 2.7769943/
-      data w/   .10405134e-04, .13956560e-04, .16473259e-04,
-     + .18501623e-04, .20238931e-04, .21780983e-04, .23182241e-04,
-     + .24476931e-04, .25688121e-04, .26832186e-04, .27921226e-04,
-     + .28964480e-04, .29969191e-04, .30941168e-04, .31885160e-04,
-     + .32805121e-04, .33704388e-04, .34585827e-04, .35451919e-04,
-     + .36304851e-04, .37146564e-04, .37978808e-04, .38803170e-04,
-     + .39621114e-04, .40433997e-04, .41243096e-04, .42049621e-04,
-     + .42854734e-04, .43659562e-04, .44465208e-04, .45272764e-04,
-     + .46083321e-04, .46897980e-04, .47717864e-04, .48544128e-04,
-     + .49377973e-04, .50220656e-04, .51073504e-04, .51937936e-04,
-     + .52815471e-04, .53707761e-04, .54616606e-04, .55543990e-04,
-     + .56492112e-04, .57463436e-04, .58460740e-04, .59487185e-04,
-     + .60546402e-04, .61642600e-04, .62780711e-04, .63966581e-04,
-     + .65207221e-04, .66511165e-04, .67888959e-04, .69353880e-04,
-     + .70922996e-04, .72618816e-04, .74471933e-04, .76525519e-04,
-     + .78843526e-04, .81526890e-04, .84749727e-04,
-     + .84749727e-04, .84749727e-04, .84749727e-04/
-      data m(1),m(2),m(3),m(4),m(5),m(6),m(7),m(8),m(9),m(10),m(11),
-     1     m(12),m(13),m(14),m(15),m(16),m(17)
-     2                   / 30788,23052,2053,19346,10646,19427,23975,
-     3                     19049,10949,19693,29746,26748,2796,23890,
-     4                     29168,31924,16499 /
-      data m1,m2,i1,j1 / 32767,256,5,17 /
-c fast part...
-c
-c
-c***first executable statement  rnor
-      if(jd.ne.0)go to 27
-   10 continue
-      i=m(i1)-m(j1)
-      if(i .lt. 0) i=i+m1
-      m(j1)=i
-      i1=i1-1
-      if(i1 .eq. 0) i1=17
-      j1=j1-1
-      if(j1 .eq.. 0) j1=17
-      j=mod(i,64)+1
-      rnor=i*w(j+1)
-      if( ( (i/m2)/2 )*2.eq.(i/m2))rnor=-rnor
-      if(abs(rnor).le.v(j))return
-c slow part; aa is a*f(0)
-      x=(abs(rnor)-v(j))/(v(j+1)-v(j))
-      y=uni(0)
-      s=x+y
-      if(s.gt.c2)go to 11
-      if(s.le.c1)return
-      if(y.gt.c-aa*exp(-.5*(b-b*x)**2))go to 11
-      if(exp(-.5*v(j+1)**2)+y*pc/v(j+1).le.exp(-.5*rnor**2))return
-c tail part; 3.855849 is .5*xn**2
-   22 s=xn-alog(uni(0))/xn
-      if(3.855849+alog(uni(0))-xn*s.gt.-.5*s**2)go to 22
-      rnor=sign(s,rnor)
-      return
-   11 rnor=sign(b-b*x,rnor)
-      return
-c  fill
-   27 continue
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-      mdig=32
-C     mdig=i1mach(8)+1
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-c          be sure that mdig at least 16...
-C     if(mdig.lt.16)call xerror('rnor--mdig less than 16',23,1,2)
-      m1 = 2**(mdig-2) + (2**(mdig-2)-1)
-      m2 = 2**(mdig/2)
-      jseed = min0(iabs(jd),m1)
-      if( mod(jseed,2).eq.0 ) jseed=jseed-1
-      k0 =mod(9069,m2)
-      k1 = 9069/m2
-      j0 = mod(jseed,m2)
-      j1 = jseed/m2
-      do 2 i=1,17
-        jseed = j0*k0
-        j1 = mod(jseed/m2+j0*k1+j1*k0,m2/2)
-        j0 = mod(jseed,m2)
-    2   m(i) = j0+m2*j1
-      j1=17
-      i1=5
-      rmax = 1./float(m1)
-c        seed uniform (0,1) generator.  (just a dummy call)
-      rnor=uni(jd)
-      do 28 i=1,65
-   28  w(i)=rmax*v(i)
-      go to 10
-      end
-      real function uni(jd)
-c***begin prologue  uni
-c***date written   810915
-c***revision date  830805
-c***category no.  l6a21
-c***keywords  random numbers, uniform random numbers
-c***author    blue, james, scientific computing division, nbs
-c             kahaner, david, scientific computing division, nbs
-c             marsaglia, george, computer science dept., wash state univ
-c
-c***purpose  this routine generates quasi uniform random numbers on [0,1
-c             and can be used on any computer with which allows integers
-c             at least as large as 32767.
-c***description
-c
-c       this routine generates quasi uniform random numbers on the inter
-c       [0,1).  it can be used with any computer which allows
-c       integers at least as large as 32767.
-c
-c
-c   use
-c       first time....
-c                   z = uni(jd)
-c                     here jd is any  n o n - z e r o  integer.
-c                     this causes initialization of the program
-c                     and the first random number to be returned as z.
-c       subsequent times...
-c                   z = uni(0)
-c                     causes the next random number to be returned as z.
-c
-c
-c..................................................................
-c   note: users who wish to transport this program from one computer
-c         to another should read the following information.....
-c
-c   machine dependencies...
-c      mdig = a lower bound on the number of binary digits available
-c              for representing integers, including the sign bit.
-c              this value must be at least 16, but may be increased
-c              in line with remark a below.
-c
-c   remarks...
-c     a. this program can be used in two ways:
-c        (1) to obtain repeatable results on different computers,
-c            set 'mdig' to the smallest of its values on each, or,
-c        (2) to allow the longest sequence of random numbers to be
-c            generated without cycling (repeating) set 'mdig' to the
-c            largest possible value.
-c     b. the sequence of numbers generated depends on the initial
-c          input 'jd' as well as the value of 'mdig'.
-c          if mdig=16 one should find that
-c            the first evaluation
-c              z=uni(305) gives z=.027832881...
-c            the second evaluation
-c              z=uni(0) gives   z=.56102176...
-c            the third evaluation
-c              z=uni(0) gives   z=.41456343...
-c            the thousandth evaluation
-c              z=uni(0) gives   z=.19797357...
-c
-c***references  marsaglia g., "comments on the perfect uniform random
-c                 number generator", unpublished notes, wash s. u.
-c***routines called  i1mach,xerror
-c***end prologue  uni
-      integer m(17)
-c
-      save i,j,m,m1,m2
-c
-      data m(1),m(2),m(3),m(4),m(5),m(6),m(7),m(8),m(9),m(10),m(11),
-     1     m(12),m(13),m(14),m(15),m(16),m(17)
-     2                   / 30788,23052,2053,19346,10646,19427,23975,
-     3                     19049,10949,19693,29746,26748,2796,23890,
-     4                     29168,31924,16499 /
-      data m1,m2,i,j / 32767,256,5,17 /
-c***first executable statement  uni
-      if(jd .eq. 0) go to 3
-c  fill
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-      mdig=32
-C     mdig=i1mach(8)+1
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-c          be sure that mdig at least 16...
-C     if(mdig.lt.16)call xerror('uni--mdig less than 16',22,1,2)
-      m1= 2**(mdig-2) + (2**(mdig-2)-1)
-      m2 = 2**(mdig/2)
-      jseed = min0(iabs(jd),m1)
-      if( mod(jseed,2).eq.0 ) jseed=jseed-1
-      k0 =mod(9069,m2)
-      k1 = 9069/m2
-      j0 = mod(jseed,m2)
-      j1 = jseed/m2
-      do 2 i=1,17
-        jseed = j0*k0
-        j1 = mod(jseed/m2+j0*k1+j1*k0,m2/2)
-        j0 = mod(jseed,m2)
-    2   m(i) = j0+m2*j1
-      i=5
-      j=17
-c  begin main loop here
-    3 k=m(i)-m(j)
-      if(k .lt. 0) k=k+m1
-      m(j)=k
-      i=i-1
-      if(i .eq. 0) i=17
-      j=j-1
-      if(j .eq. 0) j=17
-      uni=float(k)/float(m1)
-      return
-      end
-      SUBROUTINE XERBLA ( SRNAME, INFO )
-*     ..    Scalar Arguments ..
-      INTEGER            INFO
-      CHARACTER*6        SRNAME
-*     ..
-*
-*  Purpose
-*  =======
-*
-*  XERBLA  is an error handler for the Level 2 BLAS routines.
-*
-*  It is called by the Level 2 BLAS routines if an input parameter is
-*  invalid.
-*
-*  Installers should consider modifying the STOP statement in order to
-*  call system-specific exception-handling facilities.
-*
-*  Parameters
-*  ==========
-*
-*  SRNAME - CHARACTER*6.
-*           On entry, SRNAME specifies the name of the routine which
-*           called XERBLA.
-*
-*  INFO   - INTEGER.
-*           On entry, INFO specifies the position of the invalid
-*           parameter in the parameter-list of the calling routine.
-*
-*
-*  Auxiliary routine for Level 2 Blas.
-*
-*  Written on 20-July-1986.
-*
-*     .. Executable Statements ..
-*
-      WRITE (*,99999) SRNAME, INFO
-*
-      STOP
-*
-99999 FORMAT ( ' ** On entry to ', A6, ' parameter number ', I2,
-     $         ' had an illegal value' )
-*
-*     End of XERBLA.
-*
-      END
-*
