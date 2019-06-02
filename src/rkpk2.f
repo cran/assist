@@ -47,7 +47,7 @@
      *limnla, nlaht, score, varht, c, d, qraux, jpvt, wk, info)
 c      character*1 vmu
       integer vmu
-      integer lds, nobs, nnull, ldq, job, jpvt(*), info
+      integer lds, nobs, nnull, ldq, job, jpvt(*), info, nq
       double precision s(lds,*), y(*), q(ldq,*), tol, limnla(2), nlaht, 
      *score(*), varht(2), c(*), d(*), qraux(*), wk(*)
       info = 0
@@ -72,7 +72,8 @@ c      if(.not.( vmu .ne. 'v' .and. vmu .ne. 'm' .and. vmu .ne. 'u' ))
      * d, info, wk)
       return
 23004 continue
-      call dstup (s, lds, nobs, nnull, qraux, jpvt, y, q, ldq, nobs, 1, 
+      nq = 1
+      call dstup (s, lds, nobs, nnull, qraux, jpvt, y, q, ldq, nobs, nq, 
      *info, wk)
       if(.not.( info .ne. 0 ))goto 23008
       return

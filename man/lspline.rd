@@ -49,8 +49,10 @@ To appear in Canadian Journal of Statisitcs.
 \code{\link{ssr}}
 }
 \examples{
+\dontrun{
 x<- seq(0,1, len=20)
 lspline(x, type="exp", r=1.5)
+}
 }
 \keyword{file}
 

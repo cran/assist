@@ -63,10 +63,12 @@ Liu, A., Meiring, W. and Wang, Y. (2004), Testing Generalized Linear Models Usin
 \code{\link{ssr}}, \code{\link{print.anova.ssr}}
 }
 \examples{
+\dontrun{
 data(acid)
 
 # fit a partial thin-plate spline
 temp <- ssr(ph~t1+x1+x2, rk=tp(t1), data=acid, spar="m")
 anova(temp, 500)
+}
 }
 \keyword{file}

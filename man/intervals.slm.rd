@@ -53,6 +53,7 @@ Wang, Y. (1998). Mixed-effects smoothing spline ANOVA. Journal of the Royal Stat
 \code{\link{slm}}, \code{\link{plot.bCI}}, \code{\link{predict.ssr}}
 }
 \examples{
+\dontrun{
 data(dog)
 # fit a SLM model with random effects for dogs
 dog.fit<-slm(y~group*time, rk=list(cubic(time), shrink1(group),
@@ -60,5 +61,6 @@ dog.fit<-slm(y~group*time, rk=list(cubic(time), shrink1(group),
     shrink1(group))), random=list(dog=~1), data=dog)
 
 intervals(dog.fit)
+}
 }
 \keyword{file}

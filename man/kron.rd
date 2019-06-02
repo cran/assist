@@ -17,7 +17,9 @@ The [i, j] element is the reproducing kernel evaluated at the ith element of x a
 \code{\link{kronecker}},\code{\link{ssr}}
 }
 \examples{
+\dontrun{
 x<-runif(10)
 kron(x)
+}
 }
 \keyword{file}

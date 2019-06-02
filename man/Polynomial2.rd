@@ -41,8 +41,10 @@ Wahba, G. (1990). Spline Models for Observational Data. SIAM, Vol. 59.
 \code{\link{quintic}}, \code{\link{septic}}
 }
 \examples{
+\dontrun{
 x<- seq(0, 5, len=10)
 linear2(x)
+}
 }
 \keyword{file}
 

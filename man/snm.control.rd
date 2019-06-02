@@ -42,8 +42,10 @@ Returned is a list includes all re-seted control parameters.
 \code{\link{snm}}, \code{\link{dsidr}}, \code{\link{dmudr}}
 }
 \examples{
+\dontrun{
 ## set maximum iteration to be 50
 snm.control(maxit.out=50)
+}
 }
 \keyword{file}
 

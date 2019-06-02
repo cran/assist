@@ -207,13 +207,11 @@ static double
 rk_linP(double x, double y){
    double val, tmp;
    tmp=(x+y-fabs(x-y))/2.0;
-   val= tmp*tmp*tmp/3.0-(x+y)*tmp*tmp/2.0 + x*y*tmp;
-   val += x*cos(y)-sin(y)-cos(tmp-y)*(x-tmp) -sin(tmp-y);
-   val += y*cos(x)-sin(x)-cos(tmp-x)*(y-tmp) -sin(tmp-x);
-   val += tmp/2.0 * cos(y-x) -0.25*sin(2*tmp-x-y) - 0.5*sin(x+y);
+   val= -tmp*tmp*tmp/6.0 + x*y*tmp/2.0 - fabs(x-y);
+   val += -sin(x) - sin(y) + x*cos(y) + y*cos(x);
+   val += tmp*cos(y-x)/2.0 + 1.25*sin(fabs(x-y)) - 0.25*sin(x+y);
    return(val);
  }
-
 void
   linPeriod_ker(double *x, double *y, int *N, int *M, double *val){
   int i,j;

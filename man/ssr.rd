@@ -90,19 +90,21 @@ Available at: \url{http://www.pstat.ucsb.edu/faculty/yuedong }}
 	\code{\link{ssr.object}}, \code{\link{summary.ssr}}, \code{\link{smooth.spline}}.}
 
 \examples{
-\dontrun{library(MASS)}
+\dontrun{
+library(MASS)
 # fitting a cubic spline
-\dontrun{fit1<- ssr(accel~times, data=mcycle, scale=T, rk=cubic(times))}
-\dontrun{summary(fit1)}
+fit1<- ssr(accel~times, data=mcycle, scale=T, rk=cubic(times))
+summary(fit1)
 
 # using GML to choose the smoothing parameter
-\dontrun{fit2<- update(fit1, spar="m")}
+fit2<- update(fit1, spar="m")
 
 data(acid)
 ## fit an additive thin plate spline
 acid.fit<- ssr( ph ~ t1 + x1 + x2, rk = list(tp(t1), tp(list(x1, x2))), 
         data = acid, spar = "m", scale = FALSE)
 acid.fit
+}
 }
 \keyword{file }
 

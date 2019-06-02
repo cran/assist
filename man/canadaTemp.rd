@@ -17,7 +17,7 @@ station a vetor of integers from 1 to 35 indicating the sations where the temper
 }
 
 \source{
-The data set was downloaded from \url{http://www.psych.mcgill.ca/faculty/ramsay/datasets.html}.
+The data set was downloaded from \url{http://www.psych.mcgill.ca/misc/fda/downloads/FDAfuns/R/data/}.
 }
 \references{
 Ramsay, J. O and Silverman, B. W. (1997). Functional Data Analysis. New York:Springer.

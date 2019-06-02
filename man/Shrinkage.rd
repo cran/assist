@@ -22,7 +22,9 @@ The \eqn{[i, j]} element is the reproducing kernel evaluated at the ith element 
 \code{\link{shrink0}},\code{\link{ssr}}
 }
 \examples{
+\dontrun{
 x<-rep(1:10,2)
 shrink1(x)
+}
 }
 \keyword{file}

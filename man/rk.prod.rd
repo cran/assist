@@ -37,9 +37,11 @@ splines. JRSS B 55, 353--368.
 \author{Chunlei Ke \email{chunlei\_ke@pstat.ucsb.edu} and Yuedong Wang \email{yuedong@pstat.ucsb.edu}}
 \seealso{\code{\link{kron}}, \code{\link{ssr}}}
 \examples{
+\dontrun{
 x1<- 1:10/10
 x2<- runif(10)
 rk.prod(cubic(x1), periodic(x2))
+}
 }
 \keyword{file}
 

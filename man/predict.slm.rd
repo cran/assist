@@ -40,6 +40,7 @@ Pinherio, J. C. and Bates, D. M. (2000) Mixed-effects Models in S and S-Plus. Sp
 }
 
 \examples{
+\dontrun{
 data(dog)
 
 dog.fit<-slm(y~group*time, rk=list(cubic(time), shrink1(group),
@@ -47,6 +48,7 @@ dog.fit<-slm(y~group*time, rk=list(cubic(time), shrink1(group),
     shrink1(group))), random=list(dog=~1), data=dog)
 
 predict(dog.fit)
+}
 }
 \keyword{file}
 

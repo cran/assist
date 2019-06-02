@@ -49,6 +49,8 @@ returned is a list includes all re-seted control parameters.
 }
 \examples{
 ## use Newton-Raphson iteration and only a single backfitting
+\dontrun{
 snr.control(method="NR", backfit=1)
+}
 }
 \keyword{file}

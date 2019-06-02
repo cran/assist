@@ -28,8 +28,10 @@ Gu, C. (2001). Smoothing Spline ANOVA Modes. Chapman and Hall.
 \code{\link{cubic}}, \code{\link{lspline}}
 }
 \examples{
+\dontrun{
 x<- seq(0, 1, len=100)
 periodic(x, order=3)
+}
 }
 \keyword{file}
 

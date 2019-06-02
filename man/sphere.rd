@@ -43,8 +43,10 @@ Wahba, G. (1990). Spline Models for Observational Data. SIAM, Vol. 59.
 \code{\link{periodic}}
 }
 \examples{
+\dontrun{
 x<- seq(0, 2*pi, len=10)
 y<- seq(-pi/2, pi/2, len=10)
 s.ker<- sphere(cbind(x, y), order=3)
+}
 }
 \keyword{file}

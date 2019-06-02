@@ -50,8 +50,10 @@ a list with components for each of the possible arguments.
 \code{\link{ssr}}
 }
 \examples{
+\dontrun{
 # use regular grid seach method with 100 grid points
 ssr.control(job=99)
+}
 }
 \keyword{file}
 

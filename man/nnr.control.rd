@@ -55,7 +55,9 @@ Default is -1.
 \code{\link{nnr}}, \code{\link{dsidr}},\code{\link{dmudr}}
 }
 \examples{
+\dontrun{
 ## use Newton-Raphson 
 nnr.control(method="NR")
+}
 }
 \keyword{file}

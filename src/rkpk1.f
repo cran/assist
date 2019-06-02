@@ -19,7 +19,7 @@ c      character*2 vmu
       if(.not.( mtol .lt. tol1 ))goto 23002
       mtol = tol1
 23002 continue
-23004 continue
+c     23004 continue
       maxiter2 = maxiter2 - 1
       j=1
 23007 if(.not.(j.le.nobs))goto 23009
@@ -99,7 +99,7 @@ c      if(.not.(vmu .eq. 'u~'))
       info = -6
       goto 23006
 23037 continue
-23005 goto 23004
+c     23005 goto 23004
 23006 continue
       return
       end
@@ -123,7 +123,7 @@ c      character*2 vmu
       if(.not.( mtol .lt. tol1 ))goto 23002
       mtol = tol1
 23002 continue
-23004 continue
+c     23004 continue
       maxiter = maxiter - 1
       j=1
 23007 if(.not.(j.le.nobs))goto 23009
@@ -196,7 +196,7 @@ c      if(.not.(vmu .eq. 'u~'))
       info = -4
       goto 23006
 23034 continue
-23005 goto 23004
+c     23005 goto 23004
 23006 continue
       return
       end
@@ -222,7 +222,7 @@ c      character*2 vmu
       if(.not.( mtol .lt. tol1 ))goto 23002
       mtol = tol1
 23002 continue
-23004 continue
+c     23004 continue
       maxiter2 = maxiter2 - 1
       j=1
 23007 if(.not.(j.le.nobs))goto 23009
@@ -302,7 +302,7 @@ c      if(.not.(vmu .eq. 'u~'))
       info = -6
       goto 23006
 23037 continue
-23005 goto 23004
+c     23005 goto 23004
 23006 continue
       return
       end
@@ -326,7 +326,7 @@ c      character*2 vmu
       if(.not.( mtol .lt. tol1 ))goto 23002
       mtol = tol1
 23002 continue
-23004 continue
+c     23004 continue
       maxiter = maxiter - 1
       j=1
 23007 if(.not.(j.le.nobs))goto 23009
@@ -401,7 +401,7 @@ c      if(.not.(vmu .eq. 'u~'))
       info = -4
       goto 23006
 23036 continue
-23005 goto 23004
+c     23005 goto 23004
 23006 continue
       return
       end
@@ -857,7 +857,7 @@ c      character*2 vmu
       if(.not.( mtol .lt. tol1 ))goto 23002
       mtol = tol1
 23002 continue
-23004 continue
+c     23004 continue
       maxiter2 = maxiter2 - 1
       j=1
 23007 if(.not.(j.le.nobs))goto 23009
@@ -937,7 +937,7 @@ c      if(.not.(vmu .eq. 'u~'))
       info = -6
       goto 23006
 23037 continue
-23005 goto 23004
+c     23005 goto 23004
 23006 continue
       return
       end
@@ -986,7 +986,7 @@ c      if(.not.( vmu .ne. 'v' .and. vmu .ne. 'm' .and. vmu .ne. 'u' ))
       info = -2
       return
 23008 continue
-23010 continue
+c     23010 continue
       if(.not.( mup - mlo .lt. 1.d-7 ))goto 23013
       goto 23012
 23013 continue
@@ -1020,7 +1020,7 @@ c      if(.not.( vmu .ne. 'v' .and. vmu .ne. 'm' .and. vmu .ne. 'u' ))
       return
 23019 continue
 23016 continue
-23011 goto 23010
+c     23011 goto 23010
 23012 continue
       nlaht = ( mup + mlo ) / 2.d0
       call dset (n, 10.d0 ** (nlaht), twk(2,1), 2)
@@ -1055,7 +1055,7 @@ c      character*2 vmu
       if(.not.( mtol .lt. tol1 ))goto 23002
       mtol = tol1
 23002 continue
-23004 continue
+c     23004 continue
       maxiter = maxiter - 1
       j=1
 23007 if(.not.(j.le.nobs))goto 23009
@@ -1129,7 +1129,7 @@ c      if(.not.(vmu .eq. 'u~'))
       info = -4
       goto 23006
 23034 continue
-23005 goto 23004
+c     23005 goto 23004
 23006 continue
       return
       end
@@ -1226,14 +1226,15 @@ c      if(.not.(vmu .eq. 'u~'))
       subroutine dmudr (vmu, s, lds, nobs, nnull, q, ldqr, ldqc, nq, y, 
      *tol, init, prec, maxite, theta, nlaht, score, varht, c, d, wk, 
      *info)
-      integer lds, nobs, nnull, ldqr, ldqc, nq, init, maxite, info
-      double precision s(lds,*), q(ldqr,ldqc,*), y(*), tol, prec, theta(
-     **), nlaht, score(*), varht(2), c(*), d(*), wk(*)
+      integer lds, nobs, nnull, ldqr, ldqc, nq, init, maxite, 
+     *jpvt(nnull), pvtwk(nnull), info
+      double precision s(lds,*), q(ldqr,ldqc,*), y(*), tol, prec, 
+     *theta(*), nlaht, score(*), varht(2), c(*), d(*), wk(*)
 c      character*1 vmu
       integer vmu
       integer n, n0
       integer iqraux, itraux, itwk, iqwk, iywk, ithewk, ihes, igra, 
-     *ihwk1, ihwk2, igwk1, igwk2, ikwk, iwork1, iwork2, ijpvt, ipvtwk
+     *ihwk1, ihwk2, igwk1, igwk2, ikwk, iwork1, iwork2, ijpvt
       n = nobs
       n0 = nnull
       iqraux = 1
@@ -1252,12 +1253,12 @@ c      character*1 vmu
       iwork1 = ikwk + (n-n0) * (n-n0) * nq
       iwork2 = iwork1 + n
       ijpvt = iwork2 + n
-      ipvtwk = ijpvt + n0
+c      ipvtwk = ijpvt + n0
       call dmudr1 (vmu, s, lds, nobs, nnull, q, ldqr, ldqc, nq, y, tol, 
      *init, prec, maxite, theta, nlaht, score, varht, c, d, wk(iqraux), 
-     *wk(ijpvt), wk(itwk), wk(itraux), wk(iqwk), wk(iywk), wk(ithewk), 
+     *jpvt, wk(itwk), wk(itraux), wk(iqwk), wk(iywk), wk(ithewk), 
      *wk(ihes), wk(igra), wk(ihwk1), wk(ihwk2), wk(igwk1), wk(igwk2), 
-     *wk(ipvtwk), wk(ikwk), wk(iwork1), wk(iwork2), info)
+     *pvtwk, wk(ikwk), wk(iwork1), wk(iwork2), info)
       return
       end
       subroutine dmudrnew (vmu, s, lds, nobs, nnull, q,q1, q2, ldqr, 
@@ -1486,7 +1487,7 @@ c      character*2 vmu
       if(.not.( mtol .lt. tol1 ))goto 23002
       mtol = tol1
 23002 continue
-23004 continue
+c     23004 continue
       maxiter2 = maxiter2 - 1
       j=1
 23007 if(.not.(j.le.nobs))goto 23009
@@ -1565,7 +1566,7 @@ c      if(.not.(vmu .eq. 'u~'))
       info = -6
       goto 23006
 23037 continue
-23005 goto 23004
+c     23005 goto 23004
 23006 continue
       return
       end
@@ -1808,7 +1809,7 @@ c      character*2 vmu
       if(.not.( mtol .lt. tol1 ))goto 23002
       mtol = tol1
 23002 continue
-23004 continue
+c     23004 continue
       maxiter = maxiter - 1
       j=1
 23007 if(.not.(j.le.nobs))goto 23009
@@ -1885,7 +1886,7 @@ c      if(.not.(vmu .eq. 'u~'))
       info = -4
       goto 23006
 23038 continue
-23005 goto 23004
+c     23005 goto 23004
 23006 continue
       return
       end
@@ -2687,43 +2688,6 @@ c      if(.not.( vmu .eq. 'u' ))
 23020 continue
       return
       end
-      INTEGER FUNCTION IDAMAX(N,DX,INCX)
-C
-C     FINDS THE INDEX OF ELEMENT HAVING MAX. ABSOLUTE VALUE.
-C     JACK DONGARRA, LINPACK, 3/11/78.
-C
-      DOUBLE PRECISION DX(1),DMAX
-      INTEGER I,INCX,IX,N
-C
-      IDAMAX = 0
-      IF( N .LT. 1 ) RETURN
-      IDAMAX = 1
-      IF(N.EQ.1)RETURN
-      IF(INCX.EQ.1)GO TO 20
-C
-C        CODE FOR INCREMENT NOT EQUAL TO 1
-C
-      IX = 1
-      DMAX = DABS(DX(1))
-      IX = IX + INCX
-      DO 10 I = 2,N
-         IF(DABS(DX(IX)).LE.DMAX) GO TO 5
-         IDAMAX = I
-         DMAX = DABS(DX(IX))
-    5    IX = IX + INCX
-   10 CONTINUE
-      RETURN
-C
-C        CODE FOR INCREMENT EQUAL TO 1
-C
-   20 DMAX = DABS(DX(1))
-      DO 30 I = 2,N
-         IF(DABS(DX(I)).LE.DMAX) GO TO 30
-         IDAMAX = I
-         DMAX = DABS(DX(I))
-   30 CONTINUE
-      RETURN
-      END
       subroutine dsytr (x, ldx, n, tol, info, work)
       integer ldx, n, info
       double precision x(ldx,*), tol, work(*)
@@ -2790,3 +2754,4 @@ C
       x(n-1,n) = x(n,n-1)
       return
       end
+

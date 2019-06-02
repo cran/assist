@@ -58,7 +58,7 @@ Ke, C. and Wang, Y. (2002). Nonlinear Nonparametric Regression Models. Submitted
 \code{\link{nnr}}, \code{\link{plot.bCI}}
 }
 \examples{
-
+\dontrun{
 ## fit a generalized varying coefficient models
 data(Arosa)
 Arosa$csmonth <- (Arosa$month-0.5)/12
@@ -77,7 +77,8 @@ p.ozone.fit <- intervals(ozone.fit, newdata=list(csyear=x,csmonth=u),
                  terms=list(f1=matrix(c(1,1,1,1,1,0,0,0,1),nrow=3,byrow=TRUE),
 	                    f2=matrix(c(1,1,1,0,0,1),nrow=3,byrow=TRUE),
                             f3=matrix(c(1,1,1,1,1,0,0,0,1),nrow=3,byrow=TRUE)))	
-\dontrun{plot(p.ozone.fit, x.val=x)}
+plot(p.ozone.fit, x.val=x)
+}
 }
 \keyword{file}
 

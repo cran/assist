@@ -63,6 +63,7 @@ Models and Their Applications. JASA 96:1272-1298.
 \code{\link{snm}}, \code{\link{plot.bCI}}, \code{\link{predict.ssr}}
 }
 \examples{
+\dontrun{
 data(horm.cort)
 
 ## extract normal dubjects
@@ -76,6 +77,7 @@ cort.fit<- snm(conc~b1+exp(b2)*f(time-alogit(b3)),
 
 ## note the variable name of newdata
 intervals(cort.fit, newdata=data.frame(u=seq(0,1,len=50)))
+}
 }
 \keyword{file}
 

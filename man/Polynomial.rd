@@ -42,7 +42,9 @@ Wahba, G. (1990). Spline Models for Observational Data. SIAM, Vol. 59.
 \code{\link{quintic2}}, \code{\link{septic2}}
 }
 \examples{
+\dontrun{
 x<-seq(0, 1, len=10)
 cubic(x)
+}
 }
 \keyword{file}

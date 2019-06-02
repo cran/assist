@@ -1,4 +1,4 @@
-useDynLib(assist)
+useDynLib(assist, .registration=TRUE)
 
 export(alogit, bdiag, chol.new, cubic, cubic2, 
 	dcrdr, dmudr, dsidr, dsms, gdsidr, gdmudr, hat.ssr, ident,
@@ -12,6 +12,12 @@ importFrom(nlme, intervals, lme, nlme, fixef, splitFormula,
            getGroupsFormula, getGroups, corMatrix, varWeights,
            pdMatrix, gnls, pdIdent, pdBlocked)
 importFrom(lattice, xyplot, strip.default, panel.xyplot, panel.superpose)
+
+importFrom("graphics", "lines", "plot")
+importFrom("stats", "Gamma", "as.formula", "binomial", "coef",
+           "formula", "model.extract", "model.matrix", "na.fail",
+           "pchisq", "poisson", "predict", "qqline", "qqnorm", "rnorm")
+importFrom("utils", "menu")
 
 # used internally - not intended to be visible to users
 # export(addCorrGroup, diagComp,exponen, getFunInfo,

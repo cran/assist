@@ -56,6 +56,7 @@ Ke, C. and Wang, Y. (2002). Nonlinear Nonparametric Regression Models. Submitted
 \code{\link{nnr.control}}, \code{\link{ssr}}, \code{\link{print.nnr}}, \code{\link{summary.nnr}}, \code{\link{intervals.nnr}}
 }
 \examples{
+\dontrun{
 x<- 1:100/100
 y<- exp(sin(2*pi*x))+0.3*rnorm(x)
 fit<- nnr(y~exp(f(x)), func=list(f(u)~list(~u, cubic(u))), start=list(0))
@@ -69,6 +70,7 @@ ozone.vc.fit <- nnr(thick~f1(csyear)+exp(f2(csyear))*f3(csmonth),
         f3(x)~list(~sin(2*pi*x)+cos(2*pi*x)-1,lspline(x,type="sine0"))),
         data=Arosa[Arosa$year\%\%2==1,], spar="m", start=list(f1=mean(thick),f2=0,f3=sin(csmonth)),
         control=list(backfit=1))
+}
 }
 \keyword{file}
 

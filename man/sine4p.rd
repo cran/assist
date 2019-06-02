@@ -26,8 +26,10 @@ Gu, C. (2001). Smoothing Spline ANOVA Modes. Chapman and Hall.
 \code{\link{cubic}}, \code{\link{lspline}}
 }
 \examples{
+\dontrun{
 x<- seq(0, 1, len=100)
 sine4p(x)
+}
 }
 \keyword{file}
 

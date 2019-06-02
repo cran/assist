@@ -37,12 +37,14 @@ are suitable for SS ANOVA decomposition of a spline estimate.
 \code{\link{intervals.snr}}, \code{\link{intervals.snm}}
 }
 \examples{
+\dontrun{
 x<- seq(0, 1, len=100)
 y<- 2*sin(2*pi*x)+rnorm(x)*0.5
 
 fit<- ssr(y~x, cubic(x))
 p.fit<- predict(fit)
-\dontrun{plot(p.fit)}
-\dontrun{plot(p.fit,type.name="fit")}
+plot(p.fit)
+plot(p.fit,type.name="fit")
+}
 }
 \keyword{file}
