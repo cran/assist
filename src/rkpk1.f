@@ -19,7 +19,7 @@ c      character*2 vmu
       if(.not.( mtol .lt. tol1 ))goto 23002
       mtol = tol1
 23002 continue
-c     23004 continue
+23004 continue
       maxiter2 = maxiter2 - 1
       j=1
 23007 if(.not.(j.le.nobs))goto 23009
@@ -99,7 +99,8 @@ c      if(.not.(vmu .eq. 'u~'))
       info = -6
       goto 23006
 23037 continue
-c     23005 goto 23004
+cc    23005 goto 23004
+      goto 23004
 23006 continue
       return
       end
@@ -123,7 +124,7 @@ c      character*2 vmu
       if(.not.( mtol .lt. tol1 ))goto 23002
       mtol = tol1
 23002 continue
-c     23004 continue
+23004 continue
       maxiter = maxiter - 1
       j=1
 23007 if(.not.(j.le.nobs))goto 23009
@@ -196,7 +197,8 @@ c      if(.not.(vmu .eq. 'u~'))
       info = -4
       goto 23006
 23034 continue
-c     23005 goto 23004
+cc    23005 goto 23004
+      goto 23004
 23006 continue
       return
       end
@@ -222,7 +224,7 @@ c      character*2 vmu
       if(.not.( mtol .lt. tol1 ))goto 23002
       mtol = tol1
 23002 continue
-c     23004 continue
+23004 continue
       maxiter2 = maxiter2 - 1
       j=1
 23007 if(.not.(j.le.nobs))goto 23009
@@ -302,7 +304,8 @@ c      if(.not.(vmu .eq. 'u~'))
       info = -6
       goto 23006
 23037 continue
-c     23005 goto 23004
+cc    23005 goto 23004
+      goto 23004
 23006 continue
       return
       end
@@ -326,7 +329,7 @@ c      character*2 vmu
       if(.not.( mtol .lt. tol1 ))goto 23002
       mtol = tol1
 23002 continue
-c     23004 continue
+23004 continue
       maxiter = maxiter - 1
       j=1
 23007 if(.not.(j.le.nobs))goto 23009
@@ -401,7 +404,8 @@ c      if(.not.(vmu .eq. 'u~'))
       info = -4
       goto 23006
 23036 continue
-c     23005 goto 23004
+cc    23005 goto 23004
+      goto 23004
 23006 continue
       return
       end
@@ -857,7 +861,7 @@ c      character*2 vmu
       if(.not.( mtol .lt. tol1 ))goto 23002
       mtol = tol1
 23002 continue
-c     23004 continue
+23004 continue
       maxiter2 = maxiter2 - 1
       j=1
 23007 if(.not.(j.le.nobs))goto 23009
@@ -937,7 +941,8 @@ c      if(.not.(vmu .eq. 'u~'))
       info = -6
       goto 23006
 23037 continue
-c     23005 goto 23004
+cc    23005 goto 23004
+      goto 23004
 23006 continue
       return
       end
@@ -986,7 +991,7 @@ c      if(.not.( vmu .ne. 'v' .and. vmu .ne. 'm' .and. vmu .ne. 'u' ))
       info = -2
       return
 23008 continue
-c     23010 continue
+23010 continue
       if(.not.( mup - mlo .lt. 1.d-7 ))goto 23013
       goto 23012
 23013 continue
@@ -1020,7 +1025,8 @@ c     23010 continue
       return
 23019 continue
 23016 continue
-c     23011 goto 23010
+cc    23011 goto 23010
+      goto 23010
 23012 continue
       nlaht = ( mup + mlo ) / 2.d0
       call dset (n, 10.d0 ** (nlaht), twk(2,1), 2)
@@ -1055,7 +1061,7 @@ c      character*2 vmu
       if(.not.( mtol .lt. tol1 ))goto 23002
       mtol = tol1
 23002 continue
-c     23004 continue
+23004 continue
       maxiter = maxiter - 1
       j=1
 23007 if(.not.(j.le.nobs))goto 23009
@@ -1129,7 +1135,8 @@ c      if(.not.(vmu .eq. 'u~'))
       info = -4
       goto 23006
 23034 continue
-c     23005 goto 23004
+cc    23005 goto 23004
+      goto 23004
 23006 continue
       return
       end
@@ -1228,13 +1235,14 @@ c     23005 goto 23004
      *info)
       integer lds, nobs, nnull, ldqr, ldqc, nq, init, maxite, 
      *jpvt(nnull), pvtwk(nnull), info
-      double precision s(lds,*), q(ldqr,ldqc,*), y(*), tol, prec, 
-     *theta(*), nlaht, score(*), varht(2), c(*), d(*), wk(*)
+      double precision s(lds,*), q(ldqr,ldqc,*), y(*), tol, prec, theta(
+     **), nlaht, score(*), varht(2), c(*), d(*), wk(*)
 c      character*1 vmu
       integer vmu
       integer n, n0
       integer iqraux, itraux, itwk, iqwk, iywk, ithewk, ihes, igra, 
-     *ihwk1, ihwk2, igwk1, igwk2, ikwk, iwork1, iwork2, ijpvt
+     *ihwk1, ihwk2, igwk1, igwk2, ikwk, iwork1, iwork2
+c    *ijpvt, ipvtwk
       n = nobs
       n0 = nnull
       iqraux = 1
@@ -1252,13 +1260,18 @@ c      character*1 vmu
       ikwk = igwk2 + nq
       iwork1 = ikwk + (n-n0) * (n-n0) * nq
       iwork2 = iwork1 + n
-      ijpvt = iwork2 + n
+c      ijpvt = iwork2 + n
 c      ipvtwk = ijpvt + n0
       call dmudr1 (vmu, s, lds, nobs, nnull, q, ldqr, ldqc, nq, y, tol, 
      *init, prec, maxite, theta, nlaht, score, varht, c, d, wk(iqraux), 
      *jpvt, wk(itwk), wk(itraux), wk(iqwk), wk(iywk), wk(ithewk), 
      *wk(ihes), wk(igra), wk(ihwk1), wk(ihwk2), wk(igwk1), wk(igwk2), 
      *pvtwk, wk(ikwk), wk(iwork1), wk(iwork2), info)
+c      call dmudr1 (vmu, s, lds, nobs, nnull, q, ldqr, ldqc, nq, y, tol, 
+c     *init, prec, maxite, theta, nlaht, score, varht, c, d, wk(iqraux), 
+c     *wk(ijpvt), wk(itwk), wk(itraux), wk(iqwk), wk(iywk), wk(ithewk), 
+c     *wk(ihes), wk(igra), wk(ihwk1), wk(ihwk2), wk(igwk1), wk(igwk2), 
+c     *wk(ipvtwk), wk(ikwk), wk(iwork1), wk(iwork2), info)
       return
       end
       subroutine dmudrnew (vmu, s, lds, nobs, nnull, q,q1, q2, ldqr, 
@@ -1487,7 +1500,7 @@ c      character*2 vmu
       if(.not.( mtol .lt. tol1 ))goto 23002
       mtol = tol1
 23002 continue
-c     23004 continue
+23004 continue
       maxiter2 = maxiter2 - 1
       j=1
 23007 if(.not.(j.le.nobs))goto 23009
@@ -1566,7 +1579,8 @@ c      if(.not.(vmu .eq. 'u~'))
       info = -6
       goto 23006
 23037 continue
-c     23005 goto 23004
+cc    23005 goto 23004
+      goto 23004
 23006 continue
       return
       end
@@ -1809,7 +1823,7 @@ c      character*2 vmu
       if(.not.( mtol .lt. tol1 ))goto 23002
       mtol = tol1
 23002 continue
-c     23004 continue
+23004 continue
       maxiter = maxiter - 1
       j=1
 23007 if(.not.(j.le.nobs))goto 23009
@@ -1886,7 +1900,8 @@ c      if(.not.(vmu .eq. 'u~'))
       info = -4
       goto 23006
 23038 continue
-c     23005 goto 23004
+cc    23005 goto 23004
+      goto 23004
 23006 continue
       return
       end
@@ -2561,7 +2576,7 @@ c
       goto 23031
 23033 continue
       return
-      end
+      end  
       subroutine dstup (s, lds, nobs, nnull, qraux, jpvt, y, q, ldqr, 
      *ldqc, nq, info, work, dum)
       integer lds, nobs, nnull, jpvt(*), ldqr, ldqc, nq, info
@@ -2688,6 +2703,7 @@ c      if(.not.( vmu .eq. 'u' ))
 23020 continue
       return
       end
+
       subroutine dsytr (x, ldx, n, tol, info, work)
       integer ldx, n, info
       double precision x(ldx,*), tol, work(*)
@@ -2754,4 +2770,3 @@ c      if(.not.( vmu .eq. 'u' ))
       x(n-1,n) = x(n,n-1)
       return
       end
-

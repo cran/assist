@@ -47,9 +47,9 @@
      *limnla, nlaht, score, varht, c, d, qraux, jpvt, wk, info)
 c      character*1 vmu
       integer vmu
-      integer lds, nobs, nnull, ldq, job, jpvt(*), info, nq
+      integer lds, nobs, nnull, ldq, job, jpvt(*), info
       double precision s(lds,*), y(*), q(ldq,*), tol, limnla(2), nlaht, 
-     *score(*), varht(2), c(*), d(*), qraux(*), wk(*)
+     *score(*), varht(2), c(*), d(*), qraux(*), wk(*), dum(1)
       info = 0
       if(.not.( nnull .lt. 0 .or. nnull .ge. nobs .or. nobs .gt. lds 
      *.or. nobs .gt. ldq ))goto 23000
@@ -72,9 +72,11 @@ c      if(.not.( vmu .ne. 'v' .and. vmu .ne. 'm' .and. vmu .ne. 'u' ))
      * d, info, wk)
       return
 23004 continue
+c      call dstup (s, lds, nobs, nnull, qraux, jpvt, y, q, ldq, nobs, 1, 
+c     *info, wk)
       nq = 1
       call dstup (s, lds, nobs, nnull, qraux, jpvt, y, q, ldq, nobs, nq, 
-     *info, wk)
+     *info, wk, dum)
       if(.not.( info .ne. 0 ))goto 23008
       return
 23008 continue
@@ -182,14 +184,14 @@ c      if(.not.( vmu .eq. 'u' ))
      *twk(2,*), 
      *qwk(nobs,*), ywk(*), thewk(*), hes(nq,*), gra(*), hwk1(nq,*), 
      *hwk2(nq,*), gwk1(*), gwk2(*), kwk(nobs-nnull,nobs-nnull,*), work1(
-     **), work2(*)
+     **), work2(*), dum(1)
 c      character*1 vmu
       integer vmu
       double precision alph, scrold, scrwk(1), nlawk, limnla(2), tmp, 
      *dasum, ddot
       integer n, n0, i, j, iwk, maxitwk, idamax, job
-      info = 0
-      n0 = nnull
+      info = 0     
+      n0 = nnull 
       n = nobs - nnull
       maxitwk = maxite
 c      if(.not.( (vmu .ne. 'v' .and. vmu .ne. 'm' .and. vmu .ne. 'u') 
@@ -206,7 +208,9 @@ c      if(.not.( (vmu .ne. 'v' .and. vmu .ne. 'm' .and. vmu .ne. 'u')
 23002 continue
       if(.not.( n0 .gt. 0 ))goto 23004
       call dstup (s, lds, nobs, n0, qraux, jpvt, y, q, ldqr, ldqc, nq, 
-     *info, work1)
+     *info, work1, dum)
+c     *info, work1)
+
 23004 continue
       if(.not.( info .ne. 0 ))goto 23006
       return

@@ -1,5 +1,5 @@
 Package: assist
-Version: 3.1.4
+Version: 3.1.5
 Title: A Suite of R Functions Implementing Spline Smoothing Techniques
 Author: Yuedong Wang <yuedong@pstat.ucsb.edu>, and
  Chunlei Ke <chunlei_ke@yahoo.com>.
@@ -8,7 +8,7 @@ Depends: R (>= 3.0.2), nlme, lattice
 Description: A comprehensive package for fitting various non-parametric/semi-parametric linear/nonlinear fixed/mixed smoothing spline models.
 License: GPL (>= 2)
 URL: http://www.pstat.ucsb.edu/faculty/yuedong/software.html
-Packaged: 2019-06-01 17:36:49 UTC; yuedong
+Packaged: 2019-06-13 23:41:04 UTC; yuedong
 NeedsCompilation: yes
 Repository: CRAN
-Date/Publication: 2019-06-02 15:30:03 UTC
+Date/Publication: 2019-06-15 18:00:03 UTC
