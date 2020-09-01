@@ -5,7 +5,7 @@
 Returns an object of class ssr which is a general/generalized/correlated smoothing spline fit. 
 }
 \usage{
-ssr(formula, rk, data = sys.parent(), subset, weights = NULL, 
+ssr(formula, rk, data = list(), subset, weights = NULL, 
 	correlation = NULL, family = "gaussian", scale = FALSE, 
 	spar = "v", varht = NULL, limnla = c(-10, 3), control = list())
 }
@@ -82,7 +82,7 @@ Wang, Y. (1995). GRKPACK: Fitting Smoothing Spline ANOVA Models for Exponential 
 Wang, Y. (1998) Smoothing Spline Models with Correlated Random Errors. JASA, 93:341-348.
 
 Ke, C. and Wang, Y. (2002) ASSIST: A Suite of S-plus functions Implementing Spline smoothing Techniques. 
-Available at: \url{http://www.pstat.ucsb.edu/faculty/yuedong }}
+Available at: \url{http://yuedong.faculty.pstat.ucsb.edu }}
 \author{Yuedong Wang \email{yuedong@pstat.ucsb.edu} and Chunlei Ke \email{chunlei\_ke@yahoo.com} }
 
 \seealso{ \code{\link{deviance.ssr}}, \code{\link{hat.ssr}},  \code{\link{plot.ssr}}, \code{\link{ssr.control}},  

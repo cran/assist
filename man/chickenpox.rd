@@ -20,6 +20,6 @@ year a numeric vector representing the year when the cases were reported.
 \details{ This data frame contains monthly number of reported cases of chickenpox in New York City from 1931 to the first six months of 1972.}
 
 \section{Source}{
-The data were downloaded from \url{http://www-personal.buseco.monash.edu.au/~hyndman/TSDL}.
+The data were downloaded from \url{https://robjhyndman.com/tsdl/}.
 }
 \keyword{datasets}

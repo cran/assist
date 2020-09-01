@@ -9,7 +9,7 @@ in the formulation described in Ke and Wang (2001). Current version only allows 
 functions.
 }
 \usage{
-snm(formula, func, data=sys.parent(), fixed, random=fixed, 
+snm(formula, func, data=list(), fixed, random=fixed, 
 groups, start, spar="v", verbose=FALSE, method="REML", control=NULL, 
 correlation=NULL, weights=NULL)
 }

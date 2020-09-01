@@ -8,7 +8,7 @@ Returns an object of class \code{slm} that represents a
 semi-parametric linear mixed effects model fit. 
 }
 \usage{
-slm(formula, rk, data=sys.parent(), random, weights=NULL, 
+slm(formula, rk, data=list(), random, weights=NULL, 
 correlation=NULL, control=list(apVar=FALSE))
 }
 \arguments{

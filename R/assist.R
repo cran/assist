@@ -1283,7 +1283,7 @@ function(job = -1, tol = 0, init = 0, theta = NULL, prec = 1e-006, maxit = 30,
 		maxit.g) 
 } 
 ssr<-
-function (formula, rk, data = sys.parent(), subset, weights = NULL, 
+function (formula, rk, data = list(), subset, weights = NULL, 
     correlation = NULL, family = "gaussian", scale = FALSE, spar = "v", 
     varht = NULL, limnla = c(-10, 3), control = list()) 
 {
@@ -1292,7 +1292,7 @@ function (formula, rk, data = sys.parent(), subset, weights = NULL,
     m$rk <- m$family <- m$correlation <- m$scale <- m$spar <- m$weights <- m$control <- m$scale <- m$varht <- m$limnla <- m$theta <- NULL
     m$na.action <- na.fail
     m[[1]] <- as.name("model.frame")
-    m1 <- eval(m, sys.parent())
+    m1 <- eval(m, parent.frame())
     Terms <- attr(m1, "terms")
     y <- model.extract(m1, "response")
 #  y<- eval(getResponseFormula(formula)[[2]], data)
@@ -1312,7 +1312,7 @@ function (formula, rk, data = sys.parent(), subset, weights = NULL,
         }
         for (var in intersect(varName, names(data))) data[[var]] <- ident(data[[var]])
         m$data <- data
-        m <- eval(m, sys.parent())
+        m <- eval(m, parent.frame())
         Terms <- attr(m, "terms")
         S <- model.matrix(Terms, m, NULL)
     }
@@ -2167,7 +2167,7 @@ function (object, residuals = FALSE, ...)
 
 #### NNR-Part
 nnr<- function(formula, func, spar="v", 
-               data=sys.parent(), start=list(), verbose=FALSE,  control=list()) 
+               data=list(), start=list(), verbose=FALSE,  control=list()) 
 { 
 ## fit a general nonlinear spline model 
 ## using backfitting algorithm 
@@ -2597,11 +2597,12 @@ intervals.nnr<- function(object, level=0.95, newdata=NULL, terms, pstd=TRUE, ...
 
 ### SNR-part
 snr<-
-function (formula, func, params, data = sys.parent(), start, 
+function (formula, func, params, data, start, 
     spar = "v", verbose = FALSE, control = list(), correlation = NULL, 
     weights = NULL) 
 {
     thisCall <- match.call()
+    if (missing(data)) data=0
     y <- eval(getResponseFormula(formula)[[2]], data)
     nobs <- length(y)
     f.info <- getFunInfo(func)
@@ -3330,7 +3331,7 @@ intervals.snr<- function(object, level=0.95, newdata=NULL, terms=list(), pstd=TR
 ## SLM-part
 slm<- function(formula,
                rk,
-               data=sys.parent(), 
+               data=list(), 
                random,
                weights=NULL,
                correlation=NULL,               
@@ -3341,7 +3342,7 @@ slm<- function(formula,
   m<- match.call(expand.dots=FALSE)
   m$rk<- m$random<- m$correlation  <- m$weights<- m$scale<- m$control<- NULL
   m[[1]] <- as.name("model.frame")
-  m1<- eval(m, sys.parent())
+  m1<- eval(m, parent.frame())
   Terms <- attr(m1, "terms")
   y <- model.extract(m1, "response")
 #  y<- eval(getResponseFormula(formula)[[2]], data)
@@ -3423,14 +3424,8 @@ slm<- function(formula,
    }
    else grpOrder<- NULL
 ## call lme        		
-        if(missing(data)){     
-             lme.obj<- lme(formula, control=control, random=tmp1,
-                   correlation=correlation, weights=weights)
-        }
-        else{
-          lme.obj<- lme(formula, control=control, random=tmp1,
+   lme.obj<- lme(formula, control=control, random=tmp1,
                    correlation=correlation, weights=weights, data=slmData)
-        }
 
 ## get back to old cor formula
         if(!is.null(correlation) && !is.null(cor.form.new)) 
@@ -3833,12 +3828,12 @@ function(object,level=0.95,  newdata = NULL, terms, pstd = TRUE, ...)
 ### SNM-part
 snm<- function(formula,
              func,
-             data=sys.parent(),
+             data=list(),
              fixed, 
              random=fixed,
              groups,
              start,
-	     spar="v",
+             spar="v",
              verbose=FALSE,
              method="REML",                                      
              control=NULL,
@@ -4019,7 +4014,7 @@ snm<- function(formula,
      if(exists(funcName[i], envir=.env)) oldF[[i]]<-eval(parse(text=funcName[i]), envir=.env)
      else oldF[[i]]<-FALSE 
   } 
-
+  if (missing(data)) data=0  
   repeat{
     k<- k+1
     if(verbose==TRUE) cat("\nIteration ", k, "\n")     

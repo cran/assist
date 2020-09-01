@@ -7,7 +7,7 @@ Fit A Semi-parametric Nonlinear Regression Model
 This generic function fits a Semi-parametric Nonlinear Regression Model as formulated in Ke (2000).
 }
 \usage{
-snr(formula, func, params, data = sys.parent(), start, 
+snr(formula, func, params, data, start, 
     spar = "v", verbose = FALSE, control = list(), correlation = NULL, 
     weights = NULL) 
 }
