@@ -35,7 +35,7 @@ an object of class \code{bCI} is returned, which is a list of length 2. Its firs
 \references{ 
 Wahba, G. (1990). Spline Models for Observational Data. SIAM, Vol. 59.
 }
-\author{Chunlei Ke \email{chunlei\_ke@yahoo.com} and Yuedong Wang \email{yuedong@pstat.ucsb.edu}.}
+\author{Chunlei Ke \email{chunlei_ke@yahoo.com} and Yuedong Wang \email{yuedong@pstat.ucsb.edu}.}
 \seealso{
 \code{\link{ssr}}, \code{\link{plot.bCI}}
 }

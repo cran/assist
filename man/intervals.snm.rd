@@ -58,7 +58,7 @@ confidence intervals as formulated in Ke and Wang (2001).
 Ke, C. and Wang, Y. (2001). Semi-parametric Nonlinear Mixed Effects 
 Models and Their Applications. JASA 96:1272-1298.
 }
-\author{Chunlei Ke \email{chunlei\_ke@yahoo.com} and Yuedong Wang \email{yuedong@pstat.ucsb.edu}.}
+\author{Chunlei Ke \email{chunlei_ke@yahoo.com} and Yuedong Wang \email{yuedong@pstat.ucsb.edu}.}
 \seealso{
 \code{\link{snm}}, \code{\link{plot.bCI}}, \code{\link{predict.ssr}}
 }

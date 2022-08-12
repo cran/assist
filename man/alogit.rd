@@ -14,7 +14,7 @@ alogit(x)
 \value{
  Returned is \eqn{e^x/(1+e^x)}.
 }
-\author{Chunlei ke \email{chunlei\_ke@yahoo.com} and Yuedong Wang \email{yuedong@pstat.ucsb.edu}}
+\author{Chunlei ke \email{chunlei_ke@yahoo.com} and Yuedong Wang \email{yuedong@pstat.ucsb.edu}}
 \keyword{file}
 
 

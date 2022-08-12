@@ -51,7 +51,7 @@ A nonlinear nonparametric model is fitted using the algorithms developed in Ke a
 \references{
 Ke, C. and Wang, Y. (2002). Nonlinear Nonparametric Regression Models. Submitted.
 }
-\author{Chunlei Ke \email{chunlei\_ke@yahoo.com} and Yuedong Wang \email{yuedong@pstat.ucsb.edu}.}
+\author{Chunlei Ke \email{chunlei_ke@yahoo.com} and Yuedong Wang \email{yuedong@pstat.ucsb.edu}.}
 \seealso{
 \code{\link{nnr.control}}, \code{\link{ssr}}, \code{\link{print.nnr}}, \code{\link{summary.nnr}}, \code{\link{intervals.nnr}}
 }

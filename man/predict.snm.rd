@@ -33,7 +33,7 @@ Wahba, G. (1990). Spline Models for Observational Data. SIAM, Vol. 59.
 Ke, C. and Wang, Y. (2001). Semi-parametric Nonlinear Mixed Effects Models and
 Their Applications. JASA.
 }
-\author{Chunlei Ke \email{chunlei\_ke@pstat.ucsb.edu} and Yuedong Wang \email{yuedong@pstat.ucsb.edu}}
+\author{Chunlei Ke \email{chunlei_ke@yahoo.com} and Yuedong Wang \email{yuedong@pstat.ucsb.edu}}
 \seealso{
 \code{\link{snm}}, \code{\link{predict}}
 }

@@ -25,7 +25,7 @@ The following components must be included in a legitimate \code{ssr} object:
 \item{scale}{a logical value, specifying if scaling is used.}
 }
 
-\author{Chunlei Ke \email{chunlei\_ke@yahoo.com} and Yuedong Wang \email{yuedong@pstat.ucsb.edu}}
+\author{Chunlei Ke \email{chunlei_ke@yahoo.com} and Yuedong Wang \email{yuedong@pstat.ucsb.edu}}
 
 \seealso{
 \code{\link{ssr}}, \code{\link{predict.ssr}}, \code{\link{summary.ssr}}, 

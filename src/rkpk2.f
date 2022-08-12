@@ -2,8 +2,8 @@
      *nlaht, c, d, info, twk)
       integer lds, nobs, nnull, jpvt(*), ldq, info
       double precision s(lds,*), qraux(*), z(*), q(ldq,*), nlaht, c(*), 
-     *d(*), twk(2,*)
-      double precision dum, ddot
+     *d(*), twk(2,*), dum(1)
+      double precision ddot
       integer n, n0
       info = 0
       if(.not.( nnull .lt. 0 .or. nnull .ge. nobs .or. nobs .gt. lds 
@@ -95,8 +95,8 @@ c      character*1 vmu
       integer vmu
       integer ldq, nobs, nnull, job, info
       double precision q(ldq,*), tol, z(*), limnla(2), nlaht, score(*), 
-     *varht(2), twk(2,*), work(*)
-      double precision dum, low, upp, dasum, mchpr
+     *varht(2), twk(2,*), work(*), dum(1)
+      double precision dum1, low, upp, dasum, mchpr
       integer n0, n, j
       info = 0
 c      if(.not.( vmu .ne. 'v' .and. vmu .ne. 'm' .and. vmu .ne. 'u' ))
@@ -152,20 +152,20 @@ c      if(.not.( vmu .eq. 'u' ))
 23010 continue
       call deval (vmu, q(n0+1,n0+1), ldq, n, z(n0+1), job, low, upp, 
      *nlaht, score, varht, info, twk, work)
-      dum = dfloat (nobs) / dfloat (n)
+      dum1 = dfloat (nobs) / dfloat (n)
       j=1
 23018 if(.not.(j.le.job+1))goto 23020
 c      if(.not.( vmu .eq. 'v' ))
       if(.not.( vmu .eq. 0 ))goto 23021
-      score(j) = score(j) * dum
+      score(j) = score(j) * dum1
 23021 continue
 c      if(.not.( vmu .eq. 'm' ))
       if(.not.( vmu .eq. 1 ))goto 23023
-      score(j) = score(j) / dum
+      score(j) = score(j) / dum1
 23023 continue
 c      if(.not.( vmu .eq. 'u' ))
       if(.not.( vmu .eq. 2 ))goto 23025
-      score(j) = score(j) / dum + 2.d0 * varht(1)
+      score(j) = score(j) / dum1 + 2.d0 * varht(1)
 23025 continue
       j=j+1
       goto 23018
@@ -188,7 +188,7 @@ c      if(.not.( vmu .eq. 'u' ))
 c      character*1 vmu
       integer vmu
       double precision alph, scrold, scrwk(1), nlawk, limnla(2), tmp, 
-     *dasum, ddot
+     *dasum, ddot 
       integer n, n0, i, j, iwk, maxitwk, idamax, job
       info = 0     
       n0 = nnull 
@@ -254,7 +254,7 @@ c     *info, work1)
       call dcoef (s, lds, nobs, n0, qraux, jpvt, ywk, qwk, nobs, nlawk, 
      *c, d, info, twk)
       if(.not.( n0 .gt. 0 ))goto 23026
-      call dqrsl (s, lds, nobs, n0, qraux, c, tmp, c, tmp, tmp, tmp, 
+      call dqrsl (s, lds, nobs, n0, qraux, c, dum, c, dum, dum, dum, 
      *01000, info)
 23026 continue
       i=1
@@ -447,8 +447,8 @@ c     *info, work1)
      * r, ldr, nr, cr, ldcr, dr, lddr, wk, info)
       integer lds, nobs, nnull, jpvt(*), ldq, ldr, nr, ldcr, lddr, info
       double precision s(lds,*), qraux(*), q(ldq,*), nlaht, r(ldr,*), 
-     *cr(ldcr,*), dr(lddr,*), wk(2,*)
-      double precision dum, ddot
+     *cr(ldcr,*), dr(lddr,*), wk(2,*), dum(1)
+      double precision ddot
       integer i, j, n, n0
       info = 0
       if(.not.( nnull .lt. 0 .or. nnull .ge. nobs .or. nobs .gt. lds 

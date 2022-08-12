@@ -34,7 +34,7 @@ Journal of Computational and Graphical Statistics 55, 353--368.
 Gu, C. and Wahba, G. (1993b). Semiparametric analysis of variance with tensor product thin plate
 splines. JRSS B 55, 353--368. 
 }
-\author{Chunlei Ke \email{chunlei\_ke@pstat.ucsb.edu} and Yuedong Wang \email{yuedong@pstat.ucsb.edu}}
+\author{Chunlei Ke \email{chunlei_ke@yahoo.com} and Yuedong Wang \email{yuedong@pstat.ucsb.edu}}
 \seealso{\code{\link{kron}}, \code{\link{ssr}}}
 \examples{
 \dontrun{

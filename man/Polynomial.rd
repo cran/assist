@@ -36,7 +36,7 @@ evaluated at (s[i], t[j]).
 \references{
 Wahba, G. (1990). Spline Models for Observational Data. SIAM, Vol. 59.
 }
-\author{Chunlei Ke \email{chunlei\_ke@pstat.ucsb.edu} and Yuedong Wang \email{yuedong@pstat.ucsb.edu}}
+\author{Chunlei Ke \email{chunlei_ke@yahoo.com} and Yuedong Wang \email{yuedong@ucsb.edu}}
 \seealso{
 \code{\link{ssr}}, \code{\link{linear2}}, \code{\link{cubic2}}, 
 \code{\link{quintic2}}, \code{\link{septic2}}

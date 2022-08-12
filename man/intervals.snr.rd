@@ -54,7 +54,7 @@ intervals as formulated in Ke (2000).
 Ke, C. (2000). Semi-parametric Nonlinear Regression and Mixed Effects 
 Models. PhD thesis, University of California, Santa Barbara.
 }
-\author{Chunlei Ke \email{chunlei\_ke@pstat.ucsb.edu} and Yuedong Wang \email{yuedong@pstat.ucsb.edu}}
+\author{Chunlei Ke \email{chunlei_ke@yahoo.com} and Yuedong Wang \email{yuedong@pstat.ucsb.edu}}
 \seealso{
 \code{\link{snr}}, \code{\link{plot.bCI}}, \code{\link{predict.ssr}}
 }

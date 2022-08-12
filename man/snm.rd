@@ -89,7 +89,7 @@ Their Applications. JASA 96:1272-1298.
 Pinheiro, J.C. and Bates, D. M. (2000). Mixed-Effects Models in S
 and S-PLUS. Springer.
 }
-\author{Chunlei Ke \email{chunlei\_ke@yahoo.com} and Yuedong Wang \email{yuedong@pstat.ucsb.edu}.}
+\author{Chunlei Ke \email{chunlei_ke@yahoo.com} and Yuedong Wang \email{yuedong@pstat.ucsb.edu}.}
 \seealso{
 \code{\link{predict.snm}}, \code{\link{intervals.snm}}, \code{\link{snm.control}},
 \code{\link{print.snm}},\code{\link{summary.snm}}

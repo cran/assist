@@ -15,7 +15,7 @@ Print the arguments of a \code{summary.snr} object
  This is a method for  the  function \code{print}  for  objects
        inheriting from class \code{summary.snr}. 
 }
-\author{Chunlei Ke \email{chunlei\_ke@pstat.ucsb.edu} and Yuedong Wang \email{yuedong@pstat.ucsb.edu}}
+\author{Chunlei Ke \email{chunlei_ke@yahoo.com} and Yuedong Wang \email{yuedong@pstat.ucsb.edu}}
 \seealso{
    \code{\link{snr}}, \code{\link{summary.snr}}
 }

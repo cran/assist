@@ -48,7 +48,7 @@ in Wang (1998).
 \references{
 Wang, Y. (1998). Mixed-effects smoothing spline ANOVA. Journal of the Royal Statistical Society, Series B 60, 159-174.
 }
-\author{Chunlei Ke \email{chunlei\_ke@pstat.ucsb.edu} and Yuedong Wang \email{yuedong@pstat.ucsb.edu}}
+\author{Chunlei Ke \email{chunlei_ke@yahoo.com} and Yuedong Wang \email{yuedong@pstat.ucsb.edu}}
 \seealso{
 \code{\link{slm}}, \code{\link{plot.bCI}}, \code{\link{predict.ssr}}
 }

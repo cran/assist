@@ -17,7 +17,7 @@ Summarize a \code{nnr} object
 This is a method for the function  \code{summary}  for  objects inheriting from class
  \code{nnr}.  See summary for the general behavior of this function.
 }
-\author{Chunlei Ke \email{chunlei\_ke@yahoo.com} and Yuedong Wang \email{yuedong@pstat.ucsb.edu}}
+\author{Chunlei Ke \email{chunlei_ke@yahoo.com} and Yuedong Wang \email{yuedong@pstat.ucsb.edu}}
 \seealso{
 \code{\link{nnr}}, \code{\link{print.nnr}}
 }

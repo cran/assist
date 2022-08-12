@@ -16,7 +16,7 @@ applying the anova.ssr method to an ssr object.
 }
 \item{\dots}{other available arguments, currently unused.}
 }
-\author{Chunlei Ke \email{chunlei\_ke@pstat.ucsb.edu} and Yuedong Wang \email{yuedong@pstat.ucsb.edu}}
+\author{Chunlei Ke \email{chunlei_ke@yahoo.com} and Yuedong Wang \email{yuedong@pstat.ucsb.edu}}
 \seealso{
 \code{\link{anova.ssr}}, \code{\link{ssr}}
 }

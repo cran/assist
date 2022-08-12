@@ -45,7 +45,7 @@ Wahba, G. (1990). Spline Models for Observational Data. SIAM, Vol. 59.
 Gu, C. and Wahba, G (1993). Smoothing Spline ANOVA with component-wise Bayesian confidence intervals.
 Journal of Computational and Graphical Statistics 55, 353--368.
 }
-\author{Chunlei Ke \email{chunlei\_ke@yahoo.com} and Yuedong Wang \email{yuedong@pstat.ucsb.edu}}
+\author{Chunlei Ke \email{chunlei_ke@yahoo.com} and Yuedong Wang \email{yuedong@pstat.ucsb.edu}}
 \seealso{
 \code{\link{ssr}}, \code{\link{cubic}}
 }

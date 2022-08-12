@@ -17,7 +17,7 @@ The \eqn{[i, j]} element is the reproducing kernel evaluated at the ith element 
 
 \code{shink0} shrinks towards zero, and \code{shrink1} shinks towards the mean. 
 }
-\author{Chunlei Ke \email{chunlei\_ke@pstat.ucsb.edu} and Yuedong Wang \email{yuedong@pstat.ucsb.edu}}
+\author{Chunlei Ke \email{chunlei_ke@yahoo.com} and Yuedong Wang \email{yuedong@pstat.ucsb.edu}}
 \seealso{
 \code{\link{shrink0}},\code{\link{ssr}}
 }

@@ -31,7 +31,7 @@ This function is to visualize a spline fit by use of trellis graphic facility
 with Bayesian confidence intervals superposed. Multi-panel plots, based on xyplot,
 are suitable for SS ANOVA decomposition of a spline estimate. 
 }
-\author{Chunlei Ke \email{chunlei\_ke@pstat.ucsb.edu} and Yuedong Wang \email{yuedong@pstat.ucsb.edu}}
+\author{Chunlei Ke \email{chunlei_ke@yahoo.com} and Yuedong Wang \email{yuedong@pstat.ucsb.edu}}
 \seealso{
 \code{\link{predict.ssr}}, \code{\link{intervals.slm}}, 
 \code{\link{intervals.snr}}, \code{\link{intervals.snm}}

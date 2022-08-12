@@ -423,6 +423,9 @@ c      character*1 vmu
       double precision trc, det, dum, ddot, wk(1)
       integer i, j, m
       info = 0
+      det = 0.d0
+      dum = 0.d0
+      trc = 0.d0
       call dset (nq, 0.d0, gra, 1)
       call dset (nq*nq, 0.d0, hes, 1)
 c      if(.not.( vmu .ne. 'v' .and. vmu .ne. 'm' .and. vmu .ne. 'u' ))
@@ -799,6 +802,9 @@ c      character*1 vmu
       double precision tmp, minscr, mlo, varhtwk(2)
       integer j
       info = 0
+      minscr = 0.d0
+      varhtwk(1) = 0.d0
+      varhtwk(2) = 0.d0
       if(.not.( upp .lt. low ))goto 23000
       mlo = low
       low = upp

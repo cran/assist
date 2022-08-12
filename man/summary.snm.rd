@@ -17,7 +17,7 @@ Summarize a \code{snm} object
 This is a method for the function  \code{summary}  for  objects inheriting from class
  \code{snm}. 
 }
-\author{Chunlei Ke \email{chunlei\_ke@yahoo.com} and Yuedong Wang \email{yuedong@pstat.ucsb.edu}}
+\author{Chunlei Ke \email{chunlei_ke@yahoo.com} and Yuedong Wang \email{yuedong@pstat.ucsb.edu}}
 \seealso{
 \code{\link{snm}}, \code{\link{print.snm}}
 }

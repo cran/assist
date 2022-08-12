@@ -53,7 +53,7 @@ Wang, Y. (1998) Mixed Effects Smoothing Spline ANOVA. JRSS, Series B, 60:159--17
 
 Pinherio, J. C. and Bates, D. M. (2000) Mixed-effects Models in S and S-Plus. Springer.       
 }
-\author{Chunlei Ke \email{chunlei\_ke@yahoo.com} and Yuedong Wang \email{yuedong@pstat.ucsb.edu}.}
+\author{Chunlei Ke \email{chunlei_ke@yahoo.com} and Yuedong Wang \email{yuedong@pstat.ucsb.edu}.}
 \seealso{
 \code{\link{ssr}}, \code{\link{predict.slm}}, \code{\link{intervals.slm}},
 \code{\link{print.slm}},\code{\link{summary.slm}}

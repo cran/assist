@@ -37,7 +37,7 @@ assess convergence, and "PRSS" uses penalized residual sums of squares. Default 
 \value{
 Returned is a list includes all re-seted control parameters.
 }
-\author{Chunlei Ke \email{chunlei\_ke@pstat.ucsb.edu} and Yuedong Wang \email{yuedong@pstat.ucsb.edu}}
+\author{Chunlei Ke \email{chunlei_ke@yahoo.com} and Yuedong Wang \email{yuedong@pstat.ucsb.edu}}
 \seealso{
 \code{\link{snm}}, \code{\link{dsidr}}, \code{\link{dmudr}}
 }

@@ -16,7 +16,7 @@ nnr.control(job = -1, tol = 0, max.iter = 50, init = 0, limnla = c(-10,
   an integer representing the optimization method used to find the smoothing parameter. 
 The options are job=-1: golden-section search on (limnla(1), limnla(2)); 
 job=0: golden-section search with interval specified automatically; 
-job >0: regular grid search on  [limnla(1), limnla(2)] with \#(grids) = job + 1. 
+job >0: regular grid search on  [limnla(1), limnla(2)] with the number of grids = job + 1. 
 Default is -1. 
   }
 \item{ tol }{
@@ -50,7 +50,7 @@ Default is -1.
 }
 \value{returned is a list includes all re-seted control parameters.
 }
-\author{Chunlei Ke \email{chunlei\_ke@pstat.ucsb.edu} and Yuedong Wang \email{yuedong@pstat.ucsb.edu}}
+\author{Chunlei Ke \email{chunlei_ke@yahoo.com} and Yuedong Wang \email{yuedong@pstat.ucsb.edu}}
 \seealso{
 \code{\link{nnr}}, \code{\link{dsidr}},\code{\link{dmudr}}
 }

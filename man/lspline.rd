@@ -44,7 +44,7 @@ Wahba, G. (1990). Spline Models for Observational Data. SIAM, Vol. 59.
 Heckman, N and Ramsay, J. O. (2000). Penalised regression with model-based penalties.
 To appear in Canadian Journal of Statisitcs.
 }
-\author{Chunlei Ke \email{chunlei\_ke@pstat.ucsb.edu} and Yuedong Wang \email{yuedong@pstat.ucsb.edu}}
+\author{Chunlei Ke \email{chunlei_ke@yahoo.com} and Yuedong Wang \email{yuedong@pstat.ucsb.edu}}
 \seealso{
 \code{\link{ssr}}
 }

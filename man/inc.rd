@@ -41,7 +41,7 @@ This function is to fit a increasing fucntion to the data. The monotone function
 \value{
 a split fit together with the convergence information
 }
-\author{Yuedong Wang \email{yuedong@pstat.ucsb.edu} and Chunlei Ke \email{chunlei\_ke@yahoo.com} }
+\author{Yuedong Wang \email{yuedong@pstat.ucsb.edu} and Chunlei Ke \email{chunlei_ke@yahoo.com} }
 \seealso{
 \code{ssr}
 }

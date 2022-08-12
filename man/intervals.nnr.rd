@@ -53,7 +53,7 @@ intervals as formulated in Ke and Wang (2002).
 \references{
 Ke, C. and Wang, Y. (2002). Nonlinear Nonparametric Regression Models. Submitted.
 }
-\author{Chunlei Ke \email{chunlei\_ke@pstat.ucsb.edu} and Yuedong Wang \email{yuedong@pstat.ucsb.edu}}
+\author{Chunlei Ke \email{chunlei_ke@yahoo.com} and Yuedong Wang \email{yuedong@pstat.ucsb.edu}}
 \seealso{
 \code{\link{nnr}}, \code{\link{plot.bCI}}
 }

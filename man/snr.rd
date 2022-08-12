@@ -85,7 +85,7 @@ and S-PLUS. Springer.
 
 Wahba, G. (1990). Spline Models for Observational Data. SIAM, Vol. 59.
 }
-\author{Chunlei Ke \email{chunlei\_ke@yahoo.com} and Yuedong Wang \email{yuedong@pstat.ucsb.edu}.}
+\author{Chunlei Ke \email{chunlei_ke@yahoo.com} and Yuedong Wang \email{yuedong@pstat.ucsb.edu}.}
 \seealso{
 \code{\link{intervals.snr}},  \code{\link{predict.snr}}, \code{\link{snr.control}}
 }

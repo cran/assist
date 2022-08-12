@@ -34,7 +34,7 @@ with elements equal to the bases of \eqn{H_0} evaluated at design points. Defaul
   an integer representing the optimization method used to find the smoothing parameter. 
 The  options are job=-1: golden-section search on (limnla(1), limnla(2)); 
 job=0: golden-section search with interval specified automatically; 
-job >0: regular grid search on  \eqn{[limnla(1), limnla(2)]} with \#(grids) = job + 1. Default is -1. 
+job >0: regular grid search on  \eqn{[limnla(1), limnla(2)]} with the number of grids = job + 1. Default is -1. 
   }
   \item{tol }{
   tolerance for truncation used in `dsidr'. Default is 0.0, which sets to square of machine precision.
@@ -91,7 +91,7 @@ Gu, C. (1989). RKPACK and its applications: Fitting smoothing spline models. Pro
 
 Wahba, G. (1990). Spline Models for Observational Data. SIAM, Vol. 59.
 }
-\author{Chunlei Ke \email{chunlei\_ke@pstat.ucsb.edu} and Yuedong Wang \email{yuedong@pstat.ucsb.edu}}
+\author{Chunlei Ke \email{chunlei_ke@yahoo.com} and Yuedong Wang \email{yuedong@pstat.ucsb.edu}}
 \seealso{
 \code{\link{dmudr}}, \code{\link{gdsidr}}, \code{\link{gdmudr}}, \code{\link{ssr}}
 }

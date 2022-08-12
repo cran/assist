@@ -43,7 +43,7 @@ snr.control(rkpk.control = list(job = -1, tol = 0, init = 0, limnla = c(-10,
 \value{
 returned is a list includes all re-seted control parameters.
 }
-\author{Chunlei Ke \email{chunlei\_ke@yahoo.com} and Yuedong Wang \email{yuedong@pstat.ucsb.edu}.}
+\author{Chunlei Ke \email{chunlei_ke@yahoo.com} and Yuedong Wang \email{yuedong@pstat.ucsb.edu}.}
 \seealso{
 \code{\link{snr}}, \code{\link{dsidr}}, \code{\link{dmudr}}
 }

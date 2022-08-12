@@ -13,7 +13,7 @@ ssr.control(job=-1, tol=0.0, init=0.0, theta, prec=1e-06,
 an integer representing the optimization method used to find the smoothing parameter. 
 The options are job=-1: golden-section search on (limnla(1), limnla(2)); 
 job=0: golden-section search with interval specified automatically; 
-job >0: regular grid search on \eqn{[limnla(1), limnla(2)]} with \#(grids) = job + 1. 
+job >0: regular grid search on \eqn{[limnla(1), limnla(2)]} with the number of grids = job + 1. 
 Default is -1. This is only applicable to smoothing spline model with 
 a single smoothing parameter.
 }

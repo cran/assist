@@ -12,7 +12,7 @@
 a matrix with the numbers of row and column equal to the length of x and y respectively. 
 The [i, j] element is the reproducing kernel evaluated at the ith element of x and jth element of y.
 }
-\author{Chunlei Ke \email{chunlei\_ke@pstat.ucsb.edu} and Yuedong Wang \email{yuedong@pstat.ucsb.edu}}
+\author{Chunlei Ke \email{chunlei_ke@yahoo.com} and Yuedong Wang \email{yuedong@pstat.ucsb.edu}}
 \seealso{
 \code{\link{kronecker}},\code{\link{ssr}}
 }

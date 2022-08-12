@@ -39,7 +39,7 @@ The first plot of estimate of function with CIs is only useful for univariate sm
 When ask=TRUE, rather than produce  each  plot  sequentially,  plot.ssr  displays a menu listing all the plots that can be produced. If the menu is not desired but a  pause  between plots  is  still  wanted  one  must  set par(ask=TRUE) before
 invoking this command with argument ask=FALSE.
 }
-\author{Chunlei Ke \email{chunlei\_ke@pstat.ucsb.edu} and Yuedong Wang \email{yuedong@pstat.ucsb.edu}}
+\author{Chunlei Ke \email{chunlei_ke@yahoo.com} and Yuedong Wang \email{yuedong@pstat.ucsb.edu}}
 \seealso{
 \code{plot}, \code{ssr}, \code{predict.ssr}
 }

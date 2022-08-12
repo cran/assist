@@ -41,7 +41,7 @@ Methods further developed in  Liu and Wang (2004) and Liu, Meiring and Wang (200
 \value{
    a list including test values.
 }
-\author{ Chunlei Ke \email{chunlei\_ke@pstat.ucsb.edu} and Yuedong Wang \email{yuedong@pstat.ucsb.edu}}
+\author{ Chunlei Ke \email{chunlei_ke@yahoo.com} and Yuedong Wang \email{yuedong@pstat.ucsb.edu}}
 \references{
 Cox, D. and Koh, E. (1989). A smoothing spline based test of model adequency
 in polynomial regression. Ann. Ins. Stat. Math. 41, 383-400.

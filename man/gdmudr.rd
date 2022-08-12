@@ -105,7 +105,7 @@ Wahba, G. (1990). Spline Models for Observational Data. SIAM, Vol. 59.
 
 Wang, Y. (1997). GRKPACK: Fitting Smoothing Spline ANOVA Models for Exponential Families. Communications in Statistics: Simulation and Computation, 24: 1037-1059.
 }
-\author{Chunlei Ke \email{chunlei\_ke@pstat.ucsb.edu} and Yuedong Wang \email{yuedong@pstat.ucsb.edu}}
+\author{Chunlei Ke \email{chunlei_ke@yahoo.com} and Yuedong Wang \email{yuedong@pstat.ucsb.edu}}
 \seealso{
 \code{\link{dsidr}}, \code{\link{dmudr}}, \code{\link{gdsidr}}, \code{\link{ssr}}
 }
