@@ -1,4 +1,4 @@
-f86354be133e8a4545f8bf2c10191d44 *DESCRIPTION
+319a1d46f61f64c2b62e3da3ad184860 *DESCRIPTION
 726ceccb0ae8370009a9656de59f2c72 *NAMESPACE
 384dd91374ad51dbfa84c63655d0222d *R/assist.R
 aaa31f485231e218465de2d73290796b *data/Arosa.rda
@@ -98,5 +98,5 @@ d68df973f5e655b2bdb6bf0998e09ef1 *man/ultra.rd
 76cec3c221d644c21cccfd20c2300dae *src/kernel_all.c
 7089a977d006dd482e395cd60d371a6b *src/monotone.c
 7c22b1b500cab25872924e218f1645f5 *src/registerDynamicSymbol.c
-c95c3fad86f4540c07b3eace9b955603 *src/rkpk1.f
-accf18647c63aa886d064f83e696ae78 *src/rkpk2.f
+97d4702379b576bc39ed13799be10334 *src/rkpk1.f
+eb24521e9a62963acd75068647e9e5de *src/rkpk2.f

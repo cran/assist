@@ -1,6 +1,6 @@
 Package: assist
 Title: A Suite of R Functions Implementing Spline Smoothing Techniques
-Version: 3.1.8
+Version: 3.1.9
 Authors@R: c(
     person("Yuedong", "Wang", email = "yuedong@ucsb.edu", role = c("aut","cre")),
     person("Chunlei", "Ke", email = "chunlei_ke@yahoo.com", role = c("aut")),
@@ -15,10 +15,10 @@ License: GPL-2
 LazyData: true
 URL: https://yuedong.faculty.pstat.ucsb.edu/software.html
 NeedsCompilation: yes
-Packaged: 2022-08-11 21:01:28 UTC; yuedong
+Packaged: 2023-08-21 18:28:16 UTC; yuedong
 Author: Yuedong Wang [aut, cre],
   Chunlei Ke [aut],
   Cleve Moler [cph]
 Maintainer: Yuedong Wang <yuedong@ucsb.edu>
 Repository: CRAN
-Date/Publication: 2022-08-12 07:20:07 UTC
+Date/Publication: 2023-08-22 07:00:02 UTC

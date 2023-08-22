@@ -138,21 +138,21 @@ c      if(.not.( vmu .ne. 'v' .and. vmu .ne. 'm' .and. vmu .ne. 'u' ))
      *score(1), varht, info, twk, work)
 c      if(.not.( vmu .eq. 'v' ))
       if(.not.( vmu .eq. 0 ))goto 23012
-      score(1) = score(1) * dfloat (nobs) / dfloat (n)
+      score(1) = score(1) * dble (nobs) / dble (n)
 23012 continue
 c      if(.not.( vmu .eq. 'm' ))
       if(.not.( vmu .eq. 1 ))goto 23014  
-      score(1) = score(1) * dfloat (n) / dfloat (nobs)
+      score(1) = score(1) * dble (n) / dble (nobs)
 23014 continue
 c      if(.not.( vmu .eq. 'u' ))
       if(.not.( vmu .eq. 2 ))goto 23016
-      score(1) = score(1) * dfloat (n) / dfloat (nobs) + 2.d0 * varht(1)
+      score(1) = score(1) * dble (n) / dble (nobs) + 2.d0 * varht(1)
 23016 continue
       goto 23011
 23010 continue
       call deval (vmu, q(n0+1,n0+1), ldq, n, z(n0+1), job, low, upp, 
      *nlaht, score, varht, info, twk, work)
-      dum1 = dfloat (nobs) / dfloat (n)
+      dum1 = dble (nobs) / dble (n)
       j=1
 23018 if(.not.(j.le.job+1))goto 23020
 c      if(.not.( vmu .eq. 'v' ))

@@ -677,18 +677,18 @@ c      if(.not.( vmu .ne. 'm' ))
 23107 continue
 c      if(.not.( vmu .eq. 'v' ))
       if(.not.( vmu .eq. 0 ))goto 23110
-      trc = dfloat (nobs) * 10.d0 ** (-nlaht) * varht(1) / score(1)
+      trc = dble (nobs) * 10.d0 ** (-nlaht) * varht(1) / score(1)
       i=1
 23112 if(.not.(i.le.nq))goto 23114
       if(.not.( theta(i) .le. -25.d0 ))goto 23115
       goto 23113
 23115 continue
       gra(i) = gwk1(i) / trc / trc - 2.d0 * score(1) * gwk2(i) / trc / 
-     *dfloat(nobs)
+     *dble(nobs)
 23113 i=i+1
       goto 23112
 23114 continue
-      call dscal (nq, dfloat (nobs), gra, 1)
+      call dscal (nq, dble (nobs), gra, 1)
 23110 continue
 c      if(.not.( vmu .eq. 'u' ))
       if(.not.( vmu .eq. 2 ))goto 23117
@@ -702,7 +702,7 @@ c      if(.not.( vmu .eq. 'u' ))
 23120 i=i+1
       goto 23119
 23121 continue
-      call dscal (nq, 1.d0/dfloat (n), gra, 1)
+      call dscal (nq, 1.d0/dble (n), gra, 1)
 23117 continue
 c      if(.not.( vmu .eq. 'm' ))
       if(.not.( vmu .eq. 1 ))goto 23124
@@ -712,12 +712,12 @@ c      if(.not.( vmu .eq. 'm' ))
       if(.not.( theta(i) .le. -25.d0 ))goto 23129
       goto 23127
 23129 continue
-      gra(i) = gwk1(i) / det - dfloat (nobs) / dfloat (n) * score(1) 
+      gra(i) = gwk1(i) / det - dble (nobs) / dble (n) * score(1) 
      * *gwk2(i)
 23127 i=i+1
       goto 23126
 23128 continue
-      call dscal (nq, 1.d0 / dfloat (nobs), gra, 1)
+      call dscal (nq, 1.d0 / dble (nobs), gra, 1)
 23124 continue
 c      if(.not.( vmu .eq. 'v' ))
       if(.not.( vmu .eq. 0 ))goto 23131
@@ -733,12 +733,12 @@ c      if(.not.( vmu .eq. 'v' ))
 23141 continue
       hes(i,j) = hwk1(i,j) / trc / trc - 2.d0 * gwk1(i) * gwk2(j) / trc 
      *** 3 - 2.d0 * gwk1(j) * gwk2(i) / trc ** 3 - 2.d0 * score(1) * 
-     *hwk2(i,j) / trc / dfloat (nobs) + 6.d0 * score(1) * gwk2(i) * 
-     *gwk2(j) / trc / trc / dfloat (nobs)
+     *hwk2(i,j) / trc / dble (nobs) + 6.d0 * score(1) * gwk2(i) * 
+     *gwk2(j) / trc / trc / dble (nobs)
 23139 j=j+1
       goto 23138
 23140 continue
-      call dscal (i, dfloat (nobs), hes(i,1), ldh)
+      call dscal (i, dble (nobs), hes(i,1), ldh)
 23134 i=i+1
       goto 23133
 23135 continue
@@ -760,7 +760,7 @@ c      if(.not.( vmu .eq. 'u' ))
 23151 j=j+1
       goto 23150
 23152 continue
-      call dscal (i, 1.d0/dfloat (n), hes(i,1), ldh)
+      call dscal (i, 1.d0/dble (n), hes(i,1), ldh)
 23146 i=i+1
       goto 23145
 23147 continue
@@ -777,15 +777,15 @@ c      if(.not.( vmu .eq. 'm' ))
       if(.not.( theta(j) .le. -25.d0 ))goto 23165
       goto 23163
 23165 continue
-      hes(i,j) = hwk1(i,j) / det - gwk1(i) * gwk2(j) / det / dfloat (n) 
-     *- gwk1(j) * gwk2(i) / det / dfloat (n) - dfloat (nobs) / dfloat (
-     *n) * score(1) * hwk2(i,j) + dfloat (nobs) / dfloat (n) ** 2 * 
+      hes(i,j) = hwk1(i,j) / det - gwk1(i) * gwk2(j) / det / dble (n) 
+     *- gwk1(j) * gwk2(i) / det / dble (n) - dble (nobs) / dble (
+     *n) * score(1) * hwk2(i,j) + dble (nobs) / dble (n) ** 2 * 
      *score(1) *
      * gwk2(i) * gwk2(j)
 23163 j=j+1
       goto 23162
 23164 continue
-      call dscal (i, 1.d0 / dfloat (nobs), hes(i,1), ldh)
+      call dscal (i, 1.d0 / dble (nobs), hes(i,1), ldh)
 23158 i=i+1
       goto 23157
 23159 continue
@@ -822,7 +822,7 @@ c      if(.not.( (vmu .ne. 'v' .and. vmu .ne. 'm' .and. vmu .ne. 'u')
 23004 continue
       j=1
 23006 if(.not.(j.le.nint+1))goto 23008
-      tmp = low + dfloat (j-1) * ( upp - low ) / dfloat (nint)
+      tmp = low + dble (j-1) * ( upp - low ) / dble (nint)
       call dset (n, 10.d0 ** (tmp), twk(2,1), 2)
       call daxpy (n, 1.d0, q, ldq+1, twk(2,1), 2)
       call dcopy (n-1, q(1,2), ldq+1, twk(1,2), 2)
@@ -1163,7 +1163,7 @@ cc    23005 goto 23004
 23003 continue
       jmax = idamax (p, a, lda+1)
       beta = dmax1 (2.d0 * tmp, dabs (a(jmax,jmax)))
-      tmp = dsqrt (dfloat (p*p-1))
+      tmp = dsqrt (dble (p*p-1))
       if(.not.( tmp .lt. 1.d0 ))goto 23004
       tmp = 1.d0
 23004 continue
@@ -1174,7 +1174,7 @@ cc    23005 goto 23004
       j=j+1
       goto 23006
 23008 continue
-      delta = dasum (p, a, lda+1) / dfloat (p) * 1.d-7
+      delta = dasum (p, a, lda+1) / dble (p) * 1.d-7
       delta = dmax1 (delta, 1.d-10)
       j=1
 23009 if(.not.(j.le.p))goto 23011
@@ -2631,7 +2631,7 @@ c      if(.not.( vmu .ne. 'v' .and. vmu .ne. 'm' .and. vmu .ne. 'u' ))
       return
 23000 continue
       la = t(1,1)
-      alph = dfloat (n) / dasum (n, t(2,1), ldt)
+      alph = dble (n) / dasum (n, t(2,1), ldt)
       call dscal (n, alph, t(2,1), ldt)
       call dscal (n-1, alph, t(1,2), ldt)
       call dpbfa (t, ldt, n, 1, info)
@@ -2651,8 +2651,8 @@ c      if(.not.( vmu .eq. 'v' ))
       j=j-1
       goto 23006
 23008 continue
-      nume = ddot (n, work, 1, work, 1) / dfloat (n)
-      deno = deno / dfloat (n)
+      nume = ddot (n, work, 1, work, 1) / dble (n)
+      deno = deno / dble (n)
       varht(1) = alph * la * nume / deno
       score(1) = nume / deno / deno
       deno = dlog (t(2,n))
@@ -2662,7 +2662,7 @@ c      if(.not.( vmu .eq. 'v' ))
       j=j-1
       goto 23009
 23011 continue
-      nume = ddot (n, z, 1, work, 1) / dfloat (n)
+      nume = ddot (n, z, 1, work, 1) / dble (n)
       varht(2) = alph * la * nume
 23004 continue
 c      if(.not.( vmu .eq. 'm' ))
@@ -2674,9 +2674,9 @@ c      if(.not.( vmu .eq. 'm' ))
       j=j-1
       goto 23014
 23016 continue
-      nume = ddot (n, z, 1, work, 1) / dfloat (n)
+      nume = ddot (n, z, 1, work, 1) / dble (n)
       varht(2) = alph * la * nume
-      score(1) = nume * dexp (2.d0 * deno / dfloat (n))
+      score(1) = nume * dexp (2.d0 * deno / dble (n))
       tmp = 1.d0 / t(2,n) / t(2,n)
       deno = tmp
       j=n-1
@@ -2686,13 +2686,13 @@ c      if(.not.( vmu .eq. 'm' ))
       j=j-1
       goto 23017
 23019 continue
-      nume = ddot (n, work, 1, work, 1) / dfloat (n)
-      deno = deno / dfloat (n)
+      nume = ddot (n, work, 1, work, 1) / dble (n)
+      deno = deno / dble (n)
       varht(1) = alph * la * nume / deno
 23012 continue
 c      if(.not.( vmu .eq. 'u' ))
       if(.not.( vmu .eq. 2 ))goto 23020
-      nume = ddot (n, work, 1, work, 1) / dfloat (n)
+      nume = ddot (n, work, 1, work, 1) / dble (n)
       tmp = 1.d0 / t(2,n) / t(2,n)
       deno = tmp
       j=n-1
@@ -2702,7 +2702,7 @@ c      if(.not.( vmu .eq. 'u' ))
       j=j-1
       goto 23022
 23024 continue
-      deno = deno / dfloat (n)
+      deno = deno / dble (n)
       score(1) = alph * alph * la * la * nume - 2.d0 * varht(1) * 
      *alph * la * deno
       varht(2) = alph * la *deno
@@ -2738,14 +2738,14 @@ c      if(.not.( vmu .eq. 'u' ))
       toltot = tol
 23007 continue
       toltot = toltot * nrmtot
-      dn = dfloat (n)
+      dn = dble (n)
       toluni = toltot * 6.d0 / dn / ( dn - 1.d0 ) / ( 2.d0 * dn - 1.d0 )
       tolcum = 0.d0
       j=1 
 23009 if(.not.(j.lt.n-1))goto 23011
       nrmtot = nrmtot - x(j,j) * x(j,j)
       nrmxj = ddot (n-j, x(j+1,j), 1, x(j+1,j), 1)
-      dn = dfloat (n-j)
+      dn = dble (n-j)
       tolcum = tolcum + toluni * dn * dn
       if(.not.( 2.d0 * nrmxj .le. tolcum ))goto 23012
       x(j,j+1) = 0.d0
